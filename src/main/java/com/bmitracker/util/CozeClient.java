@@ -9,6 +9,30 @@ import java.time.Duration;
 
 public class CozeClient {
 
+    private static final String DEFAULT_API_KEY = System.getenv("COZE_API_KEY") != null
+            ? System.getenv("COZE_API_KEY") : "YOUR_API_KEY";
+    private static final String DEFAULT_BOT_ID = System.getenv("COZE_BOT_ID") != null
+            ? System.getenv("COZE_BOT_ID") : "YOUR_BOT_ID";
+
+    public static String getDietRecommendation(int age, int sex, double height, double weight,
+                                                double bmi, String status, String preferences) {
+        String genderStr = sex == 0 ? "男" : "女";
+        String message = String.format(
+                "请为以下用户推荐一日三餐营养膳食：年龄%d岁，性别%s，身高%.1fcm，体重%.1fkg，BMI%.1f(%s)",
+                age, genderStr, height, weight, bmi, status);
+        if (preferences != null && !preferences.isEmpty()) {
+            message += "，偏好：" + preferences;
+        }
+        message += "。请按照格式返回：{\"breakfast\":\"...\",\"lunch\":\"...\",\"dinner\":\"...\",\"totalCal\":\"...\"}";
+
+        try {
+            CozeClient client = new CozeClient(DEFAULT_API_KEY, DEFAULT_BOT_ID);
+            return client.sendMessage(message);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private final String apiKey;
     private final String apiUrl;
     private final String botId;

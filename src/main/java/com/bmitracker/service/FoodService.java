@@ -6,4 +6,6 @@ import java.util.List;
 public interface FoodService {
     List<Food> getAllFoods();
     List<Food> getFoodsByCategory(String category);
+    List<String> getAllCategories();
+    List<Food> getTopByCategory(String category);
 }

@@ -15,6 +15,14 @@ public class BmiRecord {
 
     public BmiRecord() {}
 
+    public BmiRecord(int userId, double height, double weight, double bmi, String status) {
+        this.userId.set(userId);
+        this.height.set(height);
+        this.weight.set(weight);
+        this.bmi.set(bmi);
+        this.status.set(status);
+    }
+
     public BmiRecord(int recordId, int userId, double height, double weight, double bmi, String status, LocalDateTime createTime) {
         this.recordId.set(recordId);
         this.userId.set(userId);

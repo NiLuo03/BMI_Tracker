@@ -13,5 +13,4 @@ module com.bmitracker {
     exports com.bmitracker.dao;
     exports com.bmitracker.controller;
     exports com.bmitracker.service;
-    exports com.bmitracker.algorithm;
 }

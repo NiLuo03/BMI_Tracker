@@ -19,17 +19,14 @@
         <ComboBox fx:id="foodCombo1" promptText="食物1" prefWidth="150"/>
         <ComboBox fx:id="foodCombo2" promptText="食物2" prefWidth="150"/>
         <ComboBox fx:id="foodCombo3" promptText="食物3（可选）" prefWidth="150"/>
-        <Button text="开始对比" onAction="#handleCompare"
-                style="-fx-background-color: #2980b9; -fx-text-fill: white;"/>
     </HBox>
 
     <TableView fx:id="compareTable" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colName" text="食物" prefWidth="100" style="-fx-alignment: CENTER;"/>
-            <TableColumn fx:id="colCal" text="热量(大卡/100g)" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="colProtein" text="蛋白质(g)" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="colFat" text="脂肪(g)" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="colCarb" text="碳水(g)" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="metricColumn" text="营养指标" prefWidth="120" style="-fx-alignment: CENTER;"/>
+            <TableColumn fx:id="food1Column" text="食物1" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="food2Column" text="食物2" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="food3Column" text="食物3" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
         </columns>
     </TableView>
 </VBox>

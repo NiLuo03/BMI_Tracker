@@ -2,6 +2,7 @@ package com.bmitracker.controller;
 
 import com.bmitracker.model.Food;
 import com.bmitracker.service.FoodService;
+import com.bmitracker.service.FoodServiceImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -20,7 +21,7 @@ public class FoodRankController {
     @FXML private TableColumn<Food, Double> colFat;
     @FXML private TableColumn<Food, Double> colCarb;
 
-    private final FoodService foodService = new FoodService();
+    private final FoodService foodService = new FoodServiceImpl();
 
     @FXML
     void initialize() {
