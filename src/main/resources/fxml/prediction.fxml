@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.PredictionController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="趋势预测" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Button fx:id="predictBtn" text="开始预测（7天后）" onAction="#handlePredict"/>
+    <StackPane fx:id="chartContainer">
+        <LineChart fx:id="chart" prefHeight="350" prefWidth="600">
+            <xAxis><NumberAxis label="天数序号"/></xAxis>
+            <yAxis><NumberAxis label="BMI值"/></yAxis>
+        </LineChart>
+    </StackPane>
+    <Label fx:id="equationLabel" style="-fx-font-size: 14px;"/>
+    <Label fx:id="warningLabel" wrapText="true"/>
+</VBox>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="CENTER" spacing="12" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.RegisterController">
+    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+    <Label text="用户注册" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <TextField fx:id="userNameField" promptText="账号"/>
+    <PasswordField fx:id="passwordField" promptText="密码"/>
+    <PasswordField fx:id="confirmField" promptText="确认密码"/>
+    <TextField fx:id="ageField" promptText="年龄"/>
+    <HBox spacing="20">
+        <RadioButton fx:id="maleRadio" text="男" selected="true"/>
+        <RadioButton fx:id="femaleRadio" text="女"/>
+    </HBox>
+    <Button text="注册" onAction="#handleRegister" maxWidth="Infinity"/>
+    <Hyperlink text="已有账号？去登录" onAction="#goToLogin"/>
+</VBox>

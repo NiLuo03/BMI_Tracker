@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.DietController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="AI 膳食推荐" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Button text="生成推荐" onAction="#handleGenerate" maxWidth="Infinity"/>
+    <TitledPane text="早餐" expanded="true">
+        <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"/>
+    </TitledPane>
+    <TitledPane text="午餐" expanded="true">
+        <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"/>
+    </TitledPane>
+    <TitledPane text="晚餐" expanded="true">
+        <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"/>
+    </TitledPane>
+    <TitledPane text="总热量" expanded="true">
+        <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"/>
+    </TitledPane>
+</VBox>
