@@ -1,66 +1,147 @@
 package com.bmitracker.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 public class CozeClient {
 
-    private static final String API_URL = "https://api.coze.cn/v1/chat/completions";
-    private static final String API_KEY = "your_coze_api_key";
-    private static final int TIMEOUT = 5000;
+    private final String apiKey;
+    private final String apiUrl;
+    private final String botId;
+    private final HttpClient client;
+    private final int maxRetries;
 
-    // 调用 Coze API 生成膳食推荐
-    public static String getDietRecommendation(int age, int sex, double height, double weight,
-                                                double bmi, String status, String preferences) {
-        try {
-            String prompt = buildPrompt(age, sex, height, weight, bmi, status, preferences);
+    public CozeClient(String apiKey, String botId) {
+        this(apiKey, botId, "https://api.coze.cn/open_api/v2/chat", 3);
+    }
 
-            URI uri = new URI(API_URL);
-            HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Bearer " + API_KEY);
-            conn.setConnectTimeout(TIMEOUT);
-            conn.setReadTimeout(TIMEOUT);
-            conn.setDoOutput(true);
+    public CozeClient(String apiKey, String botId, String apiUrl, int maxRetries) {
+        this.apiKey = apiKey;
+        this.botId = botId;
+        this.apiUrl = apiUrl;
+        this.maxRetries = Math.max(1, maxRetries);
+        this.client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+    }
 
-            String jsonBody = "{\"messages\":[{\"role\":\"user\",\"content\":\"" +
-                    URLEncoder.encode(prompt, StandardCharsets.UTF_8) + "\"}]}";
+    public String sendMessage(String userMessage) {
+        String json = buildJson(userMessage);
+        RuntimeException lastEx = null;
 
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(jsonBody.getBytes(StandardCharsets.UTF_8));
-            }
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(apiUrl))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + apiKey)
+                        .timeout(Duration.ofSeconds(30))
+                        .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
+                        .build();
 
-            int code = conn.getResponseCode();
-            if (code == 200) {
-                try (BufferedReader br = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                    StringBuilder resp = new StringBuilder();
-                    String line;
-                    while ((line = br.readLine()) != null) resp.append(line);
-                    return resp.toString();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 200) {
+                    return extractMessage(response.body());
+                }
+
+                if (response.statusCode() >= 500 && attempt < maxRetries) {
+                    Thread.sleep(1000L * attempt);
+                    continue;
+                }
+
+                throw new CozeApiException("Coze API 请求失败，状态码: " + response.statusCode()
+                        + ", 响应: " + truncate(response.body(), 200));
+
+            } catch (CozeApiException e) {
+                throw e;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new CozeApiException("请求被中断", e);
+            } catch (Exception e) {
+                lastEx = new CozeApiException("Coze API 请求异常 (尝试 " + attempt + "/" + maxRetries + ")", e);
+                if (attempt < maxRetries) {
+                    try { Thread.sleep(1000L * attempt); } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
             }
-            return null;
+        }
+        throw lastEx != null ? lastEx : new CozeApiException("Coze API 请求失败，已达最大重试次数");
+    }
+
+    private String buildJson(String userMessage) {
+        return "{\"bot_id\":\"" + escapeJson(botId)
+                + "\",\"user\":\"user\",\"query\":\"" + escapeJson(userMessage)
+                + "\",\"stream\":false}";
+    }
+
+    private String extractMessage(String responseBody) {
+        if (responseBody == null || responseBody.isBlank()) {
+            return "";
+        }
+        try {
+            String msgKey = "\"content\":\"";
+            int start = responseBody.indexOf(msgKey);
+            if (start < 0) {
+                msgKey = "\"msg\":\"";
+                start = responseBody.indexOf(msgKey);
+            }
+            if (start < 0) {
+                return responseBody;
+            }
+            start += msgKey.length();
+            StringBuilder result = new StringBuilder();
+            for (int i = start; i < responseBody.length(); i++) {
+                char c = responseBody.charAt(i);
+                if (c == '\\' && i + 1 < responseBody.length()) {
+                    char next = responseBody.charAt(i + 1);
+                    if (next == '"') { result.append('"'); i++; }
+                    else if (next == 'n') { result.append('\n'); i++; }
+                    else if (next == 'r') { result.append('\r'); i++; }
+                    else if (next == 't') { result.append('\t'); i++; }
+                    else if (next == '\\') { result.append('\\'); i++; }
+                    else { result.append(c); }
+                } else if (c == '"') {
+                    break;
+                } else {
+                    result.append(c);
+                }
+            }
+            return result.toString();
         } catch (Exception e) {
-            return null;
+            return responseBody;
         }
     }
 
-    private static String buildPrompt(int age, int sex, double height, double weight,
-                                       double bmi, String status, String preferences) {
-        String gender = sex == 0 ? "男" : "女";
-        return String.format(
-                "你是一位资深注册营养师，请根据以下用户体质数据推荐一日三餐。" +
-                "用户年龄：%d，性别：%s，身高：%.1fcm，体重：%.1fkg，" +
-                "BMI：%.1f，健康状态：%s，用户偏好：%s。" +
-                "请以JSON格式返回：{\"breakfast\":\"...\",\"lunch\":\"...\",\"dinner\":\"...\",\"totalCal\":\"...\"}",
-                age, gender, height, weight, bmi, status,
-                preferences == null || preferences.isEmpty() ? "无特殊偏好" : preferences);
+    private String escapeJson(String s) {
+        if (s == null) return "";
+        StringBuilder sb = new StringBuilder(s.length() + 16);
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            switch (c) {
+                case '\\' -> sb.append("\\\\");
+                case '"' -> sb.append("\\\"");
+                case '\n' -> sb.append("\\n");
+                case '\r' -> sb.append("\\r");
+                case '\t' -> sb.append("\\t");
+                default -> sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private String truncate(String s, int maxLen) {
+        return s != null && s.length() > maxLen ? s.substring(0, maxLen) + "..." : s;
+    }
+
+    public static class CozeApiException extends RuntimeException {
+        public CozeApiException(String message) { super(message); }
+        public CozeApiException(String message, Throwable cause) { super(message, cause); }
     }
 }

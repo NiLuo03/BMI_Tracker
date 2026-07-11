@@ -1,7 +1,9 @@
 package com.bmitracker;
 
+import javafx.application.Application;
+
 public class Launcher {
     public static void main(String[] args) {
-        BMIApplication.main(args);
+        Application.launch(HelloApplication.class, args);
     }
 }
