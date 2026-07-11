@@ -82,8 +82,8 @@ public class TrendPredictionController implements Initializable {
             records.sort(Comparator.comparing(BmiRecord::getCreateTime));
 
             int n = records.size();
-            if (n < 2) {
-                equationLabel.setText("暂无足够数据，至少需要2条记录");
+            if (n < 4) {
+                equationLabel.setText("暂无足够数据，至少需要4条记录才能预测");
                 trendChart.setData(FXCollections.observableArrayList());
                 return;
             }
