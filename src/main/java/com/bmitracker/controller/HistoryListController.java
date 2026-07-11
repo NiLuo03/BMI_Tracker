@@ -2,6 +2,7 @@ package com.bmitracker.controller;
 
 import com.bmitracker.model.BmiRecord;
 import com.bmitracker.service.BmiRecordService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +34,13 @@ public class HistoryListController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        dateColumn.setCellValueFactory(cellData -> cellData.getValue().createTimeProperty().asString(DATE_FMT));
+        dateColumn.setCellValueFactory(cellData -> {
+            BmiRecord record = cellData.getValue();
+            if (record.getCreateTime() != null) {
+                return new SimpleStringProperty(record.getCreateTime().format(DATE_FMT));
+            }
+            return new SimpleStringProperty("");
+        });
         heightColumn.setCellValueFactory(new PropertyValueFactory<>("height"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
         bmiColumn.setCellValueFactory(new PropertyValueFactory<>("bmi"));
