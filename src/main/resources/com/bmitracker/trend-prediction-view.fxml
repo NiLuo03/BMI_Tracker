@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="15.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.TrendPredictionController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label text="BMI 趋势预测">
+        <font>
+            <Font size="20.0" name="System Bold"/>
+        </font>
+    </Label>
+
+    <LineChart fx:id="trendChart" prefHeight="400.0" prefWidth="700.0">
+        <xAxis>
+            <NumberAxis label="天数"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="BMI"/>
+        </yAxis>
+    </LineChart>
+
+    <Label fx:id="equationLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+    <Label fx:id="slopeLabel" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+    <Label fx:id="predictionLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1565c0;"/>
+    <Label fx:id="extremeLabel" style="-fx-font-size: 13px; -fx-text-fill: #888;"/>
+</VBox>
