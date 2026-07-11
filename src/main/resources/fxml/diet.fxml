@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="15" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.DietController">
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.DietController"
+      style="-fx-background-color: #ecf0f1;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-    <Label text="AI 膳食推荐" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-    <Button text="生成推荐" onAction="#handleGenerate" maxWidth="Infinity"/>
-    <TitledPane text="早餐" expanded="true">
-        <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"/>
+
+    <Label text="AI 膳食推荐" textFill="#2c3e50">
+        <font><Font size="20.0" name="System Bold"/></font>
+    </Label>
+    <Label text="基于您的体质数据，AI 营养师为您定制一日三餐" textFill="#7f8c8d"/>
+
+    <Button text="生成推荐" onAction="#handleGenerate" maxWidth="200"
+            style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 0;"/>
+
+    <TitledPane text="早餐" expanded="true"
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+        <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"
+               wrapText="true" style="-fx-background-color: white; -fx-padding: 15px;
+               -fx-background-radius: 5px;" maxWidth="500"/>
     </TitledPane>
-    <TitledPane text="午餐" expanded="true">
-        <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"/>
+
+    <TitledPane text="午餐" expanded="true"
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+        <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"
+               wrapText="true" style="-fx-background-color: white; -fx-padding: 15px;
+               -fx-background-radius: 5px;" maxWidth="500"/>
     </TitledPane>
-    <TitledPane text="晚餐" expanded="true">
-        <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"/>
+
+    <TitledPane text="晚餐" expanded="true"
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+        <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"
+               wrapText="true" style="-fx-background-color: white; -fx-padding: 15px;
+               -fx-background-radius: 5px;" maxWidth="500"/>
     </TitledPane>
-    <TitledPane text="总热量" expanded="true">
-        <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"/>
+
+    <TitledPane text="总热量" expanded="true"
+                style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+        <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"
+               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #27ae60; -fx-padding: 10px;"/>
     </TitledPane>
 </VBox>

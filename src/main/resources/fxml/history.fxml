@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.HistoryController">
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.HistoryController"
+      style="-fx-background-color: #ecf0f1;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-    <Label text="历史记录" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-    <Label fx:id="infoLabel"/>
-    <TableView fx:id="tableView">
+
+    <Label text="历史记录" textFill="#2c3e50">
+        <font><Font size="20.0" name="System Bold"/></font>
+    </Label>
+    <Label fx:id="infoLabel" textFill="#7f8c8d"/>
+
+    <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
-            <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="80"/>
-            <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="80"/>
-            <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
-            <TableColumn fx:id="colStatus" text="健康状态" prefWidth="80"/>
-            <TableColumn fx:id="colDate" text="记录时间" prefWidth="150"/>
+            <TableColumn fx:id="colId" text="编号" prefWidth="60" style="-fx-alignment: CENTER;"/>
+            <TableColumn fx:id="colDate" text="记录时间" prefWidth="160"/>
+            <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="colBmi" text="BMI" prefWidth="80" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90" style="-fx-alignment: CENTER;"/>
         </columns>
     </TableView>
 </VBox>

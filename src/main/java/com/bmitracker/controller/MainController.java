@@ -17,6 +17,9 @@ public class MainController {
     void showHistory(ActionEvent event) { loadView("history.fxml"); }
 
     @FXML
+    void showChart(ActionEvent event) { loadView("chart.fxml"); }
+
+    @FXML
     void showPrediction(ActionEvent event) { loadView("prediction.fxml"); }
 
     @FXML
@@ -30,9 +33,6 @@ public class MainController {
 
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); }
-
-    @FXML
-    void showChart(ActionEvent event) { loadView("chart.fxml"); }
 
     private void loadView(String fxml) {
         try {

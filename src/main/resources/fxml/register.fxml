@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="12" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.RegisterController">
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.RegisterController"
+      style="-fx-background-color: #ecf0f1;">
     <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
-    <Label text="用户注册" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-    <TextField fx:id="userNameField" promptText="账号"/>
-    <PasswordField fx:id="passwordField" promptText="密码"/>
-    <PasswordField fx:id="confirmField" promptText="确认密码"/>
-    <TextField fx:id="ageField" promptText="年龄"/>
-    <HBox spacing="20">
+
+    <Label text="用户注册" textFill="#2c3e50">
+        <font><Font size="20.0" name="System Bold"/></font>
+    </Label>
+
+    <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+
+    <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280"
+               style="-fx-padding: 8px;"/>
+    <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280"
+                   style="-fx-padding: 8px;"/>
+    <PasswordField fx:id="confirmField" promptText="请再次输入密码" maxWidth="280"
+                   style="-fx-padding: 8px;"/>
+    <TextField fx:id="ageField" promptText="请输入年龄" maxWidth="280"
+               style="-fx-padding: 8px;"/>
+
+    <HBox spacing="20" maxWidth="280" alignment="CENTER">
         <RadioButton fx:id="maleRadio" text="男" selected="true"/>
         <RadioButton fx:id="femaleRadio" text="女"/>
     </HBox>
-    <Button text="注册" onAction="#handleRegister" maxWidth="Infinity"/>
-    <Hyperlink text="已有账号？去登录" onAction="#goToLogin"/>
+
+    <Button text="注 册" onAction="#handleRegister" maxWidth="280"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 0;">
+        <VBox.margin><Insets top="8.0"/></VBox.margin>
+    </Button>
+
+    <Hyperlink text="已有账号？去登录" onAction="#goToLogin"
+               style="-fx-text-fill: #2980b9;"/>
 </VBox>
