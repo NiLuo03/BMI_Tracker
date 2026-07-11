@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="12.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.BmiCalcController"
+      style="-fx-background-color: #ecf0f1;">
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+
+    <Label text="BMI 计算与记录">
+        <font>
+            <Font size="20.0" name="System Bold"/>
+        </font>
+    </Label>
+
+    <Label text="输入身高体重，计算并保存您的 BMI 数据" textFill="#7f8c8d"/>
+
+    <Separator/>
+
+    <VBox spacing="10.0" maxWidth="350">
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Label text="身高(cm)：" prefWidth="80"/>
+            <TextField fx:id="heightField" promptText="请输入身高" prefWidth="200"/>
+        </HBox>
+
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Label text="体重(kg)：" prefWidth="80"/>
+            <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200"/>
+        </HBox>
+
+        <Label fx:id="errorLabel" textFill="#e74c3c" wrapText="true"/>
+
+        <Button fx:id="calcButton" text="记录并计算 BMI" maxWidth="280"
+                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 15px; -fx-padding: 10px 0;">
+            <VBox.margin>
+                <Insets top="10.0"/>
+            </VBox.margin>
+        </Button>
+    </VBox>
+
+    <Separator/>
+
+    <Label fx:id="resultLabel" textFill="#2c3e50" wrapText="true">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+
+    <Label fx:id="statusLabel" wrapText="true">
+        <font>
+            <Font size="15.0"/>
+        </font>
+    </Label>
+</VBox>
