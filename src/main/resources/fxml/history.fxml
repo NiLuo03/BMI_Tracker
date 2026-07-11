@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.HistoryController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="历史记录" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label fx:id="infoLabel"/>
+    <TableView fx:id="tableView">
+        <columns>
+            <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
+            <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="80"/>
+            <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="80"/>
+            <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
+            <TableColumn fx:id="colStatus" text="健康状态" prefWidth="80"/>
+            <TableColumn fx:id="colDate" text="记录时间" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>

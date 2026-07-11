@@ -1,37 +1,45 @@
 package com.bmitracker.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 public class MainController {
 
-    @FXML
-    private BorderPane rootPane;
+    @FXML private StackPane contentPane;
 
     @FXML
-    private StackPane contentArea;
+    void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); }
 
     @FXML
-    private Button homeButton;
+    void showHistory(ActionEvent event) { loadView("history.fxml"); }
 
     @FXML
-    private Button bmiButton;
+    void showPrediction(ActionEvent event) { loadView("prediction.fxml"); }
 
     @FXML
-    private Button trendButton;
+    void showDiet(ActionEvent event) { loadView("diet.fxml"); }
 
     @FXML
-    private Button mealButton;
+    void showFood(ActionEvent event) { loadView("food_compare.fxml"); }
 
     @FXML
-    private Button foodButton;
+    void showFoodRank(ActionEvent event) { loadView("food_rank.fxml"); }
 
     @FXML
-    private Button profileButton;
+    void showProfile(ActionEvent event) { loadView("profile.fxml"); }
 
     @FXML
-    private Button logoutButton;
+    void showChart(ActionEvent event) { loadView("chart.fxml"); }
 
+    private void loadView(String fxml) {
+        try {
+            Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
+            contentPane.getChildren().setAll(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,27 +1,67 @@
 package com.bmitracker.controller;
 
+import com.bmitracker.BMIApplication;
+import com.bmitracker.service.UserService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginController {
 
-    @FXML
-    private TextField usernameField;
+    @FXML private TextField userNameField;
+    @FXML private PasswordField passwordField;
+
+    private final UserService userService = new UserService();
 
     @FXML
-    private PasswordField passwordField;
+    void handleLogin(ActionEvent event) {
+        String userName = userNameField.getText();
+        String password = passwordField.getText();
+        if (userName.isEmpty() || password.isEmpty()) {
+            showAlert("请输入账号和密码");
+            return;
+        }
+        int userId = userService.login(userName, password);
+        if (userId > 0) {
+            BMIApplication.currentUserId = userId;
+            try {
+                Stage stage = (Stage) userNameField.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+                Scene scene = new Scene(loader.load(), 900, 600);
+                stage.setTitle("BMI体质评估与预测系统 - 主界面");
+                stage.setScene(scene);
+                stage.setResizable(true);
+                stage.centerOnScreen();
+            } catch (Exception e) {
+                showAlert("系统繁忙，请稍后再试");
+            }
+        } else {
+            showAlert("账号或密码错误");
+        }
+    }
 
     @FXML
-    private Button loginButton;
+    void goToRegister(ActionEvent event) {
+        try {
+            Stage stage = (Stage) userNameField.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));
+            stage.setScene(new Scene(loader.load(), 400, 450));
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            showAlert("页面加载失败");
+        }
+    }
 
-    @FXML
-    private Hyperlink registerLink;
-
-    @FXML
-    private Label errorLabel;
-
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("提示");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.MainController">
+    <left>
+        <VBox spacing="5" style="-fx-background-color: #f0f0f0; -fx-padding: 10;" prefWidth="150">
+            <Button text="📊 BMI记录" onAction="#showBmiRecord" maxWidth="Infinity"/>
+            <Button text="📋 历史记录" onAction="#showHistory" maxWidth="Infinity"/>
+            <Button text="📈 折线图" onAction="#showChart" maxWidth="Infinity"/>
+            <Button text="🔮 趋势预测" onAction="#showPrediction" maxWidth="Infinity"/>
+            <Button text="🥗 膳食推荐" onAction="#showDiet" maxWidth="Infinity"/>
+            <Button text="🍎 食物对比" onAction="#showFood" maxWidth="Infinity"/>
+            <Button text="🏆 食物榜单" onAction="#showFoodRank" maxWidth="Infinity"/>
+            <Separator/>
+            <Button text="👤 个人信息" onAction="#showProfile" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentPane"/>
+    </center>
+</BorderPane>

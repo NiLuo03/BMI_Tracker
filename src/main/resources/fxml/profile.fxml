@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.ProfileController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="个人信息" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <HBox spacing="10"><Label text="用户ID：" /><Label fx:id="userIdLabel"/></HBox>
+    <HBox spacing="10"><Label text="账号：" /><Label fx:id="userNameLabel"/></HBox>
+    <HBox spacing="10"><Label text="年龄：" /><TextField fx:id="ageField" prefWidth="100"/></HBox>
+    <HBox spacing="20">
+        <Label text="性别："/>
+        <RadioButton fx:id="maleRadio" text="男"/>
+        <RadioButton fx:id="femaleRadio" text="女"/>
+    </HBox>
+    <HBox spacing="10"><Label text="身高(cm)：" /><TextField fx:id="heightField" prefWidth="100"/></HBox>
+    <HBox spacing="10"><Label text="体重(kg)：" /><TextField fx:id="weightField" prefWidth="100"/></HBox>
+    <HBox spacing="10"><Label text="偏好：" /><TextField fx:id="preferencesField" prefWidth="250" promptText="如：不吃辣,低卡"/></HBox>
+    <HBox spacing="10">
+        <Button text="保存" onAction="#handleSave"/>
+        <Button text="修改密码" onAction="#goToChangePassword"/>
+    </HBox>
+</VBox>

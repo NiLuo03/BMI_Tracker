@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml" fx:controller="com.bmitracker.controller.BmiController">
+    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+    <Label text="BMI 计算与记录" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <HBox spacing="10">
+        <Label text="身高(cm)："/>
+        <TextField fx:id="heightField" promptText="请输入身高"/>
+    </HBox>
+    <HBox spacing="10">
+        <Label text="体重(kg)："/>
+        <TextField fx:id="weightField" promptText="请输入体重"/>
+    </HBox>
+    <Button text="记录并计算" onAction="#handleCalculate" maxWidth="Infinity"/>
+</VBox>
