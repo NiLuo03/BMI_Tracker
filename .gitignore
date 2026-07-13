@@ -37,4 +37,4 @@ build/
 
 ### H2 Database ###
 *.mv.db
-bmi_db*
+bmi_db**.bak
