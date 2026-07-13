@@ -9,10 +9,9 @@ import java.time.Duration;
 
 public class CozeClient {
 
-    private static final String DEFAULT_API_KEY = System.getenv("COZE_API_KEY") != null
-            ? System.getenv("COZE_API_KEY") : "YOUR_API_KEY";
-    private static final String DEFAULT_BOT_ID = System.getenv("COZE_BOT_ID") != null
-            ? System.getenv("COZE_BOT_ID") : "YOUR_BOT_ID";
+    private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
+    private static final String ENDPOINT_ID = "ep-20260708103037-nv2cq";
+    private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
     public static String getDietRecommendation(int age, int sex, double height, double weight,
                                                 double bmi, String status, String preferences) {
@@ -26,7 +25,7 @@ public class CozeClient {
         message += "。请按照格式返回：{\"breakfast\":\"...\",\"lunch\":\"...\",\"dinner\":\"...\",\"totalCal\":\"...\"}";
 
         try {
-            CozeClient client = new CozeClient(DEFAULT_API_KEY, DEFAULT_BOT_ID);
+            CozeClient client = new CozeClient(API_KEY, ENDPOINT_ID);
             return client.sendMessage(message);
         } catch (Exception e) {
             return null;
@@ -35,17 +34,17 @@ public class CozeClient {
 
     private final String apiKey;
     private final String apiUrl;
-    private final String botId;
+    private final String model;
     private final HttpClient client;
     private final int maxRetries;
 
-    public CozeClient(String apiKey, String botId) {
-        this(apiKey, botId, "https://api.coze.cn/open_api/v2/chat", 3);
+    public CozeClient(String apiKey, String model) {
+        this(apiKey, model, API_URL, 3);
     }
 
-    public CozeClient(String apiKey, String botId, String apiUrl, int maxRetries) {
+    public CozeClient(String apiKey, String model, String apiUrl, int maxRetries) {
         this.apiKey = apiKey;
-        this.botId = botId;
+        this.model = model;
         this.apiUrl = apiUrl;
         this.maxRetries = Math.max(1, maxRetries);
         this.client = HttpClient.newBuilder()
@@ -78,7 +77,7 @@ public class CozeClient {
                     continue;
                 }
 
-                throw new CozeApiException("Coze API 请求失败，状态码: " + response.statusCode()
+                throw new CozeApiException("API 请求失败，状态码: " + response.statusCode()
                         + ", 响应: " + truncate(response.body(), 200));
 
             } catch (CozeApiException e) {
@@ -87,7 +86,7 @@ public class CozeClient {
                 Thread.currentThread().interrupt();
                 throw new CozeApiException("请求被中断", e);
             } catch (Exception e) {
-                lastEx = new CozeApiException("Coze API 请求异常 (尝试 " + attempt + "/" + maxRetries + ")", e);
+                lastEx = new CozeApiException("API 请求异常 (尝试 " + attempt + "/" + maxRetries + ")", e);
                 if (attempt < maxRetries) {
                     try { Thread.sleep(1000L * attempt); } catch (InterruptedException ie) {
                         Thread.currentThread().interrupt();
@@ -96,13 +95,14 @@ public class CozeClient {
                 }
             }
         }
-        throw lastEx != null ? lastEx : new CozeApiException("Coze API 请求失败，已达最大重试次数");
+        throw lastEx != null ? lastEx : new CozeApiException("API 请求失败，已达最大重试次数");
     }
 
     private String buildJson(String userMessage) {
-        return "{\"bot_id\":\"" + escapeJson(botId)
-                + "\",\"user\":\"user\",\"query\":\"" + escapeJson(userMessage)
-                + "\",\"stream\":false}";
+        return "{\"model\":\"" + escapeJson(model) + "\",\"messages\":["
+                + "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，根据用户的身体数据推荐健康膳食。\"},"
+                + "{\"role\":\"user\",\"content\":\"" + escapeJson(userMessage) + "\"}"
+                + "],\"stream\":false}";
     }
 
     private String extractMessage(String responseBody) {
@@ -110,16 +110,10 @@ public class CozeClient {
             return "";
         }
         try {
-            String msgKey = "\"content\":\"";
-            int start = responseBody.indexOf(msgKey);
-            if (start < 0) {
-                msgKey = "\"msg\":\"";
-                start = responseBody.indexOf(msgKey);
-            }
-            if (start < 0) {
-                return responseBody;
-            }
-            start += msgKey.length();
+            String contentKey = "\"message\":{\"content\":\"";
+            int start = responseBody.indexOf(contentKey);
+            if (start < 0) return responseBody;
+            start += contentKey.length();
             StringBuilder result = new StringBuilder();
             for (int i = start; i < responseBody.length(); i++) {
                 char c = responseBody.charAt(i);
