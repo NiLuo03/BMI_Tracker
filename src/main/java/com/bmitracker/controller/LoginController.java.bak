@@ -2,37 +2,19 @@ package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
 import com.bmitracker.service.UserService;
-import com.bmitracker.util.ParticleTextCanvas;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class LoginController {
 
     @FXML private TextField userNameField;
     @FXML private PasswordField passwordField;
-    @FXML private Canvas particleCanvas;
-    @FXML private StackPane particlePane;
-
-    private ParticleTextCanvas particleText;
-
-    @FXML
-    void initialize() {
-        if (particleCanvas != null) {
-            particleText = new ParticleTextCanvas(
-                    460, 160,
-                    new String[]{"BMI", "HEALTH", "TRACKER", "FIT", "LIFE"});
-            particlePane.getChildren().clear();
-            particlePane.getChildren().add(particleText);
-        }
-    }
 
     private final UserService userService = new UserService();
 
@@ -46,7 +28,6 @@ public class LoginController {
         }
         int userId = userService.login(userName, password);
         if (userId > 0) {
-            if (particleText != null) particleText.stop();
             BMIApplication.currentUserId = userId;
             try {
                 Stage stage = (Stage) userNameField.getScene().getWindow();
@@ -67,7 +48,6 @@ public class LoginController {
 
     @FXML
     void goToRegister(ActionEvent event) {
-        if (particleText != null) particleText.stop();
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));

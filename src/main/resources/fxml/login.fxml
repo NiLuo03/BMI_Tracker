@@ -4,26 +4,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.canvas.Canvas?>
 
-<VBox alignment="CENTER" spacing="14" xmlns:fx="http://javafx.com/fxml"
+<VBox alignment="CENTER" spacing="0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.LoginController"
-      style="-fx-background-color: #f0fdfa;">
-    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+      style="-fx-background-color: #0a0a0f;">
 
-    <Label text="⚡ BMI 体质评估与预测系统" textFill="#0891b2">
-        <font><Font size="18.0" name="System Bold"/></font>
-    </Label>
-    <Label text="用户登录" textFill="#5ea8a4">
-        <font><Font size="13.0"/></font>
-    </Label>
-    <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+    <!-- 粒子动效 Canvas -->
+    <StackPane fx:id="particlePane" style="-fx-background-color: #0a0a0f;">
+        <Canvas fx:id="particleCanvas" width="460" height="160"/>
+    </StackPane>
 
-    <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280" styleClass="text-field-dark"/>
-    <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280" styleClass="text-field-dark"/>
+    <!-- 登录表单区域 -->
+    <VBox alignment="CENTER" spacing="12" style="-fx-background-color: #0a0a0f;">
+        <padding><Insets top="0" right="40" bottom="30" left="40"/></padding>
 
-    <Button text="登 录" onAction="#handleLogin" maxWidth="280" styleClass="btn-primary">
-        <VBox.margin><Insets top="10.0"/></VBox.margin>
-    </Button>
+        <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #8ccfca;"/>
+        <Label text="用户登录" style="-fx-font-size: 12px; -fx-text-fill: #5ea8a4;"/>
+        <VBox.margin><Insets bottom="5.0"/></VBox.margin>
 
-    <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-dark"/>
+        <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280" styleClass="text-field-dark"/>
+        <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280" styleClass="text-field-dark"/>
+
+        <Button text="登 录" onAction="#handleLogin" maxWidth="280" styleClass="btn-primary">
+            <VBox.margin><Insets top="10.0"/></VBox.margin>
+        </Button>
+
+        <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-dark"/>
+    </VBox>
 </VBox>
