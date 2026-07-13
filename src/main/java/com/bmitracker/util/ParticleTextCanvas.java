@@ -111,7 +111,7 @@ public class ParticleTextCanvas extends Canvas {
         ctx.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 140));
         ctx.setTextAlign(TextAlignment.CENTER);
         ctx.setTextBaseline(VPos.CENTER);
-        ctx.fillText(word, getWidth() / 2, getHeight() / 2);
+        ctx.fillText(word, getWidth() / 2, getHeight() * 0.30);
 
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
