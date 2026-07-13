@@ -5,45 +5,36 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.canvas.Canvas?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.bmitracker.controller.LoginController"
-            style="-fx-background-color: #0a0a0f;">
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.bmitracker.controller.LoginController"
+           style="-fx-background-color: #0a0a0f;">
 
-    <!-- 左侧：粒子动效 -->
-    <left>
-        <StackPane fx:id="particlePane" style="-fx-background-color: #0a0a0f;" prefWidth="660">
-            <Canvas fx:id="particleCanvas" width="660" height="800"/>
-        </StackPane>
-    </left>
+    <!-- 粒子层：满屏 -->
+    <StackPane fx:id="particlePane" style="-fx-background-color: #0a0a0f;">
+        <Canvas fx:id="particleCanvas" width="1200" height="800"/>
+    </StackPane>
 
-    <!-- 右侧：登录表单 -->
-    <center>
-        <StackPane style="-fx-background-color: #0a0a0f;">
-            <VBox alignment="CENTER" spacing="16" maxWidth="380">
-                <VBox style="-fx-background-color: rgba(255,255,255,0.06);
-                    -fx-background-radius: 16px;
-                    -fx-border-color: rgba(255,255,255,0.10);
-                    -fx-border-width: 1px;
-                    -fx-border-radius: 16px;
-                    -fx-padding: 36px 32px;" spacing="14">
+    <!-- 表单层：悬浮在粒子上方 -->
+    <VBox alignment="CENTER" maxWidth="380" StackPane.alignment="CENTER_RIGHT">
+        <StackPane.margin><Insets right="80"/></StackPane.margin>
 
-                    <VBox spacing="4" alignment="CENTER">
-                        <Label text="BMI 体质评估" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
-                        <Label text="登录您的账户" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.40);"/>
-                        <VBox.margin><Insets bottom="8"/></VBox.margin>
-                    </VBox>
+        <VBox spacing="14" style="-fx-padding: 40px 36px;" alignment="CENTER">
 
-                    <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
-                    <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
-
-                    <Button text="登 录" onAction="#handleLogin" styleClass="btn-login" maxWidth="Infinity">
-                        <VBox.margin><Insets top="6"/></VBox.margin>
-                    </Button>
-
-                    <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-login"/>
-                </VBox>
+            <VBox spacing="4" alignment="CENTER">
+                <Label text="BMI 体质评估" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.92);"/>
+                <Label text="登录您的账户，科学管理健康" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.38);"/>
+                <VBox.margin><Insets bottom="12"/></VBox.margin>
             </VBox>
-        </StackPane>
-    </center>
 
-</BorderPane>
+            <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
+            <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
+
+            <Button text="登 录" onAction="#handleLogin" styleClass="btn-login" maxWidth="Infinity">
+                <VBox.margin><Insets top="6"/></VBox.margin>
+            </Button>
+
+            <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-login"/>
+        </VBox>
+    </VBox>
+
+</StackPane>
