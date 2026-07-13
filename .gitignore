@@ -34,3 +34,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### H2 Database ###
+*.mv.db
+bmi_db*
