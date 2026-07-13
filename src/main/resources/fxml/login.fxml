@@ -13,30 +13,34 @@
         <Canvas fx:id="particleCanvas" width="1200" height="800"/>
     </StackPane>
 
-    <VBox alignment="CENTER" maxWidth="380" StackPane.alignment="BOTTOM_CENTER">
-        <StackPane.margin><Insets bottom="30"/></StackPane.margin>
-        <VBox spacing="14" style="-fx-background-color: rgba(10,10,15,0.78);
-            -fx-background-radius: 16px;
-            -fx-border-color: rgba(255,255,255,0.10);
-            -fx-border-width: 1px;
-            -fx-border-radius: 16px;
-            -fx-padding: 44px 40px;" alignment="CENTER">
+    <BorderPane maxWidth="380" maxHeight="320" StackPane.alignment="BOTTOM_CENTER"
+                style="-fx-background-color: rgba(10,10,15,0.78);
+                    -fx-background-radius: 16px;
+                    -fx-border-color: rgba(255,255,255,0.10);
+                    -fx-border-width: 1px;
+                    -fx-border-radius: 16px;">
+        <StackPane.margin><Insets bottom="80"/></StackPane.margin>
 
-            <VBox spacing="4" alignment="CENTER">
-                <Label text="BMI 体质评估" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.92);"/>
-                <Label text="登录您的账户，科学管理健康" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.42);"/>
-                <VBox.margin><Insets bottom="14"/></VBox.margin>
+        <center>
+            <VBox spacing="14" alignment="CENTER">
+                <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+
+                <VBox spacing="4" alignment="CENTER">
+                    <Label text="BMI 体质评估" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.92);"/>
+                    <Label text="登录您的账户，科学管理健康" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.42);"/>
+                    <VBox.margin><Insets bottom="14"/></VBox.margin>
+                </VBox>
+
+                <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
+                <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
+
+                <Button text="登 录" onAction="#handleLogin" styleClass="btn-login" maxWidth="Infinity">
+                    <VBox.margin><Insets top="8"/></VBox.margin>
+                </Button>
+
+                <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-login"/>
             </VBox>
-
-            <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
-            <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
-
-            <Button text="登 录" onAction="#handleLogin" styleClass="btn-login" maxWidth="Infinity">
-                <VBox.margin><Insets top="8"/></VBox.margin>
-            </Button>
-
-            <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-login"/>
-        </VBox>
-    </VBox>
+        </center>
+    </BorderPane>
 
 </StackPane>
