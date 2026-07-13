@@ -3,33 +3,33 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.canvas.Canvas?>
 
 <VBox alignment="CENTER" spacing="0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.LoginController"
       style="-fx-background-color: #0a0a0f;">
 
-    <!-- 粒子动效 Canvas -->
+    <!-- 粒子动效 -->
     <StackPane fx:id="particlePane" style="-fx-background-color: #0a0a0f;">
         <Canvas fx:id="particleCanvas" width="460" height="160"/>
     </StackPane>
 
-    <!-- 登录表单区域 -->
-    <VBox alignment="CENTER" spacing="12" style="-fx-background-color: #0a0a0f;">
-        <padding><Insets top="0" right="40" bottom="30" left="40"/></padding>
+    <!-- 表单 -->
+    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #0a0a0f;">
+        <padding><Insets top="0" right="44" bottom="28" left="44"/></padding>
 
-        <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #8ccfca;"/>
-        <Label text="用户登录" style="-fx-font-size: 12px; -fx-text-fill: #5ea8a4;"/>
-        <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+        <Label text="BMI 体质评估与预测系统" styleClass="login-title"/>
+        <Label text="科学管理，健康生活" styleClass="login-subtitle">
+            <VBox.margin><Insets bottom="6"/></VBox.margin>
+        </Label>
 
-        <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280" styleClass="text-field-dark"/>
-        <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280" styleClass="text-field-dark"/>
+        <TextField fx:id="userNameField" promptText="账号" maxWidth="Infinity" styleClass="text-field-login"/>
+        <PasswordField fx:id="passwordField" promptText="密码" maxWidth="Infinity" styleClass="text-field-login"/>
 
-        <Button text="登 录" onAction="#handleLogin" maxWidth="280" styleClass="btn-primary">
-            <VBox.margin><Insets top="10.0"/></VBox.margin>
+        <Button text="登 录" onAction="#handleLogin" maxWidth="Infinity" styleClass="btn-login">
+            <VBox.margin><Insets top="8"/></VBox.margin>
         </Button>
 
-        <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-dark"/>
+        <Hyperlink text="没有账号？去注册" onAction="#goToRegister" styleClass="hyperlink-login"/>
     </VBox>
 </VBox>
