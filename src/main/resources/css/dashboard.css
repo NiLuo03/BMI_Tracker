@@ -306,3 +306,30 @@
     -fx-border-width: 1px;
     -fx-border-radius: 14px;
 }
+
+/* --- 膳食推荐卡片面板 --- */
+.meal-panel {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(46,204,113,0.18);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 6, 0, 0, 2);
+}
+.meal-panel > .title {
+    -fx-background-color: #f0faf3;
+    -fx-background-radius: 12px 12px 0 0;
+    -fx-padding: 10px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a6b3c;
+}
+.meal-panel > .content {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 0 12px 12px;
+    -fx-padding: 14px;
+}
+.meal-panel .label {
+    -fx-text-fill: #3d4f48;
+    -fx-font-size: 13px;
+}
