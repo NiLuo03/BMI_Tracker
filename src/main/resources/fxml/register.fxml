@@ -7,7 +7,7 @@
 
 <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.RegisterController"
-      style="-fx-background-color: #f0f4f3;">
+      style="-fx-background-color: #f0fdfa;">
     <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
 
     <Label text="用户注册" textFill="#d0c8f0">
