@@ -8,7 +8,7 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.PredictionController"
-      style="-fx-background-color: #f0fdfa;">
+      style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="趋势预测" styleClass="label-heading"/>

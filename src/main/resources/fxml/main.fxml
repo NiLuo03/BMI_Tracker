@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -33,11 +34,16 @@
     </top>
 
     <center>
-        <StackPane fx:id="contentPane">
-            <ScrollPane fitToWidth="true" fitToHeight="true"
-                        style="-fx-background: #f0fdfa; -fx-background-color: #f0fdfa;">
+        <StackPane>
+            <!-- 动态渐变背景层 -->
+            <Canvas fx:id="bgCanvas" width="1200" height="800"/>
+
+            <!-- 内容层 -->
+            <StackPane fx:id="contentPane">
+                <ScrollPane fitToWidth="true" fitToHeight="true"
+                            style="-fx-background: transparent; -fx-background-color: transparent;">
                 <content>
-                    <VBox spacing="24" style="-fx-background-color: #f0fdfa;">
+                    <VBox spacing="24" style="-fx-background-color: transparent;">
                         <padding><Insets top="24" right="28" bottom="40" left="28"/></padding>
 
                         <!-- === 主 Hero 卡片 === -->

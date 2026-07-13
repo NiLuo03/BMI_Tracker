@@ -1,13 +1,14 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
-import com.bmitracker.controller.AIChatController;
+import com.bmitracker.util.MeshGradientBackground;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -17,9 +18,18 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
+    @FXML private Canvas bgCanvas;
+
+    private MeshGradientBackground meshBg;
 
     @FXML
     void initialize() {
+        if (bgCanvas != null) {
+            meshBg = new MeshGradientBackground(bgCanvas.getWidth(), bgCanvas.getHeight());
+            meshBg.widthProperty().bind(bgCanvas.widthProperty());
+            meshBg.heightProperty().bind(bgCanvas.heightProperty());
+            ((StackPane) bgCanvas.getParent()).getChildren().set(0, meshBg);
+        }
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
             ai.setMainStage((Stage) contentPane.getScene().getWindow());
@@ -43,25 +53,18 @@ public class MainController {
 
     @FXML
     void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); setTitle("BMI 记录"); }
-
     @FXML
     void showHistory(ActionEvent event) { loadView("history.fxml"); setTitle("历史记录"); }
-
     @FXML
     void showChart(ActionEvent event) { loadView("chart.fxml"); setTitle("BMI 折线图"); }
-
     @FXML
     void showPrediction(ActionEvent event) { loadView("prediction.fxml"); setTitle("趋势预测"); }
-
     @FXML
     void showDiet(ActionEvent event) { loadView("diet.fxml"); setTitle("AI 膳食推荐"); }
-
     @FXML
     void showFood(ActionEvent event) { loadView("food_compare.fxml"); setTitle("食物对比"); }
-
     @FXML
     void showFoodRank(ActionEvent event) { loadView("food_rank.fxml"); setTitle("食物榜单"); }
-
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); setTitle("个人信息"); }
 
@@ -69,10 +72,11 @@ public class MainController {
     void showLogout(ActionEvent event) {
         BMIApplication.currentUserId = -1;
         AIChatController.getInstance().hide();
+        if (meshBg != null) meshBg.stop();
         try {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Scene scene = new Scene(loader.load(), 460, 420);
+            Scene scene = new Scene(loader.load(), 460, 520);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(false);
@@ -92,8 +96,6 @@ public class MainController {
     }
 
     private void setTitle(String title) {
-        if (pageTitle != null) {
-            pageTitle.setText(title);
-        }
+        if (pageTitle != null) pageTitle.setText(title);
     }
 }
