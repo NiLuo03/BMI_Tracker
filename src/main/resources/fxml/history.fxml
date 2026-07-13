@@ -7,7 +7,7 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.HistoryController"
-      style="-fx-background-color: transparent;">
+      style="-fx-background-color: #f0fdfa;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="历史记录" styleClass="label-heading"/>

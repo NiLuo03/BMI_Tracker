@@ -7,7 +7,7 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.ProfileController"
-      style="-fx-background-color: transparent;">
+      style="-fx-background-color: #f0fdfa;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="个人信息" styleClass="label-heading"/>

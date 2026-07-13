@@ -1,14 +1,12 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
-import com.bmitracker.util.MeshGradientBackground;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -18,18 +16,9 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
-    @FXML private Canvas bgCanvas;
-
-    private MeshGradientBackground meshBg;
 
     @FXML
     void initialize() {
-        if (bgCanvas != null) {
-            meshBg = new MeshGradientBackground(bgCanvas.getWidth(), bgCanvas.getHeight());
-            meshBg.widthProperty().bind(bgCanvas.widthProperty());
-            meshBg.heightProperty().bind(bgCanvas.heightProperty());
-            ((StackPane) bgCanvas.getParent()).getChildren().set(0, meshBg);
-        }
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
             ai.setMainStage((Stage) contentPane.getScene().getWindow());
@@ -72,7 +61,6 @@ public class MainController {
     void showLogout(ActionEvent event) {
         BMIApplication.currentUserId = -1;
         AIChatController.getInstance().hide();
-        if (meshBg != null) meshBg.stop();
         try {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));

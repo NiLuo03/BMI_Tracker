@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -34,19 +33,13 @@
     </top>
 
     <center>
-        <StackPane>
-            <!-- 动态渐变背景层 -->
-            <Canvas fx:id="bgCanvas" width="1200" height="800"/>
-
-            <!-- 内容层 -->
-            <StackPane fx:id="contentPane">
-                <ScrollPane fitToWidth="true" fitToHeight="true"
-                            style="-fx-background: transparent; -fx-background-color: transparent;">
+        <StackPane fx:id="contentPane">
+            <ScrollPane fitToWidth="true" fitToHeight="true"
+                        style="-fx-background: #f0fdfa; -fx-background-color: #f0fdfa;">
                 <content>
-                    <VBox spacing="24" style="-fx-background-color: transparent;">
+                    <VBox spacing="24" style="-fx-background-color: #f0fdfa;">
                         <padding><Insets top="24" right="28" bottom="40" left="28"/></padding>
 
-                        <!-- === 主 Hero 卡片 === -->
                         <VBox styleClass="hero-card" spacing="12">
                             <Label text="科学管理，健康生活" styleClass="hero-title"/>
                             <Label text="记录每日身体数据，AI 分析趋势并推荐个性化膳食方案" styleClass="hero-subtitle" wrapText="true"/>
@@ -55,8 +48,6 @@
                                 <Button text="开始记录 BMI" onAction="#showBmiRecord" styleClass="hero-btn"/>
                                 <Button text="查看趋势分析" onAction="#showPrediction" styleClass="hero-btn"/>
                             </HBox>
-
-                            <!-- 四组关键指标 -->
                             <HBox spacing="40" alignment="CENTER_LEFT">
                                 <VBox.margin><Insets top="20"/></VBox.margin>
                                 <VBox spacing="2" alignment="CENTER">
@@ -81,7 +72,6 @@
                             </HBox>
                         </VBox>
 
-                        <!-- === 两大核心功能卡片 === -->
                         <HBox spacing="20">
                             <VBox styleClass="feature-card" spacing="8" HBox.hgrow="ALWAYS">
                                 <Label text="BMI 计算与记录" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #134e4a;"/>
@@ -94,7 +84,6 @@
                                     <Button text="记录" onAction="#showBmiRecord" styleClass="btn-primary"/>
                                 </HBox>
                             </VBox>
-
                             <VBox styleClass="feature-card" spacing="8" HBox.hgrow="ALWAYS">
                                 <Label text="数据可视化" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #134e4a;"/>
                                 <Label text="查看历史 BMI 折线图，通过趋势预测功能了解身体指标变化方向，及时调整生活习惯。"
@@ -107,7 +96,6 @@
                             </VBox>
                         </HBox>
 
-                        <!-- === 四个快速入口 === -->
                         <HBox spacing="12">
                             <VBox styleClass="quick-link-card" spacing="6" HBox.hgrow="ALWAYS">
                                 <Button text="历史记录" onAction="#showHistory" maxWidth="Infinity"
@@ -134,7 +122,6 @@
                     </VBox>
                 </content>
             </ScrollPane>
-        </StackPane>
         </StackPane>
     </center>
 
