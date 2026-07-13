@@ -417,7 +417,91 @@
     -fx-font-size: 13px;
 }
 
-/* --- 表单标签和值 --- */
+/* --- 阴影层级体系 --- */
+.shadow-xs { -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 2, 0, 0, 1); }
+.shadow-sm { -fx-effect: dropshadow(gaussian, rgba(8,145,178,0.04), 6, 0, 0, 2); }
+.shadow-md { -fx-effect: dropshadow(gaussian, rgba(8,145,178,0.06), 12, 0, 0, 4); }
+.shadow-lg { -fx-effect: dropshadow(gaussian, rgba(8,145,178,0.10), 20, 0, 0, 8); }
+
+/* --- 首页大卡片容器 --- */
+.hero-card {
+    -fx-background-color: linear-gradient(to bottom right, #0891b2, #0e7490);
+    -fx-background-radius: 16px;
+    -fx-padding: 28px 32px;
+    -fx-effect: dropshadow(gaussian, rgba(8,145,178,0.18), 18, 0, 0, 6);
+}
+.hero-card .label {
+    -fx-text-fill: #ffffff;
+}
+.hero-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+.hero-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.78);
+}
+.hero-btn {
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 22px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255,255,255,0.28);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+}
+.hero-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.28);
+}
+
+/* --- 功能卡片（大卡）--- */
+.feature-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14px;
+    -fx-border-color: #e0f4f0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.025), 8, 0, 0, 3);
+}
+.feature-card .label-heading {
+    -fx-font-size: 16px;
+    -fx-text-fill: #134e4a;
+}
+.feature-card:hover {
+    -fx-border-color: #0891b2;
+    -fx-effect: dropshadow(gaussian, rgba(8,145,178,0.08), 12, 0, 0, 5);
+}
+
+/* --- 统计数字 --- */
+.stat-number {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0891b2;
+}
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #5ea8a4;
+}
+
+/* --- 快速链接卡片 --- */
+.quick-link-card {
+    -fx-background-color: #f5fcfa;
+    -fx-background-radius: 12px;
+    -fx-padding: 14px 18px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+}
+.quick-link-card:hover {
+    -fx-background-color: #e0f7fa;
+    -fx-border-color: #0891b2;
+}
 .field-label {
     -fx-text-fill: #5ea8a4;
     -fx-font-size: 13px;
