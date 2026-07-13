@@ -27,7 +27,7 @@ public class LoginController {
     void initialize() {
         if (particleCanvas != null) {
             particleText = new ParticleTextCanvas(
-                    460, 160,
+                    460, 190,
                     new String[]{"BMI", "HEALTH", "TRACKER", "FIT", "LIFE"});
             particlePane.getChildren().clear();
             particlePane.getChildren().add(particleText);

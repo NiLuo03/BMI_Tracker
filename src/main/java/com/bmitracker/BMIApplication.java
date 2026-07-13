@@ -12,7 +12,7 @@ public class BMIApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-        Scene scene = new Scene(loader.load(), 460, 500);
+        Scene scene = new Scene(loader.load(), 460, 520);
         scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
         stage.setTitle("BMI 体质评估与预测系统");
         stage.setScene(scene);

@@ -82,7 +82,7 @@ public class ParticleTextCanvas extends Canvas {
             @Override
             public void handle(long now) {
                 frameCount++;
-                gc.setFill(Color.color(0.04, 0.04, 0.06, 0.15));
+                gc.setFill(Color.color(0.04, 0.04, 0.06, 0.08));
                 gc.fillRect(0, 0, getWidth(), getHeight());
 
                 for (int i = particles.size() - 1; i >= 0; i--) {
@@ -108,7 +108,7 @@ public class ParticleTextCanvas extends Canvas {
         Canvas offCanvas = new Canvas(getWidth(), getHeight());
         GraphicsContext ctx = offCanvas.getGraphicsContext2D();
         ctx.setFill(Color.WHITE);
-        ctx.setFont(Font.font("System", FontWeight.BOLD, 80));
+        ctx.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 100));
         ctx.setTextAlign(TextAlignment.CENTER);
         ctx.setTextBaseline(VPos.CENTER);
         ctx.fillText(word, getWidth() / 2, getHeight() / 2);
@@ -118,7 +118,7 @@ public class ParticleTextCanvas extends Canvas {
         WritableImage snapshot = offCanvas.snapshot(params, null);
         PixelReader reader = snapshot.getPixelReader();
 
-        int step = 6;
+        int step = 4;
         currentColor = randomColor();
 
         for (Particle p : particles) p.kill(getWidth(), getHeight());
@@ -126,7 +126,7 @@ public class ParticleTextCanvas extends Canvas {
         List<int[]> coords = new ArrayList<>();
         for (int y = 0; y < getHeight(); y += step) {
             for (int x = 0; x < getWidth(); x += step) {
-                if (reader.getColor(x, y).getOpacity() > 0.3) {
+                if (reader.getColor(x, y).getOpacity() > 0.2) {
                     coords.add(new int[]{x, y});
                 }
             }
@@ -144,9 +144,9 @@ public class ParticleTextCanvas extends Canvas {
                 p = new Particle();
                 p.x = getWidth() / 2 + (Math.random() - 0.5) * 300;
                 p.y = getHeight() / 2 + (Math.random() - 0.5) * 200;
-                p.maxSpeed = Math.random() * 3.5 + 2.5;
-                p.size = Math.random() * 5 + 3;
-                p.colorBlendRate = Math.random() * 0.015 + 0.003;
+                p.maxSpeed = Math.random() * 3 + 2;
+                p.size = Math.random() * 3 + 2;
+                p.colorBlendRate = Math.random() * 0.01 + 0.002;
                 particles.add(p);
             }
             p.startColor = Color.color(

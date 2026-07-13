@@ -11,7 +11,7 @@
 
     <!-- 粒子动效 -->
     <StackPane fx:id="particlePane" style="-fx-background-color: #0a0a0f;">
-        <Canvas fx:id="particleCanvas" width="460" height="160"/>
+        <Canvas fx:id="particleCanvas" width="460" height="190"/>
     </StackPane>
 
     <!-- 表单 -->
