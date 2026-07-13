@@ -31,7 +31,7 @@ public class ChangePasswordController {
             try {
                 Stage stage = (Stage) oldPwdField.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-                Scene scene = new Scene(loader.load(), 460, 420);
+                Scene scene = new Scene(loader.load(), 1200, 800);
                 scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
                 stage.setScene(scene);
                 stage.centerOnScreen();

@@ -27,7 +27,7 @@ public class LoginController {
     void initialize() {
         if (particleCanvas != null) {
             particleText = new ParticleTextCanvas(
-                    460, 190,
+                    660, 800,
                     new String[]{"BMI", "HEALTH", "TRACKER", "FIT", "LIFE"});
             particlePane.getChildren().clear();
             particlePane.getChildren().add(particleText);
@@ -71,7 +71,7 @@ public class LoginController {
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));
-            Scene scene = new Scene(loader.load(), 460, 500);
+            Scene scene = new Scene(loader.load(), 1200, 800);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
             stage.centerOnScreen();

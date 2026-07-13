@@ -64,7 +64,7 @@ public class MainController {
         try {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Scene scene = new Scene(loader.load(), 460, 520);
+            Scene scene = new Scene(loader.load(), 1200, 800);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
             stage.setResizable(false);

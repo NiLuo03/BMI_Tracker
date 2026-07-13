@@ -108,7 +108,7 @@ public class ParticleTextCanvas extends Canvas {
         Canvas offCanvas = new Canvas(getWidth(), getHeight());
         GraphicsContext ctx = offCanvas.getGraphicsContext2D();
         ctx.setFill(Color.WHITE);
-        ctx.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 100));
+        ctx.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 140));
         ctx.setTextAlign(TextAlignment.CENTER);
         ctx.setTextBaseline(VPos.CENTER);
         ctx.fillText(word, getWidth() / 2, getHeight() / 2);

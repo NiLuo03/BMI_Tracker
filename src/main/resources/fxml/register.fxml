@@ -5,29 +5,56 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.bmitracker.controller.RegisterController"
-      style="-fx-background-color: #f0fdfa;">
-    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.bmitracker.controller.RegisterController"
+            style="-fx-background-color: #0a0a0f;">
 
-    <Label text="用户注册" textFill="#d0c8f0">
-        <font><Font size="20.0" name="System Bold"/></font>
-    </Label>
-    <VBox.margin><Insets bottom="5.0"/></VBox.margin>
+    <left>
+        <StackPane style="-fx-background-color: #0a0a0f;" prefWidth="660">
+            <VBox alignment="CENTER" spacing="4" maxWidth="400">
+                <Label text="加入我们" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
+                <Label text="创建您的账户，开始科学管理健康" style="-fx-font-size: 15px; -fx-text-fill: rgba(255,255,255,0.40);"/>
+                <VBox.margin><Insets bottom="30"/></VBox.margin>
+            </VBox>
+        </StackPane>
+    </left>
 
-    <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280" styleClass="text-field-dark"/>
-    <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280" styleClass="text-field-dark"/>
-    <PasswordField fx:id="confirmField" promptText="请再次输入密码" maxWidth="280" styleClass="text-field-dark"/>
-    <TextField fx:id="ageField" promptText="请输入年龄" maxWidth="280" styleClass="text-field-dark"/>
+    <center>
+        <StackPane style="-fx-background-color: #0a0a0f;">
+            <VBox alignment="CENTER" spacing="16" maxWidth="380">
+                <VBox style="-fx-background-color: rgba(255,255,255,0.06);
+                    -fx-background-radius: 16px;
+                    -fx-border-color: rgba(255,255,255,0.10);
+                    -fx-border-width: 1px;
+                    -fx-border-radius: 16px;
+                    -fx-padding: 36px 32px;" spacing="12">
 
-    <HBox spacing="20" maxWidth="280" alignment="CENTER">
-        <RadioButton fx:id="maleRadio" text="男" selected="true" styleClass="radio-button-dark"/>
-        <RadioButton fx:id="femaleRadio" text="女" styleClass="radio-button-dark"/>
-    </HBox>
+                    <VBox spacing="4" alignment="CENTER">
+                        <Label text="用户注册" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
+                        <Label text="创建您的 BMI 追踪账户" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.40);"/>
+                        <VBox.margin><Insets bottom="4"/></VBox.margin>
+                    </VBox>
 
-    <Button text="注 册" onAction="#handleRegister" maxWidth="280" styleClass="btn-primary">
-        <VBox.margin><Insets top="8.0"/></VBox.margin>
-    </Button>
+                    <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
+                    <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
+                    <PasswordField fx:id="confirmField" promptText="确认密码" styleClass="text-field-login"/>
+                    <TextField fx:id="ageField" promptText="年龄" styleClass="text-field-login"/>
 
-    <Hyperlink text="已有账号？去登录" onAction="#goToLogin" styleClass="hyperlink-dark"/>
-</VBox>
+                    <HBox spacing="20" alignment="CENTER">
+                        <RadioButton fx:id="maleRadio" text="男" selected="true"
+                                     style="-fx-text-fill: rgba(255,255,255,0.7);"/>
+                        <RadioButton fx:id="femaleRadio" text="女"
+                                     style="-fx-text-fill: rgba(255,255,255,0.7);"/>
+                    </HBox>
+
+                    <Button text="注 册" onAction="#handleRegister" styleClass="btn-login" maxWidth="Infinity">
+                        <VBox.margin><Insets top="4"/></VBox.margin>
+                    </Button>
+
+                    <Hyperlink text="已有账号？去登录" onAction="#goToLogin" styleClass="hyperlink-login"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+</BorderPane>
