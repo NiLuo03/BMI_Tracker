@@ -32,8 +32,9 @@ public class LoginController {
             try {
                 Stage stage = (Stage) userNameField.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-                Scene scene = new Scene(loader.load(), 900, 600);
-                stage.setTitle("BMI体质评估与预测系统 - 主界面");
+                Scene scene = new Scene(loader.load(), 1200, 800);
+                scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+                stage.setTitle("BMI 体质评估与预测系统 - 主界面");
                 stage.setScene(scene);
                 stage.setResizable(true);
                 stage.centerOnScreen();
@@ -50,7 +51,9 @@ public class LoginController {
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));
-            stage.setScene(new Scene(loader.load(), 400, 450));
+            Scene scene = new Scene(loader.load(), 460, 500);
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
             showAlert("页面加载失败");

@@ -7,34 +7,27 @@
 
 <VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.RegisterController"
-      style="-fx-background-color: #ecf0f1;">
+      style="-fx-background-color: #0d0f1a;">
     <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
 
-    <Label text="用户注册" textFill="#2c3e50">
+    <Label text="用户注册" textFill="#d0c8f0">
         <font><Font size="20.0" name="System Bold"/></font>
     </Label>
-
     <VBox.margin><Insets bottom="5.0"/></VBox.margin>
 
-    <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280"
-               style="-fx-padding: 8px;"/>
-    <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280"
-                   style="-fx-padding: 8px;"/>
-    <PasswordField fx:id="confirmField" promptText="请再次输入密码" maxWidth="280"
-                   style="-fx-padding: 8px;"/>
-    <TextField fx:id="ageField" promptText="请输入年龄" maxWidth="280"
-               style="-fx-padding: 8px;"/>
+    <TextField fx:id="userNameField" promptText="请输入账号" maxWidth="280" styleClass="text-field-dark"/>
+    <PasswordField fx:id="passwordField" promptText="请输入密码" maxWidth="280" styleClass="text-field-dark"/>
+    <PasswordField fx:id="confirmField" promptText="请再次输入密码" maxWidth="280" styleClass="text-field-dark"/>
+    <TextField fx:id="ageField" promptText="请输入年龄" maxWidth="280" styleClass="text-field-dark"/>
 
     <HBox spacing="20" maxWidth="280" alignment="CENTER">
-        <RadioButton fx:id="maleRadio" text="男" selected="true"/>
-        <RadioButton fx:id="femaleRadio" text="女"/>
+        <RadioButton fx:id="maleRadio" text="男" selected="true" styleClass="radio-button-dark"/>
+        <RadioButton fx:id="femaleRadio" text="女" styleClass="radio-button-dark"/>
     </HBox>
 
-    <Button text="注 册" onAction="#handleRegister" maxWidth="280"
-            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 0;">
+    <Button text="注 册" onAction="#handleRegister" maxWidth="280" styleClass="btn-primary">
         <VBox.margin><Insets top="8.0"/></VBox.margin>
     </Button>
 
-    <Hyperlink text="已有账号？去登录" onAction="#goToLogin"
-               style="-fx-text-fill: #2980b9;"/>
+    <Hyperlink text="已有账号？去登录" onAction="#goToLogin" styleClass="hyperlink-dark"/>
 </VBox>

@@ -69,7 +69,9 @@ public class ProfileController {
         try {
             Stage stage = (Stage) userIdLabel.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/change_password.fxml"));
-            stage.setScene(new Scene(loader.load(), 400, 350));
+            Scene scene = new Scene(loader.load(), 460, 380);
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
             showAlert("页面加载失败");

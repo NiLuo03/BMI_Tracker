@@ -31,7 +31,9 @@ public class ChangePasswordController {
             try {
                 Stage stage = (Stage) oldPwdField.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-                stage.setScene(new Scene(loader.load(), 400, 350));
+                Scene scene = new Scene(loader.load(), 460, 420);
+                scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+                stage.setScene(scene);
                 stage.centerOnScreen();
             } catch (Exception e) {
                 showAlert("页面加载失败");
@@ -46,7 +48,9 @@ public class ChangePasswordController {
         try {
             Stage stage = (Stage) oldPwdField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profile.fxml"));
-            stage.setScene(new Scene(loader.load(), 600, 400));
+            Scene scene = new Scene(loader.load(), 600, 400);
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
             showAlert("页面加载失败");

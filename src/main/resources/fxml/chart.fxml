@@ -8,15 +8,13 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.ChartController"
-      style="-fx-background-color: #ecf0f1;">
+      style="-fx-background-color: #0d0f1a;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="BMI 折线图" textFill="#2c3e50">
-        <font><Font size="20.0" name="System Bold"/></font>
-    </Label>
-    <Label fx:id="infoLabel" textFill="#7f8c8d"/>
+    <Label text="BMI 折线图" styleClass="label-heading"/>
+    <Label fx:id="infoLabel" styleClass="label-subheading"/>
 
-    <LineChart fx:id="chart" prefHeight="400" prefWidth="600" VBox.vgrow="ALWAYS">
+    <LineChart fx:id="chart" prefHeight="400" prefWidth="600" VBox.vgrow="ALWAYS" styleClass="chart-dark">
         <xAxis><NumberAxis label="天数序号"/></xAxis>
         <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
     </LineChart>

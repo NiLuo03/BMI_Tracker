@@ -5,30 +5,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.BmiController"
-      style="-fx-background-color: #ecf0f1;">
+      style="-fx-background-color: #0d0f1a;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="BMI 计算与记录" textFill="#2c3e50">
-        <font><Font size="20.0" name="System Bold"/></font>
-    </Label>
-    <Label text="输入身高体重，计算并保存您的 BMI 数据" textFill="#7f8c8d"/>
+    <Label text="BMI 计算与记录" styleClass="label-heading"/>
+    <Label text="输入身高体重，计算并保存您的 BMI 数据" styleClass="label-subheading"/>
+    <Separator styleClass="separator-dark"/>
 
-    <Separator/>
-
-    <VBox spacing="10" maxWidth="350">
-        <HBox spacing="10">
-            <Label text="身高(cm)：" prefWidth="80"/>
-            <TextField fx:id="heightField" promptText="请输入身高" prefWidth="200"/>
+    <VBox spacing="12" maxWidth="380">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="身高(cm)" prefWidth="80" style="-fx-text-fill: #a0a0d0; -fx-font-size: 13px;"/>
+            <TextField fx:id="heightField" promptText="请输入身高" prefWidth="200" styleClass="text-field-dark"/>
         </HBox>
-        <HBox spacing="10">
-            <Label text="体重(kg)：" prefWidth="80"/>
-            <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200"/>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="体重(kg)" prefWidth="80" style="-fx-text-fill: #a0a0d0; -fx-font-size: 13px;"/>
+            <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200" styleClass="text-field-dark"/>
         </HBox>
-        <Button text="记录并计算 BMI" onAction="#handleCalculate" maxWidth="280"
-                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 15px; -fx-padding: 10px 0;">
-            <VBox.margin><Insets top="10.0"/></VBox.margin>
+        <Button text="📊 记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
+            <VBox.margin><Insets top="8.0"/></VBox.margin>
         </Button>
     </VBox>
 </VBox>

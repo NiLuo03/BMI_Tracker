@@ -7,26 +7,24 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodCompareController"
-      style="-fx-background-color: #ecf0f1;">
+      style="-fx-background-color: #0d0f1a;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="食物对比" textFill="#2c3e50">
-        <font><Font size="20.0" name="System Bold"/></font>
-    </Label>
-    <Label text="选择 2~3 种食物，横向对比营养成分" textFill="#7f8c8d"/>
+    <Label text="食物对比" styleClass="label-heading"/>
+    <Label text="选择 2~3 种食物，横向对比营养成分" styleClass="label-subheading"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <ComboBox fx:id="foodCombo1" promptText="食物1" prefWidth="150"/>
-        <ComboBox fx:id="foodCombo2" promptText="食物2" prefWidth="150"/>
-        <ComboBox fx:id="foodCombo3" promptText="食物3（可选）" prefWidth="150"/>
+        <ComboBox fx:id="foodCombo1" promptText="食物1" prefWidth="150" styleClass="combo-box-dark"/>
+        <ComboBox fx:id="foodCombo2" promptText="食物2" prefWidth="150" styleClass="combo-box-dark"/>
+        <ComboBox fx:id="foodCombo3" promptText="食物3（可选）" prefWidth="150" styleClass="combo-box-dark"/>
     </HBox>
 
-    <TableView fx:id="compareTable" VBox.vgrow="ALWAYS">
+    <TableView fx:id="compareTable" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
         <columns>
-            <TableColumn fx:id="metricColumn" text="营养指标" prefWidth="120" style="-fx-alignment: CENTER;"/>
-            <TableColumn fx:id="food1Column" text="食物1" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="food2Column" text="食物2" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="food3Column" text="食物3" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="metricColumn" text="营养指标" prefWidth="120"/>
+            <TableColumn fx:id="food1Column" text="食物1" prefWidth="120"/>
+            <TableColumn fx:id="food2Column" text="食物2" prefWidth="120"/>
+            <TableColumn fx:id="food3Column" text="食物3" prefWidth="120"/>
         </columns>
     </TableView>
 </VBox>

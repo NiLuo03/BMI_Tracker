@@ -1,0 +1,302 @@
+/* ====== BMI 体质评估系统 - 赛博暗黑主题 ====== */
+
+/* --- 根背景 --- */
+.root {
+    -fx-background-color: #0d0f1a;
+    -fx-font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    -fx-text-fill: #e0e0f0;
+}
+
+/* --- 侧边导航栏 --- */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #121430, #0e1028);
+    -fx-border-color: #1e2050;
+    -fx-border-width: 0 1px 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(80,60,180,0.15), 8, 0, 2, 0);
+}
+
+.sidebar-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c0b0ff;
+    -fx-padding: 0 0 2 0;
+}
+
+.sidebar-subtitle {
+    -fx-font-size: 10px;
+    -fx-text-fill: #6e6ea0;
+    -fx-padding: 0 0 15 0;
+}
+
+/* --- 导航按钮 --- */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9090c0;
+    -fx-font-size: 13px;
+    -fx-padding: 10px 16px;
+    -fx-alignment: CENTER-LEFT;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+.nav-button:hover {
+    -fx-background-color: rgba(130,110,220,0.15);
+    -fx-text-fill: #c8b8ff;
+}
+.nav-button:pressed {
+    -fx-background-color: rgba(130,110,220,0.25);
+}
+.nav-button:selected {
+    -fx-background-color: rgba(130,110,220,0.2);
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #8868e0;
+    -fx-border-width: 0 0 0 3px;
+    -fx-border-radius: 3px;
+}
+
+/* --- 退出按钮 --- */
+.nav-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cc6677;
+    -fx-font-size: 12px;
+    -fx-padding: 8px 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+.nav-logout:hover {
+    -fx-background-color: rgba(200,60,70,0.12);
+    -fx-text-fill: #ff7080;
+}
+
+/* --- 顶栏 --- */
+.top-bar {
+    -fx-background-color: rgba(18,20,48,0.85);
+    -fx-border-color: #1e2050;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 0;
+}
+.top-bar-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d0c8f0;
+}
+.top-bar-avatar {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #6040d0, #3020a0);
+    -fx-background-radius: 50%;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* --- 内容区域 --- */
+.content-area {
+    -fx-background-color: #0d0f1a;
+    -fx-padding: 20px;
+}
+
+/* --- 卡片 --- */
+.card {
+    -fx-background-color: rgba(22,24,50,0.7);
+    -fx-background-radius: 14px;
+    -fx-border-color: rgba(100,80,200,0.15);
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(60,40,160,0.1), 12, 0, 0, 4);
+    -fx-padding: 18px;
+}
+.card-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c8c0ee;
+    -fx-padding: 0 0 10 0;
+}
+.card-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6a6ab0;
+}
+
+/* --- 主按钮：紫蓝渐变 --- */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #6a40d0, #5070e0);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 24px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(100,60,220,0.3), 8, 0, 0, 2);
+}
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #7a50e0, #6080f0);
+    -fx-effect: dropshadow(gaussian, rgba(120,80,240,0.45), 10, 0, 0, 3);
+}
+.btn-primary:pressed {
+    -fx-background-color: linear-gradient(to right, #5a30c0, #4060d0);
+}
+
+/* --- 次要按钮 --- */
+.btn-secondary {
+    -fx-background-color: rgba(100,80,200,0.12);
+    -fx-text-fill: #b0b0e0;
+    -fx-font-size: 13px;
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(120,100,220,0.2);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+.btn-secondary:hover {
+    -fx-background-color: rgba(120,100,220,0.22);
+    -fx-text-fill: #d0c8f0;
+}
+
+/* --- 输入框 --- */
+.text-field-dark {
+    -fx-background-color: rgba(30,32,60,0.6);
+    -fx-text-fill: #e0e0f0;
+    -fx-prompt-text-fill: #5555a0;
+    -fx-font-size: 13px;
+    -fx-padding: 10px 14px;
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(100,80,200,0.2);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+}
+.text-field-dark:focused {
+    -fx-border-color: #7060d0;
+    -fx-background-color: rgba(35,38,70,0.8);
+    -fx-effect: dropshadow(gaussian, rgba(80,60,200,0.2), 6, 0, 0, 2);
+}
+
+/* --- 表格 --- */
+.table-view-dark {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(100,80,200,0.1);
+    -fx-border-radius: 12px;
+}
+.table-view-dark .column-header-background {
+    -fx-background-color: rgba(25,28,55,0.9);
+    -fx-background-radius: 10px 10px 0 0;
+}
+.table-view-dark .column-header {
+    -fx-background-color: transparent;
+}
+.table-view-dark .column-header .label {
+    -fx-text-fill: #a0a0d0;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.table-view-dark .cell {
+    -fx-text-fill: #d0d0f0;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER;
+}
+.table-view-dark .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(80,60,180,0.06);
+    -fx-border-width: 0 0 1px 0;
+}
+.table-view-dark .table-row-cell:odd {
+    -fx-background-color: rgba(20,22,45,0.4);
+}
+.table-view-dark .table-row-cell:hover {
+    -fx-background-color: rgba(100,80,200,0.12);
+}
+
+/* --- 分割线 --- */
+.separator-dark {
+    -fx-background-color: rgba(100,80,200,0.15);
+}
+
+/* --- 标签 --- */
+.label-heading {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d0c8f0;
+}
+.label-subheading {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7070b0;
+}
+.label-accent {
+    -fx-text-fill: #a088ff;
+    -fx-font-weight: bold;
+}
+
+/* --- 图表 --- */
+.chart-dark {
+    -fx-background-color: transparent;
+}
+.chart-dark .chart-title {
+    -fx-text-fill: #c0c0e0;
+}
+.chart-dark .axis {
+    -fx-tick-label-fill: #7070b0;
+}
+.chart-dark .axis-label {
+    -fx-text-fill: #9090c0;
+}
+.chart-dark .chart-plot-background {
+    -fx-background-color: rgba(20,22,48,0.5);
+}
+.chart-dark .chart-vertical-grid-lines {
+    -fx-stroke: rgba(80,60,180,0.08);
+}
+.chart-dark .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(80,60,180,0.08);
+}
+
+/* --- 组合框 --- */
+.combo-box-dark {
+    -fx-background-color: rgba(30,32,60,0.7);
+    -fx-text-fill: #d0d0f0;
+    -fx-font-size: 13px;
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(100,80,200,0.2);
+    -fx-border-radius: 8px;
+}
+.combo-box-dark .list-cell {
+    -fx-text-fill: #d0d0f0;
+    -fx-background-color: transparent;
+}
+.combo-box-dark .list-view {
+    -fx-background-color: #1a1c38;
+}
+
+/* --- 复选框 --- */
+.radio-button-dark {
+    -fx-text-fill: #c0c0e0;
+    -fx-font-size: 13px;
+}
+
+/* --- 超链接 --- */
+.hyperlink-dark {
+    -fx-text-fill: #9080e0;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+}
+.hyperlink-dark:hover {
+    -fx-text-fill: #b0a0f0;
+}
+
+/* --- 进度条 --- */
+.progress-bar-dark .bar {
+    -fx-background-color: linear-gradient(to right, #6040d0, #5080e0);
+    -fx-background-radius: 6px;
+}
+.progress-bar-dark .track {
+    -fx-background-color: rgba(40,42,70,0.5);
+    -fx-background-radius: 6px;
+}
+
+/* --- 毛玻璃面板 --- */
+.glass-panel {
+    -fx-background-color: rgba(22,24,50,0.5);
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(120,100,220,0.15);
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(60,40,160,0.08), 15, 0, 0, 5);
+}

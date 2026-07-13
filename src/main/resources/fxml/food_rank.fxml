@@ -7,26 +7,24 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodRankController"
-      style="-fx-background-color: #ecf0f1;">
+      style="-fx-background-color: #0d0f1a;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="食物榜单（低卡推荐）" textFill="#2c3e50">
-        <font><Font size="20.0" name="System Bold"/></font>
-    </Label>
-    <Label text="按分类查看低卡食物排名" textFill="#7f8c8d"/>
+    <Label text="食物榜单" styleClass="label-heading"/>
+    <Label text="按分类查看低卡食物排名" styleClass="label-subheading"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="选择分类："/>
-        <ComboBox fx:id="categoryCombo" promptText="请选择分类" prefWidth="150"/>
+        <Label text="选择分类" style="-fx-text-fill: #9090c0;"/>
+        <ComboBox fx:id="categoryCombo" promptText="请选择分类" prefWidth="150" styleClass="combo-box-dark"/>
     </HBox>
 
-    <TableView fx:id="rankTable" VBox.vgrow="ALWAYS">
+    <TableView fx:id="rankTable" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
         <columns>
             <TableColumn fx:id="colName" text="食物" prefWidth="130"/>
-            <TableColumn fx:id="colCal" text="热量(大卡/100g)" prefWidth="130" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="colProtein" text="蛋白质(g)" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="colFat" text="脂肪(g)" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
-            <TableColumn fx:id="colCarb" text="碳水(g)" prefWidth="100" style="-fx-alignment: CENTER-RIGHT;"/>
+            <TableColumn fx:id="colCal" text="热量(大卡/100g)" prefWidth="130"/>
+            <TableColumn fx:id="colProtein" text="蛋白质(g)" prefWidth="100"/>
+            <TableColumn fx:id="colFat" text="脂肪(g)" prefWidth="100"/>
+            <TableColumn fx:id="colCarb" text="碳水(g)" prefWidth="100"/>
         </columns>
     </TableView>
 </VBox>
