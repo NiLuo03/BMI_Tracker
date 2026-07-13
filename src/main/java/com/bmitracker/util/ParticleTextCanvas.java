@@ -37,11 +37,11 @@ public class ParticleTextCanvas extends Canvas {
             double dx = targetX - x;
             double dy = targetY - y;
             double dist = Math.sqrt(dx * dx + dy * dy) + 0.001;
-            double mult = dist < 80 ? dist / 80 : 1;
+            double mult = dist < 150 ? dist / 150 : 1;
             double fx = (dx / dist) * maxSpeed * mult - vx;
             double fy = (dy / dist) * maxSpeed * mult - vy;
-            vx += fx * 0.04;
-            vy += fy * 0.04;
+            vx += fx * 0.015;
+            vy += fy * 0.015;
             x += vx;
             y += vy;
         }
@@ -105,7 +105,7 @@ public class ParticleTextCanvas extends Canvas {
             @Override
             public void handle(long now) {
                 frameCount++;
-                gc.setFill(Color.color(0.04, 0.04, 0.06, 0.08));
+                gc.setFill(Color.color(0.04, 0.04, 0.06, 0.04));
                 gc.fillRect(0, 0, getWidth(), getHeight());
 
                 for (int i = particles.size() - 1; i >= 0; i--) {
@@ -132,7 +132,7 @@ public class ParticleTextCanvas extends Canvas {
                     gc.fillOval(a.x - a.size / 2, a.y - a.size / 2, a.size, a.size);
                 }
 
-                if (frameCount % 280 == 0) {
+                if (frameCount % 400 == 0) {
                     wordIndex = (wordIndex + 1) % words.length;
                     nextWord(words[wordIndex]);
                 }
@@ -181,7 +181,7 @@ public class ParticleTextCanvas extends Canvas {
                 p = new Particle();
                 p.x = getWidth() / 2 + (Math.random() - 0.5) * 300;
                 p.y = getHeight() / 2 + (Math.random() - 0.5) * 200;
-                p.maxSpeed = Math.random() * 3 + 2;
+                p.maxSpeed = Math.random() * 1.5 + 1;
                 p.size = Math.random() * 3 + 2;
                 p.colorBlendRate = Math.random() * 0.01 + 0.002;
                 particles.add(p);
