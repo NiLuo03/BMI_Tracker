@@ -29,7 +29,7 @@
 /* --- 导航按钮 --- */
 .nav-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #90b4c8;
+    -fx-text-fill: #a0c4b8;
     -fx-font-size: 13px;
     -fx-padding: 10px 16px;
     -fx-alignment: CENTER-LEFT;

@@ -19,7 +19,7 @@
             <Label text="⚡ BMI 体质评估" styleClass="sidebar-title"/>
             <Label text="与预测系统" styleClass="sidebar-subtitle"/>
 
-            <Separator style="-fx-background-color: rgba(120,100,220,0.12);">
+            <Separator style="-fx-background-color: rgba(46,204,113,0.12);">
                 <VBox.margin><Insets top="5" bottom="15"/></VBox.margin>
             </Separator>
 
@@ -35,7 +35,7 @@
 
             <!-- 底部：个人信息 + 退出 -->
             <VBox VBox.vgrow="ALWAYS"/>
-            <Separator style="-fx-background-color: rgba(120,100,220,0.12);">
+            <Separator style="-fx-background-color: rgba(46,204,113,0.12);">
                 <VBox.margin><Insets bottom="10"/></VBox.margin>
             </Separator>
             <Button text="👤  个人信息" onAction="#showProfile" styleClass="nav-button" maxWidth="Infinity"/>
@@ -62,9 +62,9 @@
                 <StackPane fx:id="contentPane">
                     <!-- 默认首页：仪表盘卡片布局 -->
                     <ScrollPane fitToWidth="true" fitToHeight="true"
-                                style="-fx-background: #0d0f1a; -fx-background-color: #0d0f1a;">
+                                style="-fx-background: #f0f4f3; -fx-background-color: #f0f4f3;">
                         <content>
-                            <VBox spacing="20" style="-fx-background-color: #0d0f1a;">
+                            <VBox spacing="20" style="-fx-background-color: #f0f4f3;">
                                 <padding><Insets top="20" right="24" bottom="40" left="24"/></padding>
 
                                 <!-- 欢迎横幅 -->

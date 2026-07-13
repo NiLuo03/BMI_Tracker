@@ -10,10 +10,10 @@
       style="-fx-background-color: #f0f4f3;">
     <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
 
-    <Label text="⚡ BMI 体质评估与预测系统" textFill="#d0c8f0">
+    <Label text="⚡ BMI 体质评估与预测系统" textFill="#1a6b3c">
         <font><Font size="18.0" name="System Bold"/></font>
     </Label>
-    <Label text="用户登录" textFill="#7070b0">
+    <Label text="用户登录" textFill="#5a7068">
         <font><Font size="13.0"/></font>
     </Label>
     <VBox.margin><Insets bottom="5.0"/></VBox.margin>
