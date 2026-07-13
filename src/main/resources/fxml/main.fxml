@@ -69,8 +69,7 @@
 
                                 <!-- 欢迎横幅 -->
                                 <VBox styleClass="banner-gradient" spacing="10">
-                                    <Label text="欢迎回来 ⚡"
-                                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #d8d0ff;"/>
+                                    <Label text="欢迎回来 ⚡" styleClass="banner-title"/>
                                     <Label text="查看您的 BMI 数据趋势、获取 AI 膳食推荐、对比食物营养"
                                            styleClass="card-subtitle"/>
                                     <HBox spacing="12">

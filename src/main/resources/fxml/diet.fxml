@@ -7,7 +7,7 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.DietController"
-      style="-fx-background-color: #0d0f1a;">
+      style="-fx-background-color: #f0f4f3;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="AI 膳食推荐" styleClass="label-heading"/>
@@ -17,18 +17,18 @@
 
     <TitledPane text="早餐" expanded="true" styleClass="glass-panel">
         <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"
-               wrapText="true" style="-fx-text-fill: #c0c0e0; -fx-padding: 14px;" maxWidth="500"/>
+               wrapText="true" style="-fx-text-fill: #3d4f48; -fx-padding: 14px;" maxWidth="500"/>
     </TitledPane>
     <TitledPane text="午餐" expanded="true" styleClass="glass-panel">
         <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"
-               wrapText="true" style="-fx-text-fill: #c0c0e0; -fx-padding: 14px;" maxWidth="500"/>
+               wrapText="true" style="-fx-text-fill: #3d4f48; -fx-padding: 14px;" maxWidth="500"/>
     </TitledPane>
     <TitledPane text="晚餐" expanded="true" styleClass="glass-panel">
         <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"
-               wrapText="true" style="-fx-text-fill: #c0c0e0; -fx-padding: 14px;" maxWidth="500"/>
+               wrapText="true" style="-fx-text-fill: #3d4f48; -fx-padding: 14px;" maxWidth="500"/>
     </TitledPane>
     <TitledPane text="总热量" expanded="true" styleClass="glass-panel">
         <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"
-               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #88cc88; -fx-padding: 10px;"/>
+               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #27ae60; -fx-padding: 10px;"/>
     </TitledPane>
 </VBox>

@@ -7,14 +7,14 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodRankController"
-      style="-fx-background-color: #0d0f1a;">
+      style="-fx-background-color: #f0f4f3;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="食物榜单" styleClass="label-heading"/>
     <Label text="按分类查看低卡食物排名" styleClass="label-subheading"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="选择分类" style="-fx-text-fill: #9090c0;"/>
+        <Label text="选择分类" style="-fx-text-fill: #7f8c8d;"/>
         <ComboBox fx:id="categoryCombo" promptText="请选择分类" prefWidth="150" styleClass="combo-box-dark"/>
     </HBox>
 

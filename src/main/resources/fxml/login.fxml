@@ -7,7 +7,7 @@
 
 <VBox alignment="CENTER" spacing="14" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.LoginController"
-      style="-fx-background-color: #0d0f1a;">
+      style="-fx-background-color: #f0f4f3;">
     <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
 
     <Label text="⚡ BMI 体质评估与预测系统" textFill="#d0c8f0">

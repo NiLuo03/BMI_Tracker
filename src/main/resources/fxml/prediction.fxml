@@ -8,7 +8,7 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.PredictionController"
-      style="-fx-background-color: #0d0f1a;">
+      style="-fx-background-color: #f0f4f3;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="趋势预测" styleClass="label-heading"/>
@@ -22,6 +22,6 @@
         </LineChart>
     </StackPane>
 
-    <Label fx:id="equationLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #d0c8f0;" wrapText="true"/>
+    <Label fx:id="equationLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" wrapText="true"/>
     <Label fx:id="warningLabel" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 </VBox>
