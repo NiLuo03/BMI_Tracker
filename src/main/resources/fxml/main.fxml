@@ -4,145 +4,106 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.paint.Color?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.bmitracker.controller.MainController"
             styleClass="root">
 
-    <!-- ====== 左侧导航栏 ====== -->
-    <left>
-        <VBox spacing="6" styleClass="sidebar" prefWidth="190" minWidth="190">
-            <padding><Insets top="20" left="14" right="14" bottom="20"/></padding>
+    <!-- ====== 顶部导航栏 ====== -->
+    <top>
+        <VBox>
+            <!-- Logo行 -->
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
+                <Label text="⚡ BMI 体质评估与预测系统" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a6b3c;">
+                    <padding><Insets right="20"/></padding>
+                </Label>
+                <HBox HBox.hgrow="ALWAYS"/>
+                <Button text="👤 个人信息" onAction="#showProfile" styleClass="btn-secondary"/>
+                <Button text="🚪 退出登录" onAction="#showLogout" styleClass="btn-secondary"/>
+            </HBox>
 
-            <!-- Logo区域 -->
-            <Label text="⚡ BMI 体质评估" styleClass="sidebar-title"/>
-            <Label text="与预测系统" styleClass="sidebar-subtitle"/>
-
-            <Separator style="-fx-background-color: rgba(46,204,113,0.12);">
-                <VBox.margin><Insets top="5" bottom="15"/></VBox.margin>
-            </Separator>
-
-            <!-- 导航菜单 -->
-            <Button text="🏠  首页概览" onAction="#showHome" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="📊  BMI 记录" onAction="#showBmiRecord" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="📋  历史记录" onAction="#showHistory" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="📈  折线图" onAction="#showChart" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="🔮  趋势预测" onAction="#showPrediction" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="🥗  膳食推荐" onAction="#showDiet" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="🍎  食物对比" onAction="#showFood" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="🏆  食物榜单" onAction="#showFoodRank" styleClass="nav-button" maxWidth="Infinity"/>
-
-            <!-- 底部：个人信息 + 退出 -->
-            <VBox VBox.vgrow="ALWAYS"/>
-            <Separator style="-fx-background-color: rgba(46,204,113,0.12);">
-                <VBox.margin><Insets bottom="10"/></VBox.margin>
-            </Separator>
-            <Button text="👤  个人信息" onAction="#showProfile" styleClass="nav-button" maxWidth="Infinity"/>
-            <Button text="🚪  退出登录" onAction="#showLogout" styleClass="nav-logout" maxWidth="Infinity"/>
+            <!-- 功能导航 -->
+            <HBox spacing="4" style="-fx-background-color: #ffffff; -fx-padding: 6px 20px; -fx-border-color: #e0e8e8; -fx-border-width: 0 0 1px 0;">
+                <Button text="🏠 首页" onAction="#showHome" styleClass="nav-button-h"/>
+                <Button text="📊 BMI记录" onAction="#showBmiRecord" styleClass="nav-button-h"/>
+                <Button text="📋 历史记录" onAction="#showHistory" styleClass="nav-button-h"/>
+                <Button text="📈 折线图" onAction="#showChart" styleClass="nav-button-h"/>
+                <Button text="🔮 趋势预测" onAction="#showPrediction" styleClass="nav-button-h"/>
+                <Button text="🥗 膳食推荐" onAction="#showDiet" styleClass="nav-button-h"/>
+                <Button text="🍎 食物对比" onAction="#showFood" styleClass="nav-button-h"/>
+                <Button text="🏆 食物榜单" onAction="#showFoodRank" styleClass="nav-button-h"/>
+                <HBox HBox.hgrow="ALWAYS"/>
+                <Label fx:id="pageTitle" text="首页概览" style="-fx-font-size: 13px; -fx-text-fill: #5a7068;"/>
+            </HBox>
         </VBox>
-    </left>
+    </top>
 
-    <!-- ====== 右侧主区域 ====== -->
+    <!-- ====== 主内容区 ====== -->
     <center>
-        <BorderPane>
-            <!-- 顶部全局导航栏 -->
-            <top>
-                <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
-                    <Label fx:id="pageTitle" text="首页概览" styleClass="top-bar-label"/>
-                    <HBox HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="userLabel" text="用户中心" styleClass="top-bar-label">
-                        <font><Font size="13"/></font>
-                    </Label>
-                </HBox>
-            </top>
+        <StackPane fx:id="contentPane">
+            <ScrollPane fitToWidth="true" fitToHeight="true"
+                        style="-fx-background: #f0f4f3; -fx-background-color: #f0f4f3;">
+                <content>
+                    <VBox spacing="20" style="-fx-background-color: #f0f4f3;">
+                        <padding><Insets top="20" right="24" bottom="40" left="24"/></padding>
 
-            <!-- 主内容区 -->
-            <center>
-                <StackPane fx:id="contentPane">
-                    <!-- 默认首页：仪表盘卡片布局 -->
-                    <ScrollPane fitToWidth="true" fitToHeight="true"
-                                style="-fx-background: #f0f4f3; -fx-background-color: #f0f4f3;">
-                        <content>
-                            <VBox spacing="20" style="-fx-background-color: #f0f4f3;">
-                                <padding><Insets top="20" right="24" bottom="40" left="24"/></padding>
+                        <!-- 欢迎横幅 -->
+                        <VBox styleClass="banner-gradient" spacing="10">
+                            <Label text="欢迎回来 ⚡" styleClass="banner-title"/>
+                            <Label text="查看您的 BMI 数据趋势、获取 AI 膳食推荐、对比食物营养"
+                                   styleClass="card-subtitle"/>
+                            <HBox spacing="12">
+                                <VBox.margin><Insets top="10"/></VBox.margin>
+                                <Button text="📊 开始记录 BMI" onAction="#showBmiRecord" styleClass="btn-primary"/>
+                                <Button text="🔮 查看趋势" onAction="#showPrediction" styleClass="btn-secondary"/>
+                            </HBox>
+                        </VBox>
 
-                                <!-- 欢迎横幅 -->
-                                <VBox styleClass="banner-gradient" spacing="10">
-                                    <Label text="欢迎回来 ⚡" styleClass="banner-title"/>
-                                    <Label text="查看您的 BMI 数据趋势、获取 AI 膳食推荐、对比食物营养"
-                                           styleClass="card-subtitle"/>
-                                    <HBox spacing="12">
-                                        <VBox.margin><Insets top="10"/></VBox.margin>
-                                        <Button text="📊 开始记录 BMI" onAction="#showBmiRecord" styleClass="btn-primary"/>
-                                        <Button text="🔮 查看趋势" onAction="#showPrediction" styleClass="btn-secondary"/>
-                                    </HBox>
-                                </VBox>
-
-                                <!-- 功能卡片区 4列 -->
-                                <HBox spacing="16">
-                                    <!-- 卡片1：BMI 计算 -->
-                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
-                                        <Label text="📊" style="-fx-font-size: 28px;"/>
-                                        <Label text="BMI 计算" styleClass="card-title"/>
-                                        <Label text="输入身高体重，快速评估体质指数" styleClass="card-subtitle"
-                                               wrapText="true"/>
-                                        <Button text="立即计算 →" onAction="#showBmiRecord" styleClass="btn-secondary"
-                                                maxWidth="Infinity"/>
-                                    </VBox>
-
-                                    <!-- 卡片2：趋势预测 -->
-                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
-                                        <Label text="🔮" style="-fx-font-size: 28px;"/>
-                                        <Label text="趋势预测" styleClass="card-title"/>
-                                        <Label text="基于历史数据预测未来 BMI 变化" styleClass="card-subtitle"
-                                               wrapText="true"/>
-                                        <Button text="查看预测 →" onAction="#showPrediction" styleClass="btn-secondary"
-                                                maxWidth="Infinity"/>
-                                    </VBox>
-
-                                    <!-- 卡片3：膳食推荐 -->
-                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
-                                        <Label text="🥗" style="-fx-font-size: 28px;"/>
-                                        <Label text="AI 膳食推荐" styleClass="card-title"/>
-                                        <Label text="智能生成个性化一日三餐方案" styleClass="card-subtitle"
-                                               wrapText="true"/>
-                                        <Button text="生成推荐 →" onAction="#showDiet" styleClass="btn-secondary"
-                                                maxWidth="Infinity"/>
-                                    </VBox>
-
-                                    <!-- 卡片4：食物对比 -->
-                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
-                                        <Label text="🍎" style="-fx-font-size: 28px;"/>
-                                        <Label text="食物参考" styleClass="card-title"/>
-                                        <Label text="对比食物营养、查看低卡排行" styleClass="card-subtitle"
-                                               wrapText="true"/>
-                                        <Button text="查看食物 →" onAction="#showFood" styleClass="btn-secondary"
-                                                maxWidth="Infinity"/>
-                                    </VBox>
-                                </HBox>
-
-                                <!-- 底部信息 -->
-                                <HBox spacing="16">
-                                    <VBox styleClass="card-gradient" spacing="6" HBox.hgrow="ALWAYS">
-                                        <Label text="身体质量指数 (BMI)" styleClass="card-title"/>
-                                        <Label text="BMI = 体重(kg) / 身高(m)²" styleClass="card-subtitle"/>
-                                        <Label text="偏瘦 &lt;18.5 | 正常 18.5-24 | 超重 24-28 | 肥胖 ≥28"
-                                               styleClass="card-subtitle"/>
-                                    </VBox>
-                                    <VBox styleClass="card-gradient" spacing="6" HBox.hgrow="ALWAYS">
-                                        <Label text="温馨提示" styleClass="card-title"/>
-                                        <Label text="• 建议每周至少记录2-3次BMI数据" styleClass="card-subtitle"/>
-                                        <Label text="• 预测功能需要4条以上历史记录" styleClass="card-subtitle"/>
-                                        <Label text="• AI膳食推荐需要 Coze API 密钥" styleClass="card-subtitle"/>
-                                    </VBox>
-                                </HBox>
+                        <!-- 功能卡片区 4列 -->
+                        <HBox spacing="16">
+                            <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                <Label text="📊" style="-fx-font-size: 28px;"/>
+                                <Label text="BMI 计算" styleClass="card-title"/>
+                                <Label text="输入身高体重，快速评估体质指数" styleClass="card-subtitle" wrapText="true"/>
+                                <Button text="立即计算 →" onAction="#showBmiRecord" styleClass="btn-secondary" maxWidth="Infinity"/>
                             </VBox>
-                        </content>
-                    </ScrollPane>
-                </StackPane>
-            </center>
-        </BorderPane>
+                            <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                <Label text="🔮" style="-fx-font-size: 28px;"/>
+                                <Label text="趋势预测" styleClass="card-title"/>
+                                <Label text="基于历史数据预测未来 BMI 变化" styleClass="card-subtitle" wrapText="true"/>
+                                <Button text="查看预测 →" onAction="#showPrediction" styleClass="btn-secondary" maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                <Label text="🥗" style="-fx-font-size: 28px;"/>
+                                <Label text="AI 膳食推荐" styleClass="card-title"/>
+                                <Label text="智能生成个性化一日三餐方案" styleClass="card-subtitle" wrapText="true"/>
+                                <Button text="生成推荐 →" onAction="#showDiet" styleClass="btn-secondary" maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                <Label text="🍎" style="-fx-font-size: 28px;"/>
+                                <Label text="食物参考" styleClass="card-title"/>
+                                <Label text="对比食物营养、查看低卡排行" styleClass="card-subtitle" wrapText="true"/>
+                                <Button text="查看食物 →" onAction="#showFood" styleClass="btn-secondary" maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox spacing="16">
+                            <VBox styleClass="card-gradient" spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="身体质量指数 (BMI)" styleClass="card-title"/>
+                                <Label text="BMI = 体重(kg) / 身高(m)²" styleClass="card-subtitle"/>
+                                <Label text="偏瘦 &lt;18.5 | 正常 18.5-24 | 超重 24-28 | 肥胖 ≥28" styleClass="card-subtitle"/>
+                            </VBox>
+                            <VBox styleClass="card-gradient" spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="温馨提示" styleClass="card-title"/>
+                                <Label text="• 建议每周至少记录2-3次BMI数据" styleClass="card-subtitle"/>
+                                <Label text="• 预测功能需要4条以上历史记录" styleClass="card-subtitle"/>
+                                <Label text="• AI膳食推荐需要 Coze API 密钥" styleClass="card-subtitle"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </StackPane>
     </center>
 
 </BorderPane>

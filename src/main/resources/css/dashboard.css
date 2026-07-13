@@ -48,6 +48,20 @@
     -fx-text-fill: #ffffff;
     -fx-border-color: #2ecc71;
     -fx-border-width: 0 0 0 3px;
+
+/* --- 顶栏水平导航按钮 --- */
+.nav-button-h {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5a7068;
+    -fx-font-size: 12px;
+    -fx-padding: 6px 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+.nav-button-h:hover {
+    -fx-background-color: #e8f5f0;
+    -fx-text-fill: #1a6b3c;
+}
     -fx-border-radius: 3px;
 }
 
