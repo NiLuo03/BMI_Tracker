@@ -10,8 +10,10 @@ import java.time.Duration;
 public class CozeClient {
 
     private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
-    private static final String ENDPOINT_ID = "ep-20260708103037-nv2cq";
+    private static final String ENDPOINT_ID = "ep-20260713112535-75rjx";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
+    private static final int TIMEOUT_SECONDS = 30;
+    private static final int MAX_RETRIES = 2;
 
     public static String getDietRecommendation(int age, int sex, double height, double weight,
                                                 double bmi, String status, String preferences) {
@@ -39,7 +41,7 @@ public class CozeClient {
     private final int maxRetries;
 
     public CozeClient(String apiKey, String model) {
-        this(apiKey, model, API_URL, 3);
+        this(apiKey, model, API_URL, MAX_RETRIES);
     }
 
     public CozeClient(String apiKey, String model, String apiUrl, int maxRetries) {
@@ -62,7 +64,7 @@ public class CozeClient {
                         .uri(URI.create(apiUrl))
                         .header("Content-Type", "application/json")
                         .header("Authorization", "Bearer " + apiKey)
-                        .timeout(Duration.ofSeconds(30))
+                        .timeout(Duration.ofSeconds(TIMEOUT_SECONDS))
                         .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
                         .build();
 
