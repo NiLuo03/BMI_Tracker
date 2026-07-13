@@ -12,6 +12,9 @@ public class DBUtil {
     private static final String USER = "root";
     private static final String PASS = "23456789";
 
+    /** 设为 true 则跳过数据库连接，前端预览模式专用 */
+    public static boolean PREVIEW_MODE = true;
+
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -21,6 +24,9 @@ public class DBUtil {
     }
 
     public static Connection getConnection() throws SQLException {
+        if (PREVIEW_MODE) {
+            throw new SQLException("前端预览模式，已跳过数据库连接");
+        }
         return DriverManager.getConnection(URL, USER, PASS);
     }
 }
