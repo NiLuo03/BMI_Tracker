@@ -17,18 +17,18 @@
 
     <TitledPane text="🌅  早餐" expanded="true" styleClass="meal-panel">
         <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"
-               wrapText="true" style="-fx-text-fill: #3d5e5a; -fx-padding: 14px; -fx-font-size: 13px;" maxWidth="500"/>
+               wrapText="true" styleClass="meal-content" maxWidth="500"/>
     </TitledPane>
     <TitledPane text="☀️  午餐" expanded="true" styleClass="meal-panel">
         <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"
-               wrapText="true" style="-fx-text-fill: #3d5e5a; -fx-padding: 14px; -fx-font-size: 13px;" maxWidth="500"/>
+               wrapText="true" styleClass="meal-content" maxWidth="500"/>
     </TitledPane>
     <TitledPane text="🌙  晚餐" expanded="true" styleClass="meal-panel">
         <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"
-               wrapText="true" style="-fx-text-fill: #3d5e5a; -fx-padding: 14px; -fx-font-size: 13px;" maxWidth="500"/>
+               wrapText="true" styleClass="meal-content" maxWidth="500"/>
     </TitledPane>
     <TitledPane text="📊  总热量" expanded="true" styleClass="meal-panel">
         <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"
-               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #16a34a; -fx-padding: 12px;"/>
+               styleClass="calorie-highlight"/>
     </TitledPane>
 </VBox>

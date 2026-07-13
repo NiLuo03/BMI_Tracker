@@ -12,16 +12,17 @@
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="趋势预测" styleClass="label-heading"/>
+    <Label text="基于最小二乘法线性回归，预测 7 天后您的 BMI 变化趋势" styleClass="label-subheading"/>
 
-    <Button fx:id="predictBtn" text="🔮 开始预测（7天后）" onAction="#handlePredict" styleClass="btn-primary" maxWidth="220"/>
+    <Button fx:id="predictBtn" text="开始预测（7天后）" onAction="#handlePredict" styleClass="btn-primary" maxWidth="240"/>
 
     <StackPane fx:id="chartContainer">
         <LineChart fx:id="chart" prefHeight="380" prefWidth="650" VBox.vgrow="ALWAYS" styleClass="chart-dark">
-            <xAxis><NumberAxis label="天数序号"/></xAxis>
-            <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
+            <xAxis><NumberAxis label="记录序号（天）"/></xAxis>
+            <yAxis><NumberAxis label="BMI 值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
         </LineChart>
     </StackPane>
 
-    <Label fx:id="equationLabel" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" wrapText="true"/>
-    <Label fx:id="warningLabel" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    <Label fx:id="equationLabel" styleClass="equation-label" wrapText="true"/>
+    <Label fx:id="warningLabel" styleClass="warning-label" wrapText="true"/>
 </VBox>

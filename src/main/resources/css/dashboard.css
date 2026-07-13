@@ -234,24 +234,100 @@
 /* --- 图表 --- */
 .chart-dark {
     -fx-background-color: transparent;
+    -fx-padding: 10px;
 }
 .chart-dark .chart-title {
     -fx-text-fill: #134e4a;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
 }
 .chart-dark .axis {
     -fx-tick-label-fill: #5ea8a4;
+    -fx-tick-label-font-size: 11px;
 }
 .chart-dark .axis-label {
     -fx-text-fill: #5ea8a4;
+    -fx-font-size: 12px;
 }
 .chart-dark .chart-plot-background {
-    -fx-background-color: #f5fcfa;
+    -fx-background-color: #f8fffd;
+    -fx-background-radius: 6px;
 }
 .chart-dark .chart-vertical-grid-lines {
-    -fx-stroke: #e6f7f5;
+    -fx-stroke: #d9f2ee;
+    -fx-stroke-dash-array: 4 4;
+    -fx-stroke-width: 0.5px;
 }
 .chart-dark .chart-horizontal-grid-lines {
-    -fx-stroke: #e6f7f5;
+    -fx-stroke: #d9f2ee;
+    -fx-stroke-dash-array: 4 4;
+    -fx-stroke-width: 0.5px;
+}
+.chart-dark .default-color0.chart-series-line {
+    -fx-stroke: #0891b2;
+    -fx-stroke-width: 2.5px;
+}
+.chart-dark .default-color0.chart-line-symbol {
+    -fx-background-color: #0891b2, white;
+    -fx-background-radius: 7px;
+    -fx-padding: 4px;
+}
+.chart-dark .default-color1.chart-series-line {
+    -fx-stroke: #22d3ee;
+    -fx-stroke-width: 1.5px;
+    -fx-stroke-dash-array: 6 4;
+}
+.chart-dark .default-color1.chart-line-symbol {
+    -fx-background-color: #22d3ee, white;
+    -fx-background-radius: 5px;
+    -fx-padding: 3px;
+}
+.chart-dark .default-color2.chart-series-line {
+    -fx-stroke: #16a34a;
+    -fx-stroke-width: 1.5px;
+}
+.chart-dark .default-color2.chart-line-symbol {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+.chart-dark .default-color3.chart-series-line {
+    -fx-stroke: #dc2626;
+    -fx-stroke-width: 2px;
+}
+.chart-dark .default-color3.chart-line-symbol {
+    -fx-background-color: #dc2626, white;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px;
+}
+.chart-dark .default-color4.chart-series-line {
+    -fx-stroke: #f59e0b;
+    -fx-stroke-width: 1px;
+}
+.chart-dark .default-color4.chart-line-symbol {
+    -fx-background-color: #f59e0b, white;
+    -fx-background-radius: 5px;
+    -fx-padding: 3px;
+}
+.chart-dark .chart-legend {
+    -fx-background-color: transparent;
+}
+.chart-dark .chart-legend-item {
+    -fx-text-fill: #5ea8a4;
+    -fx-font-size: 11px;
+}
+
+/* --- 预测标签 --- */
+.equation-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #134e4a;
+    -fx-padding: 4px 0;
+}
+.warning-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 0;
 }
 
 /* --- 组合框 --- */
@@ -325,4 +401,25 @@
 .meal-panel .label {
     -fx-text-fill: #3d5e5a;
     -fx-font-size: 13px;
+}
+
+/* --- 表单标签和值 --- */
+.field-label {
+    -fx-text-fill: #5ea8a4;
+    -fx-font-size: 13px;
+}
+.field-value {
+    -fx-text-fill: #134e4a;
+    -fx-font-size: 13px;
+}
+.meal-content {
+    -fx-text-fill: #3d5e5a;
+    -fx-padding: 14px;
+    -fx-font-size: 13px;
+}
+.calorie-highlight {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #16a34a;
+    -fx-padding: 12px;
 }

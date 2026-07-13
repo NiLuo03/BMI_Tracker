@@ -14,7 +14,7 @@
     <Label text="按分类查看低卡食物排名" styleClass="label-subheading"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="选择分类" style="-fx-text-fill: #5ea8a4;"/>
+        <Label text="选择分类" styleClass="field-label"/>
         <ComboBox fx:id="categoryCombo" promptText="请选择分类" prefWidth="150" styleClass="combo-box-dark"/>
     </HBox>
 
