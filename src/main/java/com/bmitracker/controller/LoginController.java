@@ -3,9 +3,14 @@ package com.bmitracker.controller;
 import com.bmitracker.BMIApplication;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.ParticleTextCanvas;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -13,6 +18,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class LoginController {
 
@@ -46,17 +52,30 @@ public class LoginController {
         }
         int userId = userService.login(userName, password);
         if (userId > 0) {
-            if (particleText != null) particleText.stop();
             BMIApplication.currentUserId = userId;
             try {
                 Stage stage = (Stage) userNameField.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-                Scene scene = new Scene(loader.load(), 1200, 800);
-                scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-                stage.setTitle("BMI 体质评估与预测系统 - 主界面");
-                stage.setScene(scene);
+                Scene newScene = new Scene(loader.load(), 1200, 800);
+                newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+                newScene.setFill(null);
+
+                // 淡入动画
+                Scene oldScene = stage.getScene();
+                Node oldRoot = oldScene.getRoot();
+                Parent newRoot = newScene.getRoot();
+                newRoot.setOpacity(0);
+
+                stage.setScene(newScene);
                 stage.setResizable(true);
-                stage.centerOnScreen();
+
+                Timeline fadeIn = new Timeline(
+                    new KeyFrame(Duration.millis(400),
+                        new KeyValue(newRoot.opacityProperty(), 1))
+                );
+                fadeIn.play();
+
+                if (particleText != null) particleText.stop();
             } catch (Exception e) {
                 showAlert("系统繁忙，请稍后再试");
             }
