@@ -26,7 +26,7 @@
 
     <Separator styleClass="separator-dark"/>
 
-    <Label text="膳食偏好" styleClass="field-label">
+    <Label text="膳食偏好" styleClass="field-label"/>
     <TextField fx:id="preferencesField" prefWidth="350" promptText="如：不吃辣,少碳水,低卡" styleClass="text-field-dark"/>
 
     <HBox spacing="10">
