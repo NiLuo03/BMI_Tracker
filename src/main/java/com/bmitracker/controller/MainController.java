@@ -22,6 +22,7 @@ public class MainController {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Scene scene = new Scene(loader.load(), 1200, 800);
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
@@ -59,7 +60,9 @@ public class MainController {
         try {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            stage.setScene(new Scene(loader.load(), 400, 380));
+            Scene scene = new Scene(loader.load(), 460, 420);
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            stage.setScene(scene);
             stage.setResizable(false);
             stage.centerOnScreen();
         } catch (Exception e) {
