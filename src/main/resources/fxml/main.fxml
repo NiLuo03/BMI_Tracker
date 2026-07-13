@@ -68,13 +68,13 @@
                                 <padding><Insets top="20" right="24" bottom="40" left="24"/></padding>
 
                                 <!-- 欢迎横幅 -->
-                                <VBox styleClass="card" spacing="8">
-                                    <Label text="欢迎回来"
-                                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d0c8f0;"/>
+                                <VBox styleClass="banner-gradient" spacing="10">
+                                    <Label text="欢迎回来 ⚡"
+                                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #d8d0ff;"/>
                                     <Label text="查看您的 BMI 数据趋势、获取 AI 膳食推荐、对比食物营养"
                                            styleClass="card-subtitle"/>
                                     <HBox spacing="12">
-                                        <VBox.margin><Insets top="12"/></VBox.margin>
+                                        <VBox.margin><Insets top="10"/></VBox.margin>
                                         <Button text="📊 开始记录 BMI" onAction="#showBmiRecord" styleClass="btn-primary"/>
                                         <Button text="🔮 查看趋势" onAction="#showPrediction" styleClass="btn-secondary"/>
                                     </HBox>
@@ -83,7 +83,7 @@
                                 <!-- 功能卡片区 4列 -->
                                 <HBox spacing="16">
                                     <!-- 卡片1：BMI 计算 -->
-                                    <VBox styleClass="card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
                                         <Label text="📊" style="-fx-font-size: 28px;"/>
                                         <Label text="BMI 计算" styleClass="card-title"/>
                                         <Label text="输入身高体重，快速评估体质指数" styleClass="card-subtitle"
@@ -93,7 +93,7 @@
                                     </VBox>
 
                                     <!-- 卡片2：趋势预测 -->
-                                    <VBox styleClass="card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
                                         <Label text="🔮" style="-fx-font-size: 28px;"/>
                                         <Label text="趋势预测" styleClass="card-title"/>
                                         <Label text="基于历史数据预测未来 BMI 变化" styleClass="card-subtitle"
@@ -103,7 +103,7 @@
                                     </VBox>
 
                                     <!-- 卡片3：膳食推荐 -->
-                                    <VBox styleClass="card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
                                         <Label text="🥗" style="-fx-font-size: 28px;"/>
                                         <Label text="AI 膳食推荐" styleClass="card-title"/>
                                         <Label text="智能生成个性化一日三餐方案" styleClass="card-subtitle"
@@ -113,7 +113,7 @@
                                     </VBox>
 
                                     <!-- 卡片4：食物对比 -->
-                                    <VBox styleClass="card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
+                                    <VBox styleClass="card-gradient" spacing="10" HBox.hgrow="ALWAYS" prefWidth="220">
                                         <Label text="🍎" style="-fx-font-size: 28px;"/>
                                         <Label text="食物参考" styleClass="card-title"/>
                                         <Label text="对比食物营养、查看低卡排行" styleClass="card-subtitle"
@@ -125,13 +125,13 @@
 
                                 <!-- 底部信息 -->
                                 <HBox spacing="16">
-                                    <VBox styleClass="card" spacing="6" HBox.hgrow="ALWAYS">
+                                    <VBox styleClass="card-gradient" spacing="6" HBox.hgrow="ALWAYS">
                                         <Label text="身体质量指数 (BMI)" styleClass="card-title"/>
                                         <Label text="BMI = 体重(kg) / 身高(m)²" styleClass="card-subtitle"/>
                                         <Label text="偏瘦 &lt;18.5 | 正常 18.5-24 | 超重 24-28 | 肥胖 ≥28"
                                                styleClass="card-subtitle"/>
                                     </VBox>
-                                    <VBox styleClass="card" spacing="6" HBox.hgrow="ALWAYS">
+                                    <VBox styleClass="card-gradient" spacing="6" HBox.hgrow="ALWAYS">
                                         <Label text="温馨提示" styleClass="card-title"/>
                                         <Label text="• 建议每周至少记录2-3次BMI数据" styleClass="card-subtitle"/>
                                         <Label text="• 预测功能需要4条以上历史记录" styleClass="card-subtitle"/>
