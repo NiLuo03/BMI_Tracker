@@ -1,6 +1,8 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.controller.AIChatController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,15 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
+
+    @FXML
+    void initialize() {
+        Platform.runLater(() -> {
+            AIChatController ai = AIChatController.getInstance();
+            ai.setMainStage((Stage) contentPane.getScene().getWindow());
+            ai.show();
+        });
+    }
 
     @FXML
     void showHome(ActionEvent event) {
@@ -57,6 +68,7 @@ public class MainController {
     @FXML
     void showLogout(ActionEvent event) {
         BMIApplication.currentUserId = -1;
+        AIChatController.getInstance().hide();
         try {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
