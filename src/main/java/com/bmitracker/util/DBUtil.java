@@ -8,7 +8,7 @@ public class DBUtil {
 
     private static final Logger LOG = Logger.getLogger(DBUtil.class.getName());
 
-    private static final String URL = "jdbc:mysql://172.30.67.202:3306/bmi_db?useSSL=false&serverTimezone=Asia/Shanghai";
+    private static final String URL = "jdbc:mysql://172.30.67.202:3306/bmi_db?useSSL=false&serverTimezone=Asia/Shanghai&connectTimeout=3000&socketTimeout=3000";
     private static final String USER = "root";
     private static final String PASS = "23456789";
 
