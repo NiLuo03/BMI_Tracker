@@ -524,35 +524,35 @@
 
 /* --- 暗黑登录页专用 --- */
 .text-field-login {
-    -fx-background-color: rgba(255,255,255,0.04);
-    -fx-text-fill: #e0e0f0;
-    -fx-prompt-text-fill: rgba(255,255,255,0.20);
+    -fx-background-color: rgba(255,255,255,0.10);
+    -fx-text-fill: #e8e8f0;
+    -fx-prompt-text-fill: rgba(255,255,255,0.30);
     -fx-font-size: 13px;
-    -fx-padding: 11px 14px;
+    -fx-padding: 12px 16px;
     -fx-background-radius: 10px;
-    -fx-border-color: rgba(255,255,255,0.08);
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px;
-}
-.text-field-login:focused {
-    -fx-border-color: rgba(255,255,255,0.28);
-    -fx-background-color: rgba(255,255,255,0.08);
-}
-.btn-login {
-    -fx-background-color: rgba(255,255,255,0.08);
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 10px 0;
-    -fx-background-radius: 10px;
-    -fx-cursor: hand;
     -fx-border-color: rgba(255,255,255,0.12);
     -fx-border-width: 1px;
     -fx-border-radius: 10px;
 }
-.btn-login:hover {
+.text-field-login:focused {
+    -fx-border-color: rgba(255,255,255,0.35);
     -fx-background-color: rgba(255,255,255,0.16);
-    -fx-border-color: rgba(255,255,255,0.28);
+}
+.btn-login {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 11px 0;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255,255,255,0.16);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+}
+.btn-login:hover {
+    -fx-background-color: rgba(255,255,255,0.22);
+    -fx-border-color: rgba(255,255,255,0.32);
 }
 .hyperlink-login {
     -fx-text-fill: rgba(255,255,255,0.45);
