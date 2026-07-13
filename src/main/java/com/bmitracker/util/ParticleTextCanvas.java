@@ -19,6 +19,7 @@ import java.util.List;
 public class ParticleTextCanvas extends Canvas {
 
     private final List<Particle> particles = new ArrayList<>();
+    private final List<Ambient> ambients = new ArrayList<>();
     private final GraphicsContext gc;
     private AnimationTimer timer;
     private final String[] words;
@@ -68,12 +69,34 @@ public class ParticleTextCanvas extends Canvas {
         }
     }
 
+    private static class Ambient {
+        double x, y, vx, vy, size, alpha, hue, phase, baseX, baseY;
+    }
+
     public ParticleTextCanvas(double width, double height, String[] words) {
         super(width, height);
         this.words = words;
         this.gc = getGraphicsContext2D();
         this.currentColor = randomColor();
+        initAmbients();
         startAnimation();
+    }
+
+    private void initAmbients() {
+        for (int i = 0; i < 60; i++) {
+            Ambient a = new Ambient();
+            a.x = Math.random() * getWidth();
+            a.y = Math.random() * getHeight();
+            a.baseX = a.x;
+            a.baseY = a.y;
+            a.vx = (Math.random() - 0.5) * 0.4;
+            a.vy = (Math.random() - 0.5) * 0.4;
+            a.size = Math.random() * 2 + 1;
+            a.alpha = Math.random() * 0.25 + 0.08;
+            a.hue = Math.random() * 360;
+            a.phase = Math.random() * Math.PI * 2;
+            ambients.add(a);
+        }
     }
 
     private void startAnimation() {
@@ -93,6 +116,20 @@ public class ParticleTextCanvas extends Canvas {
                             || p.y < -100 || p.y > getHeight() + 100)) {
                         particles.remove(i);
                     }
+                }
+
+                // 环境点缀粒子持续游走
+                for (Ambient a : ambients) {
+                    a.x = a.baseX + Math.sin(frameCount * 0.02 + a.phase) * 30;
+                    a.y = a.baseY + Math.cos(frameCount * 0.025 + a.phase) * 20;
+                    a.baseX += a.vx;
+                    a.baseY += a.vy;
+                    if (a.baseX < -20) a.baseX = getWidth() + 20;
+                    if (a.baseX > getWidth() + 20) a.baseX = -20;
+                    if (a.baseY < -20) a.baseY = getHeight() + 20;
+                    if (a.baseY > getHeight() + 20) a.baseY = -20;
+                    gc.setFill(Color.hsb(a.hue, 0.4, 0.85, a.alpha));
+                    gc.fillOval(a.x - a.size / 2, a.y - a.size / 2, a.size, a.size);
                 }
 
                 if (frameCount % 280 == 0) {
