@@ -14,7 +14,7 @@
     </StackPane>
 
     <VBox alignment="CENTER" maxWidth="380" StackPane.alignment="BOTTOM_CENTER">
-        <StackPane.margin><Insets bottom="60"/></StackPane.margin>
+        <StackPane.margin><Insets bottom="30"/></StackPane.margin>
         <VBox spacing="14" style="-fx-background-color: rgba(10,10,15,0.78);
             -fx-background-radius: 16px;
             -fx-border-color: rgba(255,255,255,0.10);
