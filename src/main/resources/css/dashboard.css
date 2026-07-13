@@ -67,6 +67,20 @@
     -fx-text-fill: #ff6b6b;
 }
 
+/* --- 顶栏横向导航按钮 --- */
+.top-nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5ea8a4;
+    -fx-font-size: 12px;
+    -fx-padding: 7px 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+.top-nav-btn:hover {
+    -fx-background-color: #e0f7fa;
+    -fx-text-fill: #0891b2;
+}
+
 /* --- 顶栏 --- */
 .top-bar {
     -fx-background-color: #ffffff;
