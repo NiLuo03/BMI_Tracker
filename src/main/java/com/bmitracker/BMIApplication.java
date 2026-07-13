@@ -11,13 +11,11 @@ public class BMIApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // 前端预览模式：跳过登录，直接进主界面测试所有页面布局
-        currentUserId = 1;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        Scene scene = new Scene(loader.load(), 900, 600);
-        stage.setTitle("BMI体质评估与预测系统 - 前端预览模式");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+        Scene scene = new Scene(loader.load(), 400, 380);
+        stage.setTitle("BMI体质评估与预测系统");
         stage.setScene(scene);
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.show();
     }
 

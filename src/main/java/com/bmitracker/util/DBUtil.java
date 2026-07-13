@@ -13,7 +13,7 @@ public class DBUtil {
     private static final String PASS = "23456789";
 
     /** 设为 true 则跳过数据库连接，前端预览模式专用 */
-    public static boolean PREVIEW_MODE = true;
+    public static boolean PREVIEW_MODE = false;
 
     static {
         try {
