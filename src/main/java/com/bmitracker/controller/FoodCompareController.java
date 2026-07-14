@@ -202,10 +202,9 @@ public class FoodCompareController implements Initializable {
     }
 
     private void buildSpecRow(String label, Food f1, Food f2, Function<Food, String> valueExtractor, String unit) {
-        HBox row = new HBox(60);
+        HBox row = new HBox(135);
         row.setAlignment(Pos.CENTER);
         row.setPadding(new Insets(18, 40, 18, 40));
-        row.setStyle("-fx-border-color: transparent transparent rgba(16,185,129,0.06) transparent; -fx-border-width: 0 0 1 0;");
 
         VBox leftCol = new VBox(2);
         leftCol.setAlignment(Pos.CENTER);

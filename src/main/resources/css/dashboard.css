@@ -392,6 +392,35 @@
     -fx-border-radius: 12px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 25, 0, 0, 8);
 }
+.combo-box-glass .list-view .scroll-bar {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.combo-box-glass .list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(16,185,129,0.50);
+    -fx-background-radius: 4px;
+    -fx-border-color: transparent;
+}
+.combo-box-glass .list-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(16,185,129,0.70);
+}
+.combo-box-glass .list-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.combo-box-glass .list-view .scroll-bar:vertical .increment-button,
+.combo-box-glass .list-view .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+}
+.combo-box-glass .list-view .scroll-bar:vertical .increment-arrow,
+.combo-box-glass .list-view .scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
 
 /* --- 滚动条暗黑 --- */
 #scrollPane .scroll-bar:vertical,
