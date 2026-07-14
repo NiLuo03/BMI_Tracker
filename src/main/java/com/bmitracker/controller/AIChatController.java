@@ -96,6 +96,24 @@ public class AIChatController {
 
     public void setMainStage(Stage stage) {
         this.mainStage = stage;
+        mainStage.xProperty().addListener((obs, oldX, newX) -> {
+            if (ballStage != null && ballStage.isShowing()) {
+                double dx = newX.doubleValue() - oldX.doubleValue();
+                ballStage.setX(ballStage.getX() + dx);
+                if (particleStage != null && particleStage.isShowing()) {
+                    particleStage.setX(particleStage.getX() + dx);
+                }
+            }
+        });
+        mainStage.yProperty().addListener((obs, oldY, newY) -> {
+            if (ballStage != null && ballStage.isShowing()) {
+                double dy = newY.doubleValue() - oldY.doubleValue();
+                ballStage.setY(ballStage.getY() + dy);
+                if (particleStage != null && particleStage.isShowing()) {
+                    particleStage.setY(particleStage.getY() + dy);
+                }
+            }
+        });
     }
 
     public void hide() {
@@ -350,14 +368,19 @@ public class AIChatController {
         chatStage.setAlwaysOnTop(true);
         chatStage.setResizable(false);
 
-        HBox titleBar = new HBox();
-        titleBar.setStyle("-fx-background-color: #10b981; -fx-padding: 8 12;");
-        titleBar.setAlignment(Pos.CENTER);
+        VBox titleBar = new VBox(0);
+        titleBar.setStyle("-fx-background-color: #10b981; -fx-padding: 6 12 4 12;");
+        titleBar.setAlignment(Pos.TOP_CENTER);
         Label titleLabel = new Label("AI 助手");
         titleLabel.setTextFill(Color.WHITE);
         titleLabel.setFont(Font.font("System Bold", 14));
 
-        titleBar.getChildren().add(titleLabel);
+        Label subtitleLabel = new Label("内容由AI生成");
+        subtitleLabel.setTextFill(Color.WHITE);
+        subtitleLabel.setFont(Font.font("System", 10));
+        subtitleLabel.setOpacity(0.8);
+
+        titleBar.getChildren().addAll(titleLabel, subtitleLabel);
 
         messageArea = new VBox(8);
         messageArea.setPadding(new Insets(10));
