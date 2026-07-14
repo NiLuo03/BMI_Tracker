@@ -9,6 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
 public class MainController {
@@ -33,6 +37,9 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Scene scene = new Scene(loader.load(), 1200, 800);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            scene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                    new Stop(0, Color.web("#050f0a")),
+                    new Stop(1, Color.web("#000000"))));
             stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
@@ -66,6 +73,9 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Scene scene = new Scene(loader.load(), 1200, 800);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            scene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                    new Stop(0, Color.web("#050f0a")),
+                    new Stop(1, Color.web("#000000"))));
             stage.setScene(scene);
             stage.setResizable(false);
             stage.centerOnScreen();
