@@ -7,7 +7,7 @@
 
 <VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.DietController"
-      style="-fx-background-color: #f0fdfa;">
+      style="-fx-background-color: #000000;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="AI 膳食推荐" styleClass="label-heading"/>

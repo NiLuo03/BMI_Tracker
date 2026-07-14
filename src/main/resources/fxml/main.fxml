@@ -12,12 +12,12 @@
     <top>
         <VBox>
             <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
-                <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #0891b2;"/>
+                <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                 <HBox HBox.hgrow="ALWAYS"/>
                 <Button text="个人信息" onAction="#showProfile" styleClass="btn-secondary"/>
                 <Button text="退出登录" onAction="#showLogout" styleClass="btn-secondary"/>
             </HBox>
-            <HBox spacing="2" style="-fx-background-color: #ffffff; -fx-padding: 4px 20px; -fx-border-color: #ccfbf1; -fx-border-width: 0 0 1px 0;">
+            <HBox spacing="2" style="-fx-background-color: #050505; -fx-padding: 4px 20px; -fx-border-color: rgba(16,185,129,0.08); -fx-border-width: 0 0 1px 0;">
                 <Button text="首页" onAction="#showHome" styleClass="top-nav-btn"/>
                 <Button text="BMI 记录" onAction="#showBmiRecord" styleClass="top-nav-btn"/>
                 <Button text="历史记录" onAction="#showHistory" styleClass="top-nav-btn"/>
@@ -27,7 +27,7 @@
                 <Button text="食物对比" onAction="#showFood" styleClass="top-nav-btn"/>
                 <Button text="食物榜单" onAction="#showFoodRank" styleClass="top-nav-btn"/>
                 <HBox HBox.hgrow="ALWAYS"/>
-                <Label fx:id="pageTitle" text="首页概览" style="-fx-font-size: 12px; -fx-text-fill: #8ccfca;"/>
+                <Label fx:id="pageTitle" text="首页概览" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
             </HBox>
         </VBox>
     </top>
@@ -35,9 +35,9 @@
     <center>
         <StackPane fx:id="contentPane">
             <ScrollPane fitToWidth="true" fitToHeight="true"
-                        style="-fx-background: #f0fdfa; -fx-background-color: #f0fdfa;">
+                        style="-fx-background: #000000; -fx-background-color: #000000;">
                 <content>
-                    <VBox spacing="24" style="-fx-background-color: #f0fdfa;">
+                    <VBox spacing="24" style="-fx-background-color: #000000;">
                         <padding><Insets top="24" right="28" bottom="40" left="28"/></padding>
 
                         <VBox styleClass="hero-card" spacing="12">
@@ -74,9 +74,9 @@
 
                         <HBox spacing="20">
                             <VBox styleClass="feature-card" spacing="8" HBox.hgrow="ALWAYS">
-                                <Label text="BMI 计算与记录" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #134e4a;"/>
+                                <Label text="BMI 计算与记录" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;"/>
                                 <Label text="输入身高和体重，系统自动计算 BMI 指数并匹配健康区间，数据自动保存到个人记录中。"
-                                       style="-fx-font-size: 12px; -fx-text-fill: #5ea8a4;" wrapText="true"/>
+                                       style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" wrapText="true"/>
                                 <HBox spacing="12" alignment="CENTER_LEFT">
                                     <VBox.margin><Insets top="8"/></VBox.margin>
                                     <TextField promptText="身高(cm)" prefWidth="110" styleClass="text-field-dark"/>
@@ -85,9 +85,9 @@
                                 </HBox>
                             </VBox>
                             <VBox styleClass="feature-card" spacing="8" HBox.hgrow="ALWAYS">
-                                <Label text="数据可视化" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #134e4a;"/>
+                                <Label text="数据可视化" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;"/>
                                 <Label text="查看历史 BMI 折线图，通过趋势预测功能了解身体指标变化方向，及时调整生活习惯。"
-                                       style="-fx-font-size: 12px; -fx-text-fill: #5ea8a4;" wrapText="true"/>
+                                       style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" wrapText="true"/>
                                 <HBox spacing="8">
                                     <VBox.margin><Insets top="8"/></VBox.margin>
                                     <Button text="历史折线图" onAction="#showChart" styleClass="btn-secondary"/>
@@ -99,23 +99,23 @@
                         <HBox spacing="12">
                             <VBox styleClass="quick-link-card" spacing="6" HBox.hgrow="ALWAYS">
                                 <Button text="历史记录" onAction="#showHistory" maxWidth="Infinity"
-                                        style="-fx-background-color: transparent; -fx-text-fill: #134e4a; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
-                                <Label text="查看全部 BMI 测量记录" style="-fx-font-size: 11px; -fx-text-fill: #5ea8a4;"/>
+                                        style="-fx-background-color: transparent; -fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
+                                <Label text="查看全部 BMI 测量记录" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
                             </VBox>
                             <VBox styleClass="quick-link-card" spacing="6" HBox.hgrow="ALWAYS">
                                 <Button text="AI 膳食推荐" onAction="#showDiet" maxWidth="Infinity"
-                                        style="-fx-background-color: transparent; -fx-text-fill: #134e4a; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
-                                <Label text="个性化一日三餐方案" style="-fx-font-size: 11px; -fx-text-fill: #5ea8a4;"/>
+                                        style="-fx-background-color: transparent; -fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
+                                <Label text="个性化一日三餐方案" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
                             </VBox>
                             <VBox styleClass="quick-link-card" spacing="6" HBox.hgrow="ALWAYS">
                                 <Button text="食物对比" onAction="#showFood" maxWidth="Infinity"
-                                        style="-fx-background-color: transparent; -fx-text-fill: #134e4a; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
-                                <Label text="横向对比营养成分" style="-fx-font-size: 11px; -fx-text-fill: #5ea8a4;"/>
+                                        style="-fx-background-color: transparent; -fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
+                                <Label text="横向对比营养成分" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
                             </VBox>
                             <VBox styleClass="quick-link-card" spacing="6" HBox.hgrow="ALWAYS">
                                 <Button text="食物榜单" onAction="#showFoodRank" maxWidth="Infinity"
-                                        style="-fx-background-color: transparent; -fx-text-fill: #134e4a; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
-                                <Label text="低卡食物排行推荐" style="-fx-font-size: 11px; -fx-text-fill: #5ea8a4;"/>
+                                        style="-fx-background-color: transparent; -fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-cursor: hand; -fx-alignment: CENTER-LEFT; -fx-padding: 0;"/>
+                                <Label text="低卡食物排行推荐" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
                             </VBox>
                         </HBox>
 
