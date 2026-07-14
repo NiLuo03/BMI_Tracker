@@ -64,6 +64,7 @@ public class AIChatController {
     private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
     private static final String MODEL = "ep-20260713112535-75rjx";
+    private static final String VISION_MODEL = "ep-20260714154339-vkt22";
 
     private final HttpClient httpClient;
     private final List<ChatMessage> messages = new ArrayList<>();
@@ -510,7 +511,7 @@ public class AIChatController {
         String messagesJson = "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"}";
         messagesJson += ",{\"role\":\"user\",\"content\":\"" + userContent + "\"}";
 
-        String json = "{\"model\":\"" + MODEL + "\",\"messages\":[" + messagesJson + "]}";
+        String json = "{\"model\":\"" + VISION_MODEL + "\",\"messages\":[" + messagesJson + "]}";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
@@ -528,7 +529,7 @@ public class AIChatController {
                 return msg;
             }
         }
-        String altJson = "{\"model\":\"" + MODEL + "\",\"messages\":["
+        String altJson = "{\"model\":\"" + VISION_MODEL + "\",\"messages\":["
                 + "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"},"
                 + "{\"role\":\"user\",\"content\":["
                 + "{\"type\":\"text\",\"text\":\"" + escapeJson(text) + "\"},"
