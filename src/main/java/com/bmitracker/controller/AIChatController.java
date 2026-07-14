@@ -1,5 +1,6 @@
 package com.bmitracker.controller;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -10,24 +11,34 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 public class AIChatController {
 
@@ -36,8 +47,9 @@ public class AIChatController {
     private Stage ballStage;
     private Stage chatStage;
     private Stage mainStage;
+    private Stage particleStage;
+    private Pane particlePane;
 
-    private Circle ball;
     private VBox messageArea;
     private ScrollPane scrollPane;
     private TextField inputField;
@@ -72,6 +84,13 @@ public class AIChatController {
     public void show() {
         if (ballStage != null && ballStage.isShowing()) return;
         createBallStage();
+        if (mainStage != null) {
+            double x = mainStage.getX() + mainStage.getWidth() - 44 - 15;
+            double y = mainStage.getY() + mainStage.getHeight() / 2 - 32;
+            y = Math.max(mainStage.getY() + 15, Math.min(y, mainStage.getY() + mainStage.getHeight() - 64 - 15));
+            ballStage.setX(x);
+            ballStage.setY(y);
+        }
         ballStage.show();
     }
 
@@ -87,6 +106,7 @@ public class AIChatController {
             chatStage.close();
             chatStage = null;
         }
+        hideParticleStage();
     }
 
     private void createBallStage() {
@@ -95,24 +115,78 @@ public class AIChatController {
         ballStage.setAlwaysOnTop(true);
         ballStage.setResizable(false);
 
-        ball = new Circle(22, Color.web("#1a6b3c"));
-        ball.setStroke(Color.web("#145530"));
-        ball.setStrokeWidth(2);
-        ball.setEffect(new DropShadow(6, 0, 2, Color.gray(0.4)));
-
-        Label aiLabel = new Label("AI");
-        aiLabel.setTextFill(Color.WHITE);
-        aiLabel.setFont(Font.font("System Bold", 12));
-
-        StackPane ballPane = new StackPane(ball, aiLabel);
-        ballPane.setPrefSize(44, 44);
-
-        Scene ballScene = new Scene(ballPane, 44, 44);
-        ballScene.setFill(null);
-        ballStage.setScene(ballScene);
-
         ballStage.setX(0);
         ballStage.setY(100);
+
+        Circle face = new Circle(17);
+        face.setFill(Color.WHITE);
+        face.setStroke(Color.web("#ddd"));
+        face.setStrokeWidth(0.5);
+
+        Ellipse earL = new Ellipse(8, 7);
+        earL.setFill(Color.web("#222"));
+        earL.setCenterX(-12);
+        earL.setCenterY(-12);
+
+        Ellipse earR = new Ellipse(8, 7);
+        earR.setFill(Color.web("#222"));
+        earR.setCenterX(12);
+        earR.setCenterY(-12);
+
+        Ellipse eyeL = new Ellipse(3.5, 4);
+        eyeL.setFill(Color.web("#222"));
+        eyeL.setCenterX(-6);
+        eyeL.setCenterY(-3);
+
+        Ellipse eyeR = new Ellipse(3.5, 4);
+        eyeR.setFill(Color.web("#222"));
+        eyeR.setCenterX(6);
+        eyeR.setCenterY(-3);
+
+        Ellipse eyeL2 = new Ellipse(1.5, 2);
+        eyeL2.setFill(Color.WHITE);
+        eyeL2.setCenterX(-5);
+        eyeL2.setCenterY(-4.5);
+
+        Ellipse eyeR2 = new Ellipse(1.5, 2);
+        eyeR2.setFill(Color.WHITE);
+        eyeR2.setCenterX(7);
+        eyeR2.setCenterY(-4.5);
+
+        Ellipse nose = new Ellipse(2.5, 2);
+        nose.setFill(Color.web("#333"));
+        nose.setCenterX(0);
+        nose.setCenterY(3);
+
+        Ellipse cheekL = new Ellipse(4, 3);
+        cheekL.setFill(Color.web("#ffcdd2"));
+        cheekL.setCenterX(-10);
+        cheekL.setCenterY(4);
+
+        Ellipse cheekR = new Ellipse(4, 3);
+        cheekR.setFill(Color.web("#ffcdd2"));
+        cheekR.setCenterX(10);
+        cheekR.setCenterY(4);
+
+        StackPane ballPane = new StackPane(face, earL, earR, eyeL, eyeR, eyeL2, eyeR2, nose, cheekL, cheekR);
+        ballPane.setPrefSize(44, 44);
+        Circle clip = new Circle(22, 22, 22);
+        ballPane.setClip(clip);
+        ballPane.setEffect(new DropShadow(6, 0, 2, Color.gray(0.4)));
+
+        Label aiLabel = new Label("AI助手");
+        aiLabel.setFont(Font.font("System", 10));
+        aiLabel.setTextFill(Color.web("#333"));
+        aiLabel.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+        aiLabel.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(ballPane, aiLabel);
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+
+        Scene ballScene = new Scene(root, 44, 64);
+        ballScene.setFill(null);
+        ballStage.setScene(ballScene);
 
         ballPane.setOnMousePressed(e -> {
             dragStartX = e.getScreenX();
@@ -134,8 +208,19 @@ public class AIChatController {
                 dragging = true;
                 double dx = e.getScreenX() - dragStartX;
                 double dy = e.getScreenY() - dragStartY;
-                ballStage.setX(stageStartX + dx);
-                ballStage.setY(stageStartY + dy);
+                double nx = stageStartX + dx;
+                double ny = stageStartY + dy;
+                if (mainStage != null) {
+                    double mX = mainStage.getX();
+                    double mY = mainStage.getY();
+                    double mW = mainStage.getWidth();
+                    double mH = mainStage.getHeight();
+                    nx = Math.max(mX + 5, Math.min(nx, mX + mW - 49));
+                    ny = Math.max(mY + 5, Math.min(ny, mY + mH - 49));
+                }
+                ballStage.setX(nx);
+                ballStage.setY(ny);
+                spawnParticle(e.getScreenX(), e.getScreenY());
             }
         });
 
@@ -148,6 +233,7 @@ public class AIChatController {
             }
             if (dragging) {
                 snapToEdge();
+                hideParticleStage();
             }
             dragging = false;
             longPressed = false;
@@ -156,41 +242,96 @@ public class AIChatController {
 
     private void snapToEdge() {
         if (mainStage == null) return;
-        double bw = 44, bh = 44;
+        double bw = 44, bh = 64;
         double mainX = mainStage.getX();
         double mainY = mainStage.getY();
         double mainW = mainStage.getWidth();
         double mainH = mainStage.getHeight();
-        double margin = 5;
+        double margin = 15;
 
         double cx = ballStage.getX() + bw / 2;
         double cy = ballStage.getY() + bh / 2;
 
-        double left = mainX;
-        double right = mainX + mainW;
-        double top = mainY;
-        double bottom = mainY + mainH;
-
-        double toLeft = cx - left;
-        double toRight = right - cx;
-        double toTop = cy - top;
-        double toBottom = bottom - cy;
+        double toLeft = cx - mainX;
+        double toRight = (mainX + mainW) - cx;
+        double toTop = cy - mainY;
+        double toBottom = (mainY + mainH) - cy;
 
         double minDist = Math.min(Math.min(toLeft, toRight), Math.min(toTop, toBottom));
 
+        double nx = ballStage.getX();
+        double ny = ballStage.getY();
+
         if (minDist == toLeft) {
-            ballStage.setX(left - margin);
-            ballStage.setY(Math.max(top, Math.min(ballStage.getY(), bottom - bh)));
+            nx = mainX + margin;
+            ny = Math.max(mainY + margin, Math.min(ballStage.getY(), mainY + mainH - bh - margin));
         } else if (minDist == toRight) {
-            ballStage.setX(right - bw + margin);
-            ballStage.setY(Math.max(top, Math.min(ballStage.getY(), bottom - bh)));
+            nx = mainX + mainW - bw - margin;
+            ny = Math.max(mainY + margin, Math.min(ballStage.getY(), mainY + mainH - bh - margin));
         } else if (minDist == toTop) {
-            ballStage.setX(Math.max(left, Math.min(ballStage.getX(), right - bw)));
-            ballStage.setY(top - margin);
+            nx = Math.max(mainX + margin, Math.min(ballStage.getX(), mainX + mainW - bw - margin));
+            ny = mainY + margin;
         } else {
-            ballStage.setX(Math.max(left, Math.min(ballStage.getX(), right - bw)));
-            ballStage.setY(bottom - bh + margin);
+            nx = Math.max(mainX + margin, Math.min(ballStage.getX(), mainX + mainW - bw - margin));
+            ny = mainY + mainH - bh - margin;
         }
+
+        ballStage.setX(nx);
+        ballStage.setY(ny);
+    }
+
+    private void ensureParticleStage() {
+        if (particleStage != null) return;
+        if (mainStage == null) return;
+        particleStage = new Stage();
+        particleStage.initStyle(StageStyle.TRANSPARENT);
+        particleStage.setAlwaysOnTop(true);
+        particleStage.setResizable(false);
+        particlePane = new Pane();
+        particlePane.setStyle("-fx-background-color: transparent;");
+        Scene ps = new Scene(particlePane, mainStage.getWidth(), mainStage.getHeight());
+        ps.setFill(null);
+        particleStage.setScene(ps);
+        particleStage.setX(mainStage.getX());
+        particleStage.setY(mainStage.getY());
+    }
+
+    private void showParticleStage() {
+        if (mainStage == null) return;
+        ensureParticleStage();
+        if (particleStage == null) return;
+        particleStage.setX(mainStage.getX());
+        particleStage.setY(mainStage.getY());
+        particleStage.setWidth(mainStage.getWidth());
+        particleStage.setHeight(mainStage.getHeight());
+        if (!particleStage.isShowing()) {
+            particleStage.show();
+            ballStage.toFront();
+        }
+    }
+
+    private void hideParticleStage() {
+        if (particleStage != null && particleStage.isShowing()) {
+            particleStage.hide();
+            particlePane.getChildren().clear();
+        }
+    }
+
+    private void spawnParticle(double screenX, double screenY) {
+        if (mainStage == null) return;
+        showParticleStage();
+        double px = screenX - mainStage.getX() + (Math.random() - 0.5) * 8;
+        double py = screenY - mainStage.getY() + (Math.random() - 0.5) * 8;
+        Circle p = new Circle(2 + Math.random() * 2, Color.web("#1a6b3c", 0.25 + Math.random() * 0.15));
+        p.setCenterX(px);
+        p.setCenterY(py);
+        particlePane.getChildren().add(p);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(400 + Math.random() * 200), p);
+        ft.setFromValue(p.getOpacity());
+        ft.setToValue(0);
+        ft.setOnFinished(e -> particlePane.getChildren().remove(p));
+        ft.play();
     }
 
     private void toggleChat() {
@@ -209,12 +350,21 @@ public class AIChatController {
         chatStage.setAlwaysOnTop(true);
         chatStage.setResizable(false);
 
-        VBox titleBar = new VBox();
+        HBox titleBar = new HBox();
         titleBar.setStyle("-fx-background-color: #1a6b3c; -fx-padding: 8 12;");
+        titleBar.setAlignment(Pos.CENTER_LEFT);
         Label titleLabel = new Label("AI 助手");
         titleLabel.setTextFill(Color.WHITE);
         titleLabel.setFont(Font.font("System Bold", 14));
-        titleBar.getChildren().add(titleLabel);
+        HBox.setHgrow(titleLabel, Priority.ALWAYS);
+
+        Button cameraBtn = new Button("📷");
+        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
+        cameraBtn.setOnAction(e -> handleCameraCapture());
+        Tooltip tt = new Tooltip("拍摄食物并识别热量");
+        Tooltip.install(cameraBtn, tt);
+
+        titleBar.getChildren().addAll(titleLabel, cameraBtn);
 
         messageArea = new VBox(8);
         messageArea.setPadding(new Insets(10));
@@ -286,6 +436,120 @@ public class AIChatController {
         }).start();
     }
 
+    private void handleCameraCapture() {
+        addMessage("我", "📷 正在通过摄像头拍摄食物...");
+        inputField.setDisable(true);
+        sendBtn.setDisable(true);
+
+        new Thread(() -> {
+            try {
+                Class<?> webcamClass = Class.forName("com.github.sarxos.webcam.Webcam");
+                Object webcam = webcamClass.getMethod("getDefault").invoke(null);
+                if (webcam == null) {
+                    Platform.runLater(() -> {
+                        addMessage("AI", "未检测到摄像头，请检查设备连接");
+                        inputField.setDisable(false);
+                        sendBtn.setDisable(false);
+                    });
+                    return;
+                }
+                webcamClass.getMethod("open").invoke(webcam);
+                BufferedImage img = (BufferedImage) webcamClass.getMethod("getImage").invoke(webcam);
+                webcamClass.getMethod("close").invoke(webcam);
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(img, "jpg", baos);
+                byte[] imageBytes = baos.toByteArray();
+                String base64 = Base64.getEncoder().encodeToString(imageBytes);
+
+                Image fxImage = new Image(new ByteArrayInputStream(imageBytes));
+                Platform.runLater(() -> {
+                    messageArea.getChildren().remove(messageArea.getChildren().size() - 1);
+
+                    ImageView iv = new ImageView(fxImage);
+                    iv.setFitWidth(200);
+                    iv.setFitHeight(150);
+                    iv.setPreserveRatio(true);
+                    iv.setStyle("-fx-background-radius: 8;");
+
+                    HBox box = new HBox(iv);
+                    box.setAlignment(Pos.CENTER_RIGHT);
+                    messageArea.getChildren().add(box);
+                    scrollToBottom();
+
+                    addMessage("我", "请识别图中的食物并估算热量");
+                });
+
+                String response = callCozeWithImage("请识别图中的食物，列出每种食物的名称，并估算每100g的热量以及图片中食物的总热量。用中文回答。", base64);
+                Platform.runLater(() -> {
+                    addMessage("AI", response);
+                    inputField.setDisable(false);
+                    sendBtn.setDisable(false);
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    messageArea.getChildren().remove(messageArea.getChildren().size() - 1);
+                    addMessage("AI", "摄像头识别失败：" + e.getMessage() + "，请检查摄像头权限");
+                    inputField.setDisable(false);
+                    sendBtn.setDisable(false);
+                });
+            }
+        }).start();
+    }
+
+    private void scrollToBottom() {
+        Platform.runLater(() -> {
+            if (scrollPane != null) scrollPane.setVvalue(1.0);
+        });
+    }
+
+    private String callCozeWithImage(String text, String base64Image) throws Exception {
+        String userContent = escapeJson(text)
+                + "\\n\\n![photo](data:image/jpeg;base64," + base64Image + ")";
+
+        String messagesJson = "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"}";
+        messagesJson += ",{\"role\":\"user\",\"content\":\"" + userContent + "\"}";
+
+        String json = "{\"model\":\"" + MODEL + "\",\"messages\":[" + messagesJson + "]}";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + API_KEY)
+                .timeout(java.time.Duration.ofSeconds(60))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        String body = response.body();
+        if (response.statusCode() == 200) {
+            String msg = extractMessage(body);
+            if (msg != null && !msg.isEmpty() && !msg.contains("不支持") && !msg.contains("无法识别")) {
+                return msg;
+            }
+        }
+        String altJson = "{\"model\":\"" + MODEL + "\",\"messages\":["
+                + "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"},"
+                + "{\"role\":\"user\",\"content\":["
+                + "{\"type\":\"text\",\"text\":\"" + escapeJson(text) + "\"},"
+                + "{\"type\":\"image_url\",\"image_url\":{\"url\":\"data:image/jpeg;base64," + base64Image + "\"}}"
+                + "]}]}";
+
+        HttpRequest altRequest = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + API_KEY)
+                .timeout(java.time.Duration.ofSeconds(60))
+                .POST(HttpRequest.BodyPublishers.ofString(altJson))
+                .build();
+
+        HttpResponse<String> altResponse = httpClient.send(altRequest, HttpResponse.BodyHandlers.ofString());
+        if (altResponse.statusCode() == 200) {
+            return extractMessage(altResponse.body());
+        }
+        throw new RuntimeException("API识别失败: " + altResponse.body());
+    }
+
     private void addMessage(String sender, String content) {
         Label label = new Label(content);
         label.setWrapText(true);
@@ -303,12 +567,7 @@ public class AIChatController {
             box.setAlignment(Pos.CENTER_RIGHT);
         }
         messageArea.getChildren().add(box);
-
-        Platform.runLater(() -> {
-            if (scrollPane != null) {
-                scrollPane.setVvalue(1.0);
-            }
-        });
+        scrollToBottom();
     }
 
     private String callCozeChat(List<ChatMessage> chatMessages) throws Exception {
