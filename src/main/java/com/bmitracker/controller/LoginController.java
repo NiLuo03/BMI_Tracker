@@ -3,9 +3,7 @@ package com.bmitracker.controller;
 import com.bmitracker.BMIApplication;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.ParticleTextCanvas;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +14,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -26,8 +26,11 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Canvas particleCanvas;
     @FXML private StackPane particlePane;
+    @FXML private BorderPane loginCard;
 
     private ParticleTextCanvas particleText;
+    private Rotate rotateX;
+    private Rotate rotateY;
 
     @FXML
     void initialize() {
@@ -38,6 +41,34 @@ public class LoginController {
             particlePane.getChildren().clear();
             particlePane.getChildren().add(particleText);
         }
+        if (loginCard != null) {
+            initCardTilt();
+        }
+    }
+
+    private void initCardTilt() {
+        rotateX = new Rotate(0, Rotate.X_AXIS);
+        rotateY = new Rotate(0, Rotate.Y_AXIS);
+        loginCard.getTransforms().addAll(rotateX, rotateY);
+
+        loginCard.setOnMouseMoved(e -> {
+            double halfW = loginCard.getWidth() / 2;
+            double halfH = loginCard.getHeight() / 2;
+            if (halfW <= 0 || halfH <= 0) return;
+            double dx = (e.getX() - halfW) / halfW;
+            double dy = (e.getY() - halfH) / halfH;
+            rotateY.setAngle(dx * 8);
+            rotateX.setAngle(dy * -8);
+        });
+
+        loginCard.setOnMouseExited(e -> {
+            Timeline reset = new Timeline(
+                new KeyFrame(Duration.millis(300),
+                    new KeyValue(rotateX.angleProperty(), 0),
+                    new KeyValue(rotateY.angleProperty(), 0))
+            );
+            reset.play();
+        });
     }
 
     private final UserService userService = new UserService();
