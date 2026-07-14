@@ -43,6 +43,11 @@ public class LoginController {
     private final UserService userService = new UserService();
 
     @FXML
+    void onUserNameAction() {
+        passwordField.requestFocus();
+    }
+
+    @FXML
     void handleLogin(ActionEvent event) {
         String userName = userNameField.getText();
         String password = passwordField.getText();

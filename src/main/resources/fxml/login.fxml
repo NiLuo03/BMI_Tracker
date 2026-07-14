@@ -31,8 +31,8 @@
                     <VBox.margin><Insets bottom="14"/></VBox.margin>
                 </VBox>
 
-                <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
-                <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
+                <TextField fx:id="userNameField" promptText="账号" onAction="#onUserNameAction" styleClass="text-field-login"/>
+                <PasswordField fx:id="passwordField" promptText="密码" onAction="#handleLogin" styleClass="text-field-login"/>
 
                 <Button text="登 录" onAction="#handleLogin" styleClass="btn-login" maxWidth="Infinity">
                     <VBox.margin><Insets top="8"/></VBox.margin>
