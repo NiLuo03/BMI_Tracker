@@ -63,8 +63,7 @@ public class AIChatController {
 
     private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
-    private static final String MODEL = "ep-20260713112535-75rjx";
-    private static final String VISION_MODEL = "ep-20260714154339-vkt22";
+    private static final String MODEL = "ep-20260714154339-vkt22";
 
     private final HttpClient httpClient;
     private final List<ChatMessage> messages = new ArrayList<>();
@@ -352,29 +351,22 @@ public class AIChatController {
         chatStage.setResizable(false);
 
         HBox titleBar = new HBox();
-        titleBar.setStyle("-fx-background-color: #1a6b3c; -fx-padding: 8 12;");
-        titleBar.setAlignment(Pos.CENTER_LEFT);
+        titleBar.setStyle("-fx-background-color: #10b981; -fx-padding: 8 12;");
+        titleBar.setAlignment(Pos.CENTER);
         Label titleLabel = new Label("AI 助手");
         titleLabel.setTextFill(Color.WHITE);
         titleLabel.setFont(Font.font("System Bold", 14));
-        HBox.setHgrow(titleLabel, Priority.ALWAYS);
 
-        Button cameraBtn = new Button("📷");
-        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
-        cameraBtn.setOnAction(e -> handleCameraCapture());
-        Tooltip tt = new Tooltip("拍摄食物并识别热量");
-        Tooltip.install(cameraBtn, tt);
-
-        titleBar.getChildren().addAll(titleLabel, cameraBtn);
+        titleBar.getChildren().add(titleLabel);
 
         messageArea = new VBox(8);
         messageArea.setPadding(new Insets(10));
-        messageArea.setStyle("-fx-background-color: #f5f7f6;");
+        messageArea.setStyle("-fx-background-color: transparent;");
 
         scrollPane = new ScrollPane(messageArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(320);
-        scrollPane.setStyle("-fx-background: #f5f7f6; -fx-border-color: transparent;");
+        scrollPane.setStyle("-fx-background: linear-gradient(from 0% 0% to 0% 100%, #c8ecec, #fffdf5); -fx-border-color: transparent;");
 
         inputField = new TextField();
         inputField.setPromptText("输入消息...");
@@ -386,7 +378,17 @@ public class AIChatController {
         sendBtn.setOnAction(e -> sendMessage());
         inputField.setOnAction(e -> sendMessage());
 
-        HBox inputBox = new HBox(8, inputField, sendBtn);
+        Button cameraBtn = new Button("📷");
+        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #666; -fx-font-size: 18; -fx-cursor: hand; -fx-padding: 0 4;");
+        cameraBtn.setPrefHeight(36);
+        cameraBtn.setOnAction(e -> handleCameraCapture());
+        Tooltip tt = new Tooltip("拍摄食物并识别热量");
+        Tooltip.install(cameraBtn, tt);
+
+        sendBtn.setPrefHeight(36);
+
+        HBox inputBox = new HBox(6, cameraBtn, inputField, sendBtn);
+        inputBox.setAlignment(Pos.CENTER_LEFT);
         inputBox.setPadding(new Insets(10));
         inputBox.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;");
         HBox.setHgrow(inputField, Priority.ALWAYS);
@@ -511,7 +513,7 @@ public class AIChatController {
         String messagesJson = "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"}";
         messagesJson += ",{\"role\":\"user\",\"content\":\"" + userContent + "\"}";
 
-        String json = "{\"model\":\"" + VISION_MODEL + "\",\"messages\":[" + messagesJson + "]}";
+        String json = "{\"model\":\"" + MODEL + "\",\"messages\":[" + messagesJson + "]}";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
@@ -529,7 +531,7 @@ public class AIChatController {
                 return msg;
             }
         }
-        String altJson = "{\"model\":\"" + VISION_MODEL + "\",\"messages\":["
+        String altJson = "{\"model\":\"" + MODEL + "\",\"messages\":["
                 + "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"},"
                 + "{\"role\":\"user\",\"content\":["
                 + "{\"type\":\"text\",\"text\":\"" + escapeJson(text) + "\"},"
