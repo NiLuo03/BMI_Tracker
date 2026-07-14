@@ -35,7 +35,7 @@
     <center>
         <StackPane fx:id="contentPane">
             <ScrollPane fitToWidth="true" fitToHeight="true"
-                        style="-fx-background: #000000; -fx-background-color: linear-gradient(to bottom, #050f0a, #000000);">
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
                 <content>
                     <VBox spacing="24" style="-fx-background-color: transparent;">
                         <padding><Insets top="24" right="28" bottom="40" left="28"/></padding>
