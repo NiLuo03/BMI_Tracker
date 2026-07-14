@@ -13,7 +13,7 @@
         <Canvas fx:id="particleCanvas" width="1200" height="800"/>
     </StackPane>
 
-    <BorderPane fx:id="loginCard" maxWidth="380" maxHeight="320" StackPane.alignment="BOTTOM_CENTER"
+    <BorderPane maxWidth="380" maxHeight="320" StackPane.alignment="BOTTOM_CENTER"
                 style="-fx-background-color: rgba(10,10,15,0.70);
                     -fx-background-radius: 16px;
                     -fx-border-color: rgba(255,255,255,0.10);
