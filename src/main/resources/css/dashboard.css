@@ -1,9 +1,12 @@
 /* ====== BMI 体质评估系统 - 赛博医疗暗黑主题 ====== */
 
 .root {
-    -fx-background-color: #000000;
+    -fx-background-color: linear-gradient(to bottom, #050f0a, #000000);
     -fx-font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
     -fx-text-fill: #d0d0d0;
+}
+.bg-gradient {
+    -fx-background-color: linear-gradient(to bottom, #050f0a, #000000);
 }
 
 /* --- 顶栏 --- */
