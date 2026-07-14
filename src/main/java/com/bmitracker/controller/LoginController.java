@@ -57,8 +57,8 @@ public class LoginController {
             if (halfW <= 0 || halfH <= 0) return;
             double dx = (e.getX() - halfW) / halfW;
             double dy = (e.getY() - halfH) / halfH;
-            rotateY.setAngle(dx * 8);
-            rotateX.setAngle(dy * -8);
+            rotateY.setAngle(dx * 15);
+            rotateX.setAngle(dy * -15);
         });
 
         loginCard.setOnMouseExited(e -> {
