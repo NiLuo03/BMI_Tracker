@@ -55,45 +55,12 @@
                     <content>
                         <StackPane style="-fx-padding: 20px 28px 40px 28px;">
                             <VBox spacing="24"
-                                  style="-fx-background-color: rgba(255,255,255,0.03);
+                                  style="-fx-background-color: rgba(255,255,255,0.05);
                                          -fx-background-radius: 20px;
-                                         -fx-border-color: rgba(16,185,129,0.08);
+                                         -fx-border-color: rgba(255,255,255,0.06);
                                          -fx-border-width: 1px;
                                          -fx-border-radius: 20px;
                                          -fx-padding: 28px 24px;">
-
-                                <!-- Hero 区域 -->
-                                <VBox styleClass="hero-card" spacing="12">
-                                    <Label text="科学管理，健康生活" styleClass="hero-title"/>
-                                    <Label text="记录每日身体数据，AI 分析趋势并推荐个性化膳食方案" styleClass="hero-subtitle" wrapText="true"/>
-                                    <HBox spacing="12">
-                                        <VBox.margin><Insets top="8"/></VBox.margin>
-                                        <Button text="开始记录 BMI" onAction="#showBmiRecord" styleClass="hero-btn"/>
-                                        <Button text="查看趋势分析" onAction="#showPrediction" styleClass="hero-btn"/>
-                                    </HBox>
-                                    <HBox spacing="40" alignment="CENTER_LEFT">
-                                        <VBox.margin><Insets top="20"/></VBox.margin>
-                                        <VBox spacing="2" alignment="CENTER">
-                                            <Label text="18.5 – 24" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.95);"/>
-                                            <Label text="BMI 正常范围" style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.7);"/>
-                                        </VBox>
-                                        <Separator orientation="VERTICAL" style="-fx-background-color: rgba(255,255,255,0.15);"/>
-                                        <VBox spacing="2" alignment="CENTER">
-                                            <Label text="50+" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.95);"/>
-                                            <Label text="食物数据参考" style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.7);"/>
-                                        </VBox>
-                                        <Separator orientation="VERTICAL" style="-fx-background-color: rgba(255,255,255,0.15);"/>
-                                        <VBox spacing="2" alignment="CENTER">
-                                            <Label text="4+" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.95);"/>
-                                            <Label text="条记录即可预测" style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.7);"/>
-                                        </VBox>
-                                        <Separator orientation="VERTICAL" style="-fx-background-color: rgba(255,255,255,0.15);"/>
-                                        <VBox spacing="2" alignment="CENTER">
-                                            <Label text="AI" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.95);"/>
-                                            <Label text="智能膳食推荐" style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.7);"/>
-                                        </VBox>
-                                    </HBox>
-                                </VBox>
 
                                 <!-- 双列功能卡片 -->
                                 <HBox spacing="20">
