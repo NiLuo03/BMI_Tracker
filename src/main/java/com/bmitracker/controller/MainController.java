@@ -54,7 +54,6 @@ public class MainController {
             btns[i].setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
             btns[i].setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
         }
-        }
         toggleNavBtn.setText(navExpanded ? "« 收起" : "»");
     }
 
