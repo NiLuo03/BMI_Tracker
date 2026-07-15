@@ -11,6 +11,8 @@ public class User {
     private double height;
     private double weight;
     private String preferences;
+    private String allergens;
+    private String chronicDiseases;
     private LocalDateTime createTime;
 
     public User() {}
@@ -45,6 +47,16 @@ public class User {
 
     public String getPreferences() { return preferences; }
     public void setPreferences(String preferences) { this.preferences = preferences; }
+
+    public String getAllergens() { return allergens; }
+    public void setAllergens(String allergens) { this.allergens = allergens; }
+
+    public String getChronicDiseases() { return chronicDiseases; }
+    public void setChronicDiseases(String chronicDiseases) { this.chronicDiseases = chronicDiseases; }
+
+    public boolean needsHealthProfile() {
+        return (allergens == null || allergens.isEmpty()) && (chronicDiseases == null || chronicDiseases.isEmpty());
+    }
 
     public LocalDateTime getCreateTime() { return createTime; }
     public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
