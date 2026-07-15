@@ -25,25 +25,21 @@ public class FoodRankController {
 
     @FXML
     void initialize() {
-        // 绑定表格列与 Food 模型字段
         colName.setCellValueFactory(new PropertyValueFactory<>("foodName"));
         colCal.setCellValueFactory(new PropertyValueFactory<>("calories"));
         colProtein.setCellValueFactory(new PropertyValueFactory<>("protein"));
         colFat.setCellValueFactory(new PropertyValueFactory<>("fat"));
         colCarb.setCellValueFactory(new PropertyValueFactory<>("carb"));
 
-        // 加载分类下拉列表
         List<String> categories = foodService.getAllCategories();
         if (categories != null) {
             categoryCombo.getItems().addAll(categories);
         }
 
-        // 选择分类后自动刷新排行
         categoryCombo.setOnAction(e -> loadRank());
     }
 
     private void loadRank() {
-        // 按当前分类查询 Top 食品并刷新表格
         String category = categoryCombo.getValue();
         if (category == null) return;
         List<Food> list = foodService.getTopByCategory(category);
