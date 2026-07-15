@@ -38,6 +38,7 @@ public class UserService {
         }
     }
 
+    // 获取用户信息
     public User getUserById(int userId) {
         try {
             return userDao.findById(userId);
@@ -58,6 +59,16 @@ public class UserService {
             if (!user.getPassword().equals(oldPwd)) return "原密码不正确";
             int n = userDao.updatePassword(userId, newPwd);
             return n > 0 ? null : "修改失败，请稍后再试";
+        } catch (SQLException e) {
+            return "系统繁忙，请稍后再试";
+        }
+    }
+
+    // 更新健康档案（过敏原 + 慢性病）
+    public String updateHealthProfile(int userId, String allergens, String chronicDiseases) {
+        try {
+            int n = userDao.updateHealthProfile(userId, allergens, chronicDiseases);
+            return n > 0 ? null : "更新失败，请稍后再试";
         } catch (SQLException e) {
             return "系统繁忙，请稍后再试";
         }
