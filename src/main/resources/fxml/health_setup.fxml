@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.bmitracker.controller.HealthSetupController"
+           style="-fx-background-color: transparent;">
+
+    <StackPane fx:id="particlePane" style="-fx-background-color: transparent;"/>
+
+    <ScrollPane maxWidth="520" maxHeight="620" StackPane.alignment="CENTER"
+                style="-fx-background-color: rgba(10,10,15,0.70);
+                    -fx-background-radius: 16px;
+                    -fx-border-color: rgba(255,255,255,0.10);
+                    -fx-border-width: 1px;
+                    -fx-border-radius: 16px;
+                    -fx-background: transparent;">
+        <StackPane.margin><Insets bottom="40"/></StackPane.margin>
+
+        <VBox spacing="12" alignment="CENTER" style="-fx-background: transparent;">
+            <padding><Insets top="32" right="40" bottom="32" left="40"/></padding>
+
+            <Label text="完善健康档案" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.92);"/>
+            <Label text="选择您的过敏原和慢性病史，以便提供更精准的健康建议"
+                   style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.42);" wrapText="true"/>
+            <VBox.margin><Insets bottom="8"/></VBox.margin>
+
+            <!-- 过敏原 -->
+            <Label text="过敏原（可多选）" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #9ad5d5;"/>
+            <HBox spacing="6" alignment="CENTER">
+                <TextField fx:id="allergenSearchField" promptText="搜索过敏原..." HBox.hgrow="ALWAYS"
+                           styleClass="text-field-login" style="-fx-prompt-text-fill: rgba(255,255,255,0.3);"/>
+                <Button fx:id="allergenSearchBtn" text="搜索" onAction="#searchAllergens"
+                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+            <FlowPane fx:id="allergenOptionsPane" hgap="6" vgap="6" prefWrapLength="440"
+                      style="-fx-padding: 8 0 0 0;"/>
+            <Label text="已选：" style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.5);"/>
+            <FlowPane fx:id="allergenSelectedPane" hgap="6" vgap="6" prefWrapLength="440"/>
+
+            <Separator style="-fx-background: rgba(255,255,255,0.1); -fx-pref-height: 1;"/>
+            <VBox.margin><Insets top="8" bottom="8"/></VBox.margin>
+
+            <!-- 慢性病 -->
+            <Label text="慢性病史（可多选）" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #9ad5d5;"/>
+            <HBox spacing="6" alignment="CENTER">
+                <TextField fx:id="diseaseSearchField" promptText="搜索慢性病..." HBox.hgrow="ALWAYS"
+                           styleClass="text-field-login" style="-fx-prompt-text-fill: rgba(255,255,255,0.3);"/>
+                <Button fx:id="diseaseSearchBtn" text="搜索" onAction="#searchDiseases"
+                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+            <FlowPane fx:id="diseaseOptionsPane" hgap="6" vgap="6" prefWrapLength="440"
+                      style="-fx-padding: 8 0 0 0;"/>
+            <Label text="已选：" style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.5);"/>
+            <FlowPane fx:id="diseaseSelectedPane" hgap="6" vgap="6" prefWrapLength="440"/>
+
+            <Button text="保存并进入系统" onAction="#handleSave" styleClass="btn-login" maxWidth="Infinity">
+                <VBox.margin><Insets top="12"/></VBox.margin>
+            </Button>
+
+            <Hyperlink text="跳过，稍后设置" onAction="#handleSkip" styleClass="hyperlink-login"/>
+        </VBox>
+    </ScrollPane>
+
+</StackPane>
