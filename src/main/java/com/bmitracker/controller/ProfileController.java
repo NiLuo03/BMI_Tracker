@@ -25,7 +25,6 @@ public class ProfileController {
 
     @FXML
     void initialize() {
-        // 加载当前用户信息，填充到各表单字段
         User user = userService.getUserById(BMIApplication.currentUserId);
         if (user != null) {
             userIdLabel.setText(String.valueOf(user.getUserId()));
@@ -41,7 +40,6 @@ public class ProfileController {
 
     @FXML
     void handleSave(ActionEvent event) {
-        // 逐个字段校验并更新用户资料，数字型字段单独捕获格式异常
         User user = userService.getUserById(BMIApplication.currentUserId);
         if (user == null) return;
         try {
@@ -62,14 +60,12 @@ public class ProfileController {
         if (error == null) {
             showInfo("保存成功");
         } else {
-            // 服务层返回错误消息直接展示
             showAlert(error);
         }
     }
 
     @FXML
     void goToChangePassword(ActionEvent event) {
-        // 跳转修改密码子页面
         try {
             Stage stage = (Stage) userIdLabel.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/change_password.fxml"));
