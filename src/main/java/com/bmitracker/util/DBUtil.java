@@ -50,6 +50,11 @@ public class DBUtil {
                     "preferences VARCHAR(200)," +
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
+            // 兼容旧表：添加健康档案字段
+            for (String col : new String[]{"allergens VARCHAR(200)", "chronic_diseases VARCHAR(200)"}) {
+                try { stmt.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS " + col); } catch (SQLException ignored) {}
+            }
+
             stmt.execute("CREATE TABLE IF NOT EXISTS bmi_records (" +
                     "recordId INT AUTO_INCREMENT PRIMARY KEY," +
                     "userId INT NOT NULL," +
@@ -74,7 +79,6 @@ public class DBUtil {
                     "storage VARCHAR(10)," +
                     "cooking_method VARCHAR(10)," +
                     "image VARCHAR(50))");
-
             // 兼容旧表：尝试添加新列（表已存在时会跳过）
             for (String col : new String[]{"meal_type","food_texture","flavor","storage","cooking_method","image"}) {
                 try { stmt.execute("ALTER TABLE foods ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(10)"); } catch (SQLException ignored) {}
