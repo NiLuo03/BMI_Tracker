@@ -15,7 +15,7 @@
     <BorderPane>
         <top>
             <!-- 功能导航 + 右侧设置按钮 -->
-            <HBox spacing="2" style="-fx-background-color: rgba(0,0,0,0.10); -fx-padding: 6px 16px; -fx-border-color: rgba(16,185,129,0.06); -fx-border-width: 0 0 1px 0;" alignment="CENTER_LEFT">
+            <HBox spacing="2" style="-fx-background-color: rgba(255,255,255,0.03); -fx-padding: 6px 16px; -fx-border-color: rgba(16,185,129,0.06); -fx-border-width: 0 0 1px 0;" alignment="CENTER_LEFT">
                 <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;">
                     <HBox.margin><Insets right="16"/></HBox.margin>
                 </Label>
@@ -39,6 +39,7 @@
                             <MenuItem text="暗紫 #100a1a" onAction="#setBackdrop3"/>
                             <MenuItem text="纯黑 #000000" onAction="#setBackdrop4"/>
                             <MenuItem text="炭灰 #111111" onAction="#setBackdrop5"/>
+                            <MenuItem text="纯白 #ffffff" onAction="#setBackdrop6"/>
                         </Menu>
                         <SeparatorMenuItem/>
                         <MenuItem text="个人信息" onAction="#showProfile"/>

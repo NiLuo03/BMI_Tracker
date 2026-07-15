@@ -28,6 +28,7 @@ public class MainController {
     @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
     @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); }
     @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); }
+    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); }
 
     @FXML
     void initialize() {
