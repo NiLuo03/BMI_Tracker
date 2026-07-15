@@ -3,49 +3,49 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.bmitracker.controller.MainController"
            styleClass="root">
 
-    <!-- ====== 全屏幕布背景 ====== -->
+    <!-- ====== 全屏幕布 ====== -->
     <Region fx:id="backdrop" style="-fx-background-color: #050f0a;"/>
 
     <!-- ====== 内容层 ====== -->
     <BorderPane>
         <top>
-            <VBox>
-                <HBox style="-fx-background-color: transparent; -fx-padding: 10px 24px;" alignment="CENTER_LEFT" spacing="12">
-                    <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-                    <HBox HBox.hgrow="ALWAYS"/>
+            <!-- 功能导航 + 右侧设置按钮 -->
+            <HBox spacing="2" style="-fx-background-color: rgba(0,0,0,0.25); -fx-padding: 6px 16px; -fx-border-color: rgba(16,185,129,0.08); -fx-border-width: 0 0 1px 0;" alignment="CENTER_LEFT">
+                <Label text="BMI 体质评估与预测系统" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;">
+                    <HBox.margin><Insets right="16"/></HBox.margin>
+                </Label>
+                <Button text="首页" onAction="#showHome" styleClass="top-nav-btn"/>
+                <Button text="BMI 记录" onAction="#showBmiRecord" styleClass="top-nav-btn"/>
+                <Button text="历史记录" onAction="#showHistory" styleClass="top-nav-btn"/>
+                <Button text="折线图" onAction="#showChart" styleClass="top-nav-btn"/>
+                <Button text="趋势预测" onAction="#showPrediction" styleClass="top-nav-btn"/>
+                <Button text="膳食推荐" onAction="#showDiet" styleClass="top-nav-btn"/>
+                <Button text="食物对比" onAction="#showFood" styleClass="top-nav-btn"/>
+                <Button text="食物榜单" onAction="#showFoodRank" styleClass="top-nav-btn"/>
+                <HBox HBox.hgrow="ALWAYS"/>
+                <Label fx:id="pageTitle" text="首页" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
 
-                    <!-- 幕布配色选择器 -->
-                    <HBox spacing="4" style="-fx-background-color: rgba(255,255,255,0.04); -fx-background-radius: 8px; -fx-padding: 3px 6px;">
-                        <Label text="幕布" style="-fx-font-size: 10px; -fx-text-fill: #6b7280;"/>
-                        <Button text="墨绿" onAction="#setBackdrop1" style="-fx-background-color: #050f0a; -fx-text-fill: #10b981; -fx-font-size: 10px; -fx-padding: 3px 8px; -fx-background-radius: 4px; -fx-cursor: hand;"/>
-                        <Button text="深蓝" onAction="#setBackdrop2" style="-fx-background-color: #0a0a1a; -fx-text-fill: #60a5fa; -fx-font-size: 10px; -fx-padding: 3px 8px; -fx-background-radius: 4px; -fx-cursor: hand;"/>
-                        <Button text="暗紫" onAction="#setBackdrop3" style="-fx-background-color: #100a1a; -fx-text-fill: #a78bfa; -fx-font-size: 10px; -fx-padding: 3px 8px; -fx-background-radius: 4px; -fx-cursor: hand;"/>
-                        <Button text="纯黑" onAction="#setBackdrop4" style="-fx-background-color: #000000; -fx-text-fill: #9ca3af; -fx-font-size: 10px; -fx-padding: 3px 8px; -fx-background-radius: 4px; -fx-cursor: hand;"/>
-                        <Button text="炭灰" onAction="#setBackdrop5" style="-fx-background-color: #111111; -fx-text-fill: #d1d5db; -fx-font-size: 10px; -fx-padding: 3px 8px; -fx-background-radius: 4px; -fx-cursor: hand;"/>
-                    </HBox>
-
-                    <Button text="个人信息" onAction="#showProfile" styleClass="btn-secondary"/>
-                    <Button text="退出登录" onAction="#showLogout" styleClass="btn-secondary"/>
-                </HBox>
-                <HBox spacing="2" style="-fx-background-color: rgba(0,0,0,0.30); -fx-padding: 4px 20px; -fx-border-color: rgba(16,185,129,0.08); -fx-border-width: 0 0 1px 0;">
-                    <Button text="首页" onAction="#showHome" styleClass="top-nav-btn"/>
-                    <Button text="BMI 记录" onAction="#showBmiRecord" styleClass="top-nav-btn"/>
-                    <Button text="历史记录" onAction="#showHistory" styleClass="top-nav-btn"/>
-                    <Button text="折线图" onAction="#showChart" styleClass="top-nav-btn"/>
-                    <Button text="趋势预测" onAction="#showPrediction" styleClass="top-nav-btn"/>
-                    <Button text="膳食推荐" onAction="#showDiet" styleClass="top-nav-btn"/>
-                    <Button text="食物对比" onAction="#showFood" styleClass="top-nav-btn"/>
-                    <Button text="食物榜单" onAction="#showFoodRank" styleClass="top-nav-btn"/>
-                    <HBox HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="pageTitle" text="首页概览" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
-                </HBox>
-            </VBox>
+                <!-- 设置下拉 -->
+                <MenuButton text="⚙ 设置" style="-fx-background-color: rgba(16,185,129,0.08); -fx-text-fill: #10b981; -fx-font-size: 12px; -fx-padding: 4px 12px; -fx-background-radius: 6px; -fx-cursor: hand;">
+                    <items>
+                        <Menu text="幕布配色">
+                            <MenuItem text="墨绿 #050f0a" onAction="#setBackdrop1"/>
+                            <MenuItem text="深蓝 #0a0a1a" onAction="#setBackdrop2"/>
+                            <MenuItem text="暗紫 #100a1a" onAction="#setBackdrop3"/>
+                            <MenuItem text="纯黑 #000000" onAction="#setBackdrop4"/>
+                            <MenuItem text="炭灰 #111111" onAction="#setBackdrop5"/>
+                        </Menu>
+                        <SeparatorMenuItem/>
+                        <MenuItem text="个人信息" onAction="#showProfile"/>
+                        <MenuItem text="退出登录" onAction="#showLogout"/>
+                    </items>
+                </MenuButton>
+            </HBox>
         </top>
 
         <center>
