@@ -22,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -64,6 +63,15 @@ public class AIChatController {
     private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
     private static final String MODEL = "ep-20260714154339-vkt22";
+
+    private static final ImageView aiAvatar;
+    static {
+        Image img = new Image(AIChatController.class.getResourceAsStream("/images/ai_ball.png"));
+        aiAvatar = new ImageView(img);
+        aiAvatar.setFitWidth(24);
+        aiAvatar.setFitHeight(24);
+        aiAvatar.setPreserveRatio(true);
+    }
 
     private final HttpClient httpClient;
     private final List<ChatMessage> messages = new ArrayList<>();
@@ -136,57 +144,13 @@ public class AIChatController {
         ballStage.setX(0);
         ballStage.setY(100);
 
-        Circle face = new Circle(17);
-        face.setFill(Color.WHITE);
-        face.setStroke(Color.web("#ddd"));
-        face.setStrokeWidth(0.5);
+        Image ballImage = new Image(getClass().getResourceAsStream("/images/ai_ball.png"));
+        ImageView ballView = new ImageView(ballImage);
+        ballView.setFitWidth(44);
+        ballView.setFitHeight(44);
+        ballView.setPreserveRatio(true);
 
-        Ellipse earL = new Ellipse(8, 7);
-        earL.setFill(Color.web("#222"));
-        earL.setCenterX(-12);
-        earL.setCenterY(-12);
-
-        Ellipse earR = new Ellipse(8, 7);
-        earR.setFill(Color.web("#222"));
-        earR.setCenterX(12);
-        earR.setCenterY(-12);
-
-        Ellipse eyeL = new Ellipse(3.5, 4);
-        eyeL.setFill(Color.web("#222"));
-        eyeL.setCenterX(-6);
-        eyeL.setCenterY(-3);
-
-        Ellipse eyeR = new Ellipse(3.5, 4);
-        eyeR.setFill(Color.web("#222"));
-        eyeR.setCenterX(6);
-        eyeR.setCenterY(-3);
-
-        Ellipse eyeL2 = new Ellipse(1.5, 2);
-        eyeL2.setFill(Color.WHITE);
-        eyeL2.setCenterX(-5);
-        eyeL2.setCenterY(-4.5);
-
-        Ellipse eyeR2 = new Ellipse(1.5, 2);
-        eyeR2.setFill(Color.WHITE);
-        eyeR2.setCenterX(7);
-        eyeR2.setCenterY(-4.5);
-
-        Ellipse nose = new Ellipse(2.5, 2);
-        nose.setFill(Color.web("#333"));
-        nose.setCenterX(0);
-        nose.setCenterY(3);
-
-        Ellipse cheekL = new Ellipse(4, 3);
-        cheekL.setFill(Color.web("#ffcdd2"));
-        cheekL.setCenterX(-10);
-        cheekL.setCenterY(4);
-
-        Ellipse cheekR = new Ellipse(4, 3);
-        cheekR.setFill(Color.web("#ffcdd2"));
-        cheekR.setCenterX(10);
-        cheekR.setCenterY(4);
-
-        StackPane ballPane = new StackPane(face, earL, earR, eyeL, eyeR, eyeL2, eyeR2, nose, cheekL, cheekR);
+        StackPane ballPane = new StackPane(ballView);
         ballPane.setPrefSize(44, 44);
         Circle clip = new Circle(22, 22, 22);
         ballPane.setClip(clip);
@@ -369,14 +333,14 @@ public class AIChatController {
         chatStage.setResizable(false);
 
         VBox titleBar = new VBox(0);
-        titleBar.setStyle("-fx-background-color: #10b981; -fx-padding: 6 12 4 12;");
+        titleBar.setStyle("-fx-background-color: #b8e4e4; -fx-padding: 6 12 4 12;");
         titleBar.setAlignment(Pos.TOP_CENTER);
         Label titleLabel = new Label("AI 助手");
-        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setTextFill(Color.web("#222"));
         titleLabel.setFont(Font.font("System Bold", 14));
 
         Label subtitleLabel = new Label("内容由AI生成");
-        subtitleLabel.setTextFill(Color.WHITE);
+        subtitleLabel.setTextFill(Color.web("#222"));
         subtitleLabel.setFont(Font.font("System", 10));
         subtitleLabel.setOpacity(0.8);
 
@@ -389,7 +353,8 @@ public class AIChatController {
         scrollPane = new ScrollPane(messageArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(320);
-        scrollPane.setStyle("-fx-background: linear-gradient(from 0% 0% to 0% 100%, #c8ecec, #fffdf5); -fx-border-color: transparent;");
+        scrollPane.setStyle("-fx-background: linear-gradient(from 0% 0% to 0% 100%, #c8ecec, #fffdf5); -fx-border-color: transparent; -fx-background-insets: 0; -fx-padding: 0;");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         inputField = new TextField();
         inputField.setPromptText("输入消息...");
@@ -402,8 +367,8 @@ public class AIChatController {
         inputField.setOnAction(e -> sendMessage());
 
         Button cameraBtn = new Button("📷");
-        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #666; -fx-font-size: 18; -fx-cursor: hand; -fx-padding: 0 4;");
-        cameraBtn.setPrefHeight(36);
+        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4a9e9e; -fx-font-size: 18; -fx-cursor: hand; -fx-padding: 0; -fx-background-radius: 18; -fx-border-radius: 18; -fx-border-color: #9ad5d5; -fx-border-width: 2; -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36; -fx-alignment: center;");
+        cameraBtn.setPrefSize(36, 36);
         cameraBtn.setOnAction(e -> handleCameraCapture());
         Tooltip tt = new Tooltip("拍摄食物并识别热量");
         Tooltip.install(cameraBtn, tt);
@@ -582,11 +547,17 @@ public class AIChatController {
         label.setMaxWidth(240);
         label.setPadding(new Insets(8, 12, 8, 12));
 
-        HBox box = new HBox();
+        HBox box = new HBox(6);
         if ("AI".equals(sender)) {
             label.setStyle("-fx-background-color: #e8f5e9; -fx-background-radius: 12; -fx-text-fill: #333; -fx-font-size: 13;");
-            box.getChildren().add(label);
-            box.setAlignment(Pos.CENTER_LEFT);
+            ImageView avatar = new ImageView(aiAvatar.getImage());
+            avatar.setFitWidth(36);
+            avatar.setFitHeight(36);
+            avatar.setPreserveRatio(true);
+            Circle avatarClip = new Circle(18, 18, 18);
+            avatar.setClip(avatarClip);
+            box.getChildren().addAll(avatar, label);
+            box.setAlignment(Pos.TOP_LEFT);
         } else {
             label.setStyle("-fx-background-color: #1a6b3c; -fx-background-radius: 12; -fx-text-fill: white; -fx-font-size: 13;");
             box.getChildren().add(label);
