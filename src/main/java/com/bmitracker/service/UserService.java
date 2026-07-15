@@ -38,7 +38,6 @@ public class UserService {
         }
     }
 
-    // 获取用户信息
     public User getUserById(int userId) {
         try {
             return userDao.findById(userId);

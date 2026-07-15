@@ -11,6 +11,7 @@ public class FoodServiceImpl implements FoodService {
 
     private final FoodDao foodDao = new FoodDao();
 
+    // 传 null 等于查全部，复用 findFiltered 省个 DAO 方法
     @Override
     public List<Food> getAllFoods() {
         try {
@@ -34,6 +35,7 @@ public class FoodServiceImpl implements FoodService {
         try { return foodDao.findAllCategories(); } catch (SQLException e) { return Collections.emptyList(); }
     }
 
+    // 按热量排序返回，category 为空就直接返回全部食品
     @Override
     public List<Food> getTopByCategory(String category) {
         if (category == null || category.isEmpty()) return getAllFoods();

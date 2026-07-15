@@ -2,6 +2,7 @@ package com.bmitracker.model;
 
 import java.time.LocalDateTime;
 
+// 用户账号模型：基本信息 + 身体指标
 public class User {
     private int userId;
     private String userName;

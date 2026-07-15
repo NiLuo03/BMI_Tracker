@@ -73,6 +73,7 @@ public class ParticleTextCanvas extends Canvas {
         double x, y, vx, vy, size, alpha, hue, phase, baseX, baseY;
     }
 
+    // 构造器：初始化粒子系统、环境光点、启动动画循环
     public ParticleTextCanvas(double width, double height, String[] words) {
         super(width, height);
         this.words = words;
@@ -82,6 +83,7 @@ public class ParticleTextCanvas extends Canvas {
         startAnimation();
     }
 
+    // 生成 60 个随机环境光点，缓慢漂浮营造背景氛围
     private void initAmbients() {
         for (int i = 0; i < 60; i++) {
             Ambient a = new Ambient();
@@ -100,14 +102,17 @@ public class ParticleTextCanvas extends Canvas {
     }
 
     private void startAnimation() {
+        // 动画周期：粒子聚合（converge）→ 驻留展示（hold）→ 400 帧后切词消散（scatter）
         nextWord(words[0]);
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                // 帧循环：擦除画布 → 更新/绘制粒子 → 环境光点 → 定时切词
                 frameCount++;
                 gc.setFill(Color.color(0.04, 0.04, 0.06, 0.08));
                 gc.fillRect(0, 0, getWidth(), getHeight());
 
+                // 粒子物理更新 + 越界死亡粒子回收
                 for (int i = particles.size() - 1; i >= 0; i--) {
                     Particle p = particles.get(i);
                     p.update();
@@ -132,6 +137,7 @@ public class ParticleTextCanvas extends Canvas {
                     gc.fillOval(a.x - a.size / 2, a.y - a.size / 2, a.size, a.size);
                 }
 
+                // 每 400 帧切换下一个词，触发新一轮聚合 → 消散
                 if (frameCount % 400 == 0) {
                     wordIndex = (wordIndex + 1) % words.length;
                     nextWord(words[wordIndex]);
@@ -141,6 +147,7 @@ public class ParticleTextCanvas extends Canvas {
         timer.start();
     }
 
+    // particle→word 映射：将文字渲染为像素坐标，每个非透明像素成为一个粒子的目标位置
     private void nextWord(String word) {
         Canvas offCanvas = new Canvas(getWidth(), getHeight());
         GraphicsContext ctx = offCanvas.getGraphicsContext2D();
@@ -155,11 +162,14 @@ public class ParticleTextCanvas extends Canvas {
         WritableImage snapshot = offCanvas.snapshot(params, null);
         PixelReader reader = snapshot.getPixelReader();
 
+        // 采样步长 4px，平衡渲染精度与性能
         int step = 4;
+        // 旧粒子标记为消散，新粒子用新颜色
         currentColor = randomColor();
 
         for (Particle p : particles) p.kill(getWidth(), getHeight());
 
+        // 逐像素扫描文字区域，收集不透明像素坐标作为粒子目标点（text partitioning）
         List<int[]> coords = new ArrayList<>();
         for (int y = 0; y < getHeight(); y += step) {
             for (int x = 0; x < getWidth(); x += step) {
@@ -170,6 +180,7 @@ public class ParticleTextCanvas extends Canvas {
         }
         Collections.shuffle(coords);
 
+        // 复用现有粒子或创建新粒子，设定新目标坐标与颜色
         int reuse = 0;
         for (int[] c : coords) {
             Particle p;
@@ -196,11 +207,13 @@ public class ParticleTextCanvas extends Canvas {
             p.targetY = c[1];
         }
 
+        // 多余粒子标记为消散
         for (int i = reuse; i < particles.size(); i++) {
             particles.get(i).kill(getWidth(), getHeight());
         }
     }
 
+    // 生成下一轮粒子的随机鲜艳色
     private Color randomColor() {
         double hue = Math.random() * 360;
         return Color.hsb(hue, 0.55, 0.92);

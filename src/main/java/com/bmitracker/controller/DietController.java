@@ -24,12 +24,14 @@ public class DietController {
 
     @FXML
     void handleGenerate(ActionEvent event) {
+        // 获取用户资料并计算当前 BMI 与健康状态
         User user = userService.getUserById(BMIApplication.currentUserId);
         if (user == null) return;
 
         double bmi = bmiService.calculateBMI(user.getHeight(), user.getWeight());
         String status = bmiService.getHealthStatus(bmi);
 
+        // 禁用按钮，组装 AI 请求参数
         Button btn = (Button) event.getSource();
         btn.setDisable(true);
 
@@ -39,6 +41,7 @@ public class DietController {
         double weight = user.getWeight();
         String preferences = user.getPreferences();
 
+        // 后台线程请求 AI，避免阻塞 UI 线程
         new Thread(() -> {
             try {
                 String json = CozeClient.getDietRecommendation(age, sex, height, weight, bmi, status, preferences);
@@ -47,6 +50,7 @@ public class DietController {
                         showAlert("AI 服务繁忙，请稍后再试");
                     } else {
                         try {
+                            // 手工解析简易 JSON 键值对，填充三餐和总热量
                             String clean = json.replaceAll("[{}\"]", "");
                             String[] parts = clean.split(",");
                             for (String part : parts) {

@@ -27,11 +27,14 @@ public class BmiController {
             return;
         }
 
+        // 保存身高体重记录到数据库
         String error = bmiService.saveRecord(BMIApplication.currentUserId, height, weight);
         if (error == null) {
+            // 计算 BMI 和健康评级并显示
             double bmi = bmiService.calculateBMI(height, weight);
             String status = bmiService.getHealthStatus(bmi);
             showInfo(String.format("您的BMI为 %.1f，状态：%s", bmi, status));
+            // 计算完成后清空输入框
             heightField.clear();
             weightField.clear();
         } else {

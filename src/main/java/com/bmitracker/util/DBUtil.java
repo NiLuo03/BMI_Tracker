@@ -74,6 +74,7 @@ public class DBUtil {
                     "storage VARCHAR(10)," +
                     "cooking_method VARCHAR(10)," +
                     "image VARCHAR(50))");
+
             // 兼容旧表：尝试添加新列（表已存在时会跳过）
             for (String col : new String[]{"meal_type","food_texture","flavor","storage","cooking_method","image"}) {
                 try { stmt.execute("ALTER TABLE foods ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(10)"); } catch (SQLException ignored) {}

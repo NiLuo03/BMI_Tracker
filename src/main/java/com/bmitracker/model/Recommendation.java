@@ -2,6 +2,7 @@ package com.bmitracker.model;
 
 import java.time.LocalDateTime;
 
+// AI 膳食推荐：一日三餐安排 + 总热量
 public class Recommendation {
     private int recId;
     private int userId;

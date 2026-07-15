@@ -44,6 +44,7 @@ public class FoodCompareController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // combo 选择后立即触发对比构建
         foodCombo1.setOnAction(e -> { f1 = foodCombo1.getValue(); buildComparison(); });
         foodCombo2.setOnAction(e -> { f2 = foodCombo2.getValue(); buildComparison(); });
 
@@ -51,6 +52,7 @@ public class FoodCompareController implements Initializable {
     }
 
     private void loadFoods() {
+        // 初始化加载食物数据，绑定各筛选器变更事件
         try {
             List<Food> list = foodService.getAllFoods();
             LOG.info("加载到 " + (list == null ? 0 : list.size()) + " 种食物");
@@ -74,6 +76,7 @@ public class FoodCompareController implements Initializable {
     }
 
     private void loadFilterOptions() {
+        // 为每个筛选下拉框填充可选项
         filterCategory.setItems(FXCollections.observableArrayList(foodService.getAllCategories()));
         filterMealType.setItems(FXCollections.observableArrayList(foodService.getAllMealTypes()));
         filterTexture.setItems(FXCollections.observableArrayList(foodService.getAllTextures()));
@@ -84,6 +87,7 @@ public class FoodCompareController implements Initializable {
 
     @FXML
     private void resetFilters() {
+        // 一键清空所有筛选条件
         filterCategory.setValue(null);
         filterMealType.setValue(null);
         filterTexture.setValue(null);
@@ -94,6 +98,7 @@ public class FoodCompareController implements Initializable {
     }
 
     private void applyFilters() {
+        // 六项筛选条件对流过滤食物列表
         String cat = filterCategory.getValue();
         String meal = filterMealType.getValue();
         String tex = filterTexture.getValue();
@@ -114,12 +119,14 @@ public class FoodCompareController implements Initializable {
         foodCombo1.setItems(items);
         foodCombo2.setItems(items);
 
+        // 若已选食物被过滤掉则清空选择
         if (f1 != null && !filtered.contains(f1)) { f1 = null; foodCombo1.setValue(null); }
         if (f2 != null && !filtered.contains(f2)) { f2 = null; foodCombo2.setValue(null); }
         buildComparison();
     }
 
     private void buildComparison() {
+        // 构建左右对比布局：图片卡片 + 分隔线 + 逐行属性比较
         compareContent.getChildren().clear();
 
         if (f1 == null && f2 == null) {
@@ -130,7 +137,7 @@ public class FoodCompareController implements Initializable {
             return;
         }
 
-        // Image + name cards
+        // 左右两张食物卡片并排展示
         HBox cardRow = new HBox(50);
         cardRow.setAlignment(Pos.CENTER);
         cardRow.setPadding(new Insets(10, 0, 20, 0));
@@ -149,7 +156,7 @@ public class FoodCompareController implements Initializable {
         sep.setPadding(new Insets(10, 0, 10, 0));
         compareContent.getChildren().add(sep);
 
-        // Spec rows
+        // 逐行对比营养指标和属性，左列 f1 右列 f2
         buildSpecRow("热量", f1, f2, f -> String.format("%.0f", f.getCalories()), "大卡");
         buildSpecRow("蛋白质", f1, f2, f -> String.format("%.1f", f.getProtein()), "g");
         buildSpecRow("脂肪", f1, f2, f -> String.format("%.1f", f.getFat()), "g");
@@ -163,6 +170,7 @@ public class FoodCompareController implements Initializable {
         compareContent.getChildren().add(new Region() {{ setMinHeight(40); }});
     }
 
+    // 单张食物卡片：图片 + 名称 + 分类标签
     private VBox foodCard(Food f) {
         VBox card = new VBox(10);
         card.setAlignment(Pos.TOP_CENTER);
@@ -201,6 +209,7 @@ public class FoodCompareController implements Initializable {
         return card;
     }
 
+    // 单行属性对比：左食物值 | 属性名 | 右食物值，支持单位后缀
     private void buildSpecRow(String label, Food f1, Food f2, Function<Food, String> valueExtractor, String unit) {
         HBox row = new HBox(135);
         row.setAlignment(Pos.CENTER);
@@ -238,6 +247,7 @@ public class FoodCompareController implements Initializable {
         compareContent.getChildren().add(row);
     }
 
+    // 空值或空串转占位符 "-"
     private static String nullToDash(String s) {
         return s != null && !s.isEmpty() ? s : "-";
     }

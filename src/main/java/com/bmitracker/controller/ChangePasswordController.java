@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 public class ChangePasswordController {
 
+    // 三个密码输入框：原密码 / 新密码 / 确认新密码
     @FXML private PasswordField oldPwdField;
     @FXML private PasswordField newPwdField;
     @FXML private PasswordField confirmPwdField;
@@ -20,6 +21,7 @@ public class ChangePasswordController {
 
     @FXML
     void handleChange(ActionEvent event) {
+        // 校验旧密码、比对两次新密码，通过后更新数据库并跳回登录页
         String oldPwd = oldPwdField.getText();
         String newPwd = newPwdField.getText();
         String confirmPwd = confirmPwdField.getText();
@@ -45,6 +47,7 @@ public class ChangePasswordController {
 
     @FXML
     void goBack(ActionEvent event) {
+        // 返回个人资料页
         try {
             Stage stage = (Stage) oldPwdField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profile.fxml"));

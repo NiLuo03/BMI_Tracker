@@ -51,6 +51,7 @@ public class BmiRecordDao {
         return 0;
     }
 
+    // 按 userId 查记录列表
     private List<BmiRecord> queryList(int userId, String sql) throws SQLException {
         List<BmiRecord> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
@@ -63,6 +64,7 @@ public class BmiRecordDao {
         return list;
     }
 
+    // 映射 ResultSet 到 BmiRecord
     private BmiRecord mapRecord(ResultSet rs) throws SQLException {
         BmiRecord r = new BmiRecord();
         r.setRecordId(rs.getInt("recordId"));

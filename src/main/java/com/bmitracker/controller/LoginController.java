@@ -35,6 +35,7 @@ public class LoginController {
     @FXML
     void initialize() {
         if (particleCanvas != null) {
+            // 初始化粒子动画背景，展示动态文字
             particleText = new ParticleTextCanvas(
                     1200, 800,
                     new String[]{"BMI", "PHYSICAL", "ASSESSMENT", "PREDICTION", "HEALTH"});
@@ -62,6 +63,7 @@ public class LoginController {
         if (userId > 0) {
             BMIApplication.currentUserId = userId;
             try {
+                // 加载主场景，配置深色渐变背景
                 Stage stage = (Stage) userNameField.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
                 Scene newScene = new Scene(loader.load(), 1200, 800);
@@ -79,6 +81,7 @@ public class LoginController {
                 stage.setScene(newScene);
                 stage.setResizable(true);
 
+                // 透明度 0→1 过渡，400ms 淡入
                 Timeline fadeIn = new Timeline(
                     new KeyFrame(Duration.millis(400),
                         new KeyValue(newRoot.opacityProperty(), 1))

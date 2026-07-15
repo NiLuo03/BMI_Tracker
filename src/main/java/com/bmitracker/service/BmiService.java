@@ -9,7 +9,7 @@ public class BmiService {
 
     private final BmiRecordDao recordDao = new BmiRecordDao();
 
-    // 计算 BMI
+    // BMI = 体重(kg) / 身高(m)²，结果保留一位小数
     public double calculateBMI(double heightCm, double weightKg) {
         double heightM = heightCm / 100.0;
         return Math.round((weightKg / (heightM * heightM)) * 10.0) / 10.0;
@@ -55,7 +55,6 @@ public class BmiService {
         }
     }
 
-    // 统计记录数
     public int getRecordCount(int userId) {
         try {
             return recordDao.countByUserId(userId);
@@ -64,7 +63,6 @@ public class BmiService {
         }
     }
 
-    // 获取最近一次 BMI
     public Double getLatestBmi(int userId) {
         List<BmiRecord> records = getRecordsDesc(userId);
         if (records != null && !records.isEmpty()) {

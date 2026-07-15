@@ -9,6 +9,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
+// 应用入口：加载登录页、配置深色渐变背景、启动 JavaFX 窗口
 public class BMIApplication extends Application {
 
     public static int currentUserId = -1;
@@ -28,6 +29,7 @@ public class BMIApplication extends Application {
     }
 
     public static void main(String[] args) {
+        // JavaFX 启动入口
         launch(args);
     }
 }

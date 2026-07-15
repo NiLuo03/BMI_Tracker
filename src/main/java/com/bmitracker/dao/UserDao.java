@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public class UserDao {
 
+    // 查重（注册时用）
     public User findByUserName(String userName) throws SQLException {
         String sql = "SELECT * FROM users WHERE userName = ?";
         try (Connection conn = DBUtil.getConnection();
@@ -19,6 +20,7 @@ public class UserDao {
         }
     }
 
+    // 插入新用户，返回自增 userId
     public int insert(User user) throws SQLException {
         String sql = "INSERT INTO users (userName, password, userAge, sex) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
@@ -35,6 +37,7 @@ public class UserDao {
         return -1;
     }
 
+    // 登录验证，返回 userId 或 -1
     public int login(String userName, String password) throws SQLException {
         String sql = "SELECT userId FROM users WHERE userName = ? AND password = ?";
         try (Connection conn = DBUtil.getConnection();
@@ -84,6 +87,7 @@ public class UserDao {
         }
     }
 
+    // 将 ResultSet 映射为 User（含 Timestamp 转换）
     private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("userId"));

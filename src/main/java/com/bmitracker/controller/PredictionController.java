@@ -34,6 +34,7 @@ public class PredictionController {
 
     @FXML
     void handlePredict() {
+        // 核心预测：用线性回归拟合历史 BMI 趋势，推算一周后的值并可视化
         List<BmiRecord> records = bmiService.getRecordsAsc(BMIApplication.currentUserId);
         if (records == null || records.size() < 4) {
             showAlert("至少需要4条记录才能进行预测");

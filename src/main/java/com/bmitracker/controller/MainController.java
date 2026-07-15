@@ -23,6 +23,7 @@ public class MainController {
     @FXML private Label userLabel;
     @FXML private Region backdrop;
 
+    // 背景主题切换，让用户自定义界面氛围
     @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
     @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
     @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
@@ -32,6 +33,7 @@ public class MainController {
 
     @FXML
     void initialize() {
+        // 应用启动后自动弹出 AI 悬浮助手
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
             ai.setMainStage((Stage) contentPane.getScene().getWindow());
@@ -41,6 +43,7 @@ public class MainController {
 
     @FXML
     void showHome(ActionEvent event) {
+        // 刷新首页时完整重载主布局，保留用户选中的背景色
         try {
             String savedColor = backdrop.getStyle();
             Stage stage = (Stage) contentPane.getScene().getWindow();
@@ -58,6 +61,7 @@ public class MainController {
         }
     }
 
+    // 各功能导航按钮：统一走 loadView 切换内容区、更新标题
     @FXML
     void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); setTitle("BMI 记录"); }
     @FXML
@@ -95,6 +99,7 @@ public class MainController {
         }
     }
 
+    // 将指定 fxml 渲染到中央内容区域，实现子页面切换
     private void loadView(String fxml) {
         try {
             Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
