@@ -601,3 +601,127 @@
 .menu .label {
     -fx-text-fill: #d0d0d0;
 }
+
+/* --- 设置菜单按钮 --- */
+.setting-menu {
+    -fx-background-color: rgba(16,185,129,0.08);
+    -fx-text-fill: #10b981;
+    -fx-font-size: 12px;
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+/* ====== 浅色主题适配（纯白 #ffffff 幕布全组件） ====== */
+.light-theme {
+    -fx-text-fill: #1e293b;
+}
+
+/* --- 组合框浅绿 --- */
+.light-theme .combo-box-glass {
+    -fx-background-color: rgba(200,235,215,0.50);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(16,185,129,0.30);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 13px;
+    -fx-padding: 4px 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 0);
+}
+.light-theme .combo-box-glass .arrow-button .arrow {
+    -fx-background-color: rgba(16,185,129,0.60);
+}
+.light-theme .combo-box-glass .list-cell {
+    -fx-text-fill: #1e293b;
+    -fx-background-color: transparent;
+    -fx-padding: 6px 10px;
+}
+.light-theme .combo-box-glass .list-cell:hover {
+    -fx-background-color: rgba(16,185,129,0.10);
+}
+.light-theme .combo-box-glass .list-view {
+    -fx-background-color: rgba(240,250,243,0.98);
+    -fx-background-radius: 12px;
+    -fx-padding: 6px;
+    -fx-border-color: rgba(16,185,129,0.25);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 4);
+}
+.light-theme .combo-box-glass .list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(16,185,129,0.30);
+    -fx-background-radius: 4px;
+}
+.light-theme .combo-box-glass .list-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(16,185,129,0.50);
+}
+
+/* --- 下滑块浅绿（整体页面滚动条） --- */
+.light-theme #scrollPane .scroll-bar:vertical .thumb,
+.light-theme #scrollPane .scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(16,185,129,0.30);
+    -fx-background-radius: 5px;
+}
+.light-theme #scrollPane .scroll-bar:vertical .thumb:hover,
+.light-theme #scrollPane .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: rgba(16,185,129,0.50);
+}
+
+/* --- TitledPane 浅绿 --- */
+.light-theme .titled-pane-glass {
+    -fx-background-color: rgba(200,235,215,0.15);
+    -fx-background-radius: 14px;
+    -fx-border-color: rgba(16,185,129,0.20);
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+}
+.light-theme .titled-pane-glass > .title {
+    -fx-background-color: rgba(16,185,129,0.10);
+    -fx-background-radius: 14px 14px 0 0;
+    -fx-padding: 12px 18px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #059669;
+}
+.light-theme .titled-pane-glass > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(16,185,129,0.15);
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 14px;
+}
+
+/* --- 标签文字浅色适配 --- */
+.light-theme .label-heading {
+    -fx-text-fill: #047857;
+}
+.light-theme .label-subheading {
+    -fx-text-fill: #6b7280;
+}
+.light-theme .field-label {
+    -fx-text-fill: #4b5563;
+}
+
+/* --- 设置菜单浅绿 --- */
+.light-theme .setting-menu {
+    -fx-background-color: rgba(16,185,129,0.12);
+    -fx-text-fill: #059669;
+}
+.light-theme .context-menu {
+    -fx-background-color: #f0faf3;
+    -fx-border-color: rgba(16,185,129,0.20);
+}
+.light-theme .menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1e293b;
+}
+.light-theme .menu-item:hover {
+    -fx-background-color: rgba(16,185,129,0.08);
+}
+.light-theme .menu-item:focused {
+    -fx-background-color: rgba(16,185,129,0.12);
+}
+.light-theme .menu .label {
+    -fx-text-fill: #1e293b;
+}

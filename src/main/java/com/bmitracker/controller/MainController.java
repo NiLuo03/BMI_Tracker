@@ -24,12 +24,23 @@ public class MainController {
     @FXML private Region backdrop;
 
     // 背景主题切换，让用户自定义界面氛围
-    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
-    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
-    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
-    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); }
-    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); }
-    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); }
+    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); removeLightTheme(); }
+    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); removeLightTheme(); }
+    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); removeLightTheme(); }
+    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); removeLightTheme(); }
+    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); removeLightTheme(); }
+    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); addLightTheme(); }
+
+    private void addLightTheme() {
+        if (backdrop.getScene() != null && backdrop.getScene().getRoot() != null) {
+            backdrop.getScene().getRoot().getStyleClass().add("light-theme");
+        }
+    }
+    private void removeLightTheme() {
+        if (backdrop.getScene() != null && backdrop.getScene().getRoot() != null) {
+            backdrop.getScene().getRoot().getStyleClass().remove("light-theme");
+        }
+    }
 
     @FXML
     void initialize() {
@@ -56,6 +67,10 @@ public class MainController {
             }
             stage.setScene(scene);
             stage.centerOnScreen();
+            // 恢复浅色主题 class
+            if (newCtrl != null && savedColor != null && savedColor.contains("#ffffff")) {
+                newCtrl.addLightTheme();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

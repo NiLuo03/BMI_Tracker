@@ -29,7 +29,7 @@
                 <Button text="食物榜单" onAction="#showFoodRank" styleClass="top-nav-btn"/>
                 <HBox HBox.hgrow="ALWAYS"/>
                 <Label fx:id="pageTitle" text="首页" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
-                <MenuButton text="⚙ 设置" style="-fx-background-color: rgba(16,185,129,0.08); -fx-text-fill: #10b981; -fx-font-size: 12px; -fx-padding: 4px 12px; -fx-background-radius: 6px; -fx-cursor: hand;">
+                <MenuButton text="⚙ 设置" styleClass="setting-menu">
                     <items>
                         <Menu text="幕布配色">
                             <MenuItem text="墨绿 #050f0a" onAction="#setBackdrop1"/>
