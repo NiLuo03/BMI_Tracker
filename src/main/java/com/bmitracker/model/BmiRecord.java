@@ -4,7 +4,6 @@ import javafx.beans.property.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-// BMI 测量记录：每次记录的身高体重 BMI 值及健康评级
 public class BmiRecord {
     private final IntegerProperty recordId = new SimpleIntegerProperty();
     private final IntegerProperty userId = new SimpleIntegerProperty();
