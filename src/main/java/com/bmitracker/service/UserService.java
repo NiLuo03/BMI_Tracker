@@ -64,6 +64,16 @@ public class UserService {
         }
     }
 
+    // 更新健康档案（过敏原 + 慢性病）
+    public String updateHealthProfile(int userId, String allergens, String chronicDiseases) {
+        try {
+            int n = userDao.updateHealthProfile(userId, allergens, chronicDiseases);
+            return n > 0 ? null : "更新失败，请稍后再试";
+        } catch (SQLException e) {
+            return "系统繁忙，请稍后再试";
+        }
+    }
+
     // 更新个人信息
     public String updateProfile(User user) {
         if (user.getHeight() <= 0) return "请输入有效身高";

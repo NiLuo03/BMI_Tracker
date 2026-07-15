@@ -61,7 +61,7 @@ public class UserDao {
     }
 
     public int update(User user) throws SQLException {
-        String sql = "UPDATE users SET userAge = ?, sex = ?, height = ?, weight = ?, preferences = ? WHERE userId = ?";
+        String sql = "UPDATE users SET userAge = ?, sex = ?, height = ?, weight = ?, preferences = ?, allergens = ?, chronic_diseases = ? WHERE userId = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, user.getUserAge());
@@ -69,7 +69,20 @@ public class UserDao {
             ps.setDouble(3, user.getHeight());
             ps.setDouble(4, user.getWeight());
             ps.setString(5, user.getPreferences());
-            ps.setInt(6, user.getUserId());
+            ps.setString(6, user.getAllergens());
+            ps.setString(7, user.getChronicDiseases());
+            ps.setInt(8, user.getUserId());
+            return ps.executeUpdate();
+        }
+    }
+
+    public int updateHealthProfile(int userId, String allergens, String chronicDiseases) throws SQLException {
+        String sql = "UPDATE users SET allergens = ?, chronic_diseases = ? WHERE userId = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, allergens);
+            ps.setString(2, chronicDiseases);
+            ps.setInt(3, userId);
             return ps.executeUpdate();
         }
     }
@@ -94,6 +107,8 @@ public class UserDao {
         user.setHeight(rs.getDouble("height"));
         user.setWeight(rs.getDouble("weight"));
         user.setPreferences(rs.getString("preferences"));
+        user.setAllergens(rs.getString("allergens"));
+        user.setChronicDiseases(rs.getString("chronic_diseases"));
         Timestamp ts = rs.getTimestamp("createTime");
         if (ts != null) user.setCreateTime(ts.toLocalDateTime());
         return user;
