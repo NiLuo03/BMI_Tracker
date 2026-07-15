@@ -7,7 +7,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
-// 封装 Coze API 调用：鉴权、请求发送、指数退避重试、手动解析 JSON 响应
 public class CozeClient {
 
     private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
@@ -16,7 +15,6 @@ public class CozeClient {
     private static final int TIMEOUT_SECONDS = 30;
     private static final int MAX_RETRIES = 2;
 
-    // 静态便捷方法，每次调用新建客户端实例，用完即弃
     public static String getDietRecommendation(int age, int sex, double height, double weight,
                                                 double bmi, String status, String preferences) {
         String genderStr = sex == 0 ? "男" : "女";
@@ -56,7 +54,6 @@ public class CozeClient {
                 .build();
     }
 
-    // 带指数退避的重试：5xx 和网络异常自动重试，间隔逐次递增
     public String sendMessage(String userMessage) {
         String json = buildJson(userMessage);
         RuntimeException lastEx = null;
@@ -110,7 +107,6 @@ public class CozeClient {
                 + "],\"stream\":false}";
     }
 
-    // 手动解析 JSON，不依赖第三方库；顺便把转义字符还原成实际字符
     private String extractMessage(String responseBody) {
         if (responseBody == null || responseBody.isBlank()) {
             return "";
