@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 public class UserDao {
 
-    // 查重（注册时用）
     public User findByUserName(String userName) throws SQLException {
         String sql = "SELECT * FROM users WHERE userName = ?";
         try (Connection conn = DBUtil.getConnection();
@@ -20,7 +19,6 @@ public class UserDao {
         }
     }
 
-    // 插入新用户，返回自增 userId
     public int insert(User user) throws SQLException {
         String sql = "INSERT INTO users (userName, password, userAge, sex) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
@@ -37,7 +35,6 @@ public class UserDao {
         return -1;
     }
 
-    // 登录验证，返回 userId 或 -1
     public int login(String userName, String password) throws SQLException {
         String sql = "SELECT userId FROM users WHERE userName = ? AND password = ?";
         try (Connection conn = DBUtil.getConnection();
@@ -64,7 +61,7 @@ public class UserDao {
     }
 
     public int update(User user) throws SQLException {
-        String sql = "UPDATE users SET userAge = ?, sex = ?, height = ?, weight = ?, preferences = ? WHERE userId = ?";
+        String sql = "UPDATE users SET userAge = ?, sex = ?, height = ?, weight = ?, preferences = ?, allergens = ?, chronic_diseases = ? WHERE userId = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, user.getUserAge());
@@ -72,7 +69,20 @@ public class UserDao {
             ps.setDouble(3, user.getHeight());
             ps.setDouble(4, user.getWeight());
             ps.setString(5, user.getPreferences());
-            ps.setInt(6, user.getUserId());
+            ps.setString(6, user.getAllergens());
+            ps.setString(7, user.getChronicDiseases());
+            ps.setInt(8, user.getUserId());
+            return ps.executeUpdate();
+        }
+    }
+
+    public int updateHealthProfile(int userId, String allergens, String chronicDiseases) throws SQLException {
+        String sql = "UPDATE users SET allergens = ?, chronic_diseases = ? WHERE userId = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, allergens);
+            ps.setString(2, chronicDiseases);
+            ps.setInt(3, userId);
             return ps.executeUpdate();
         }
     }
@@ -87,7 +97,6 @@ public class UserDao {
         }
     }
 
-    // 将 ResultSet 映射为 User（含 Timestamp 转换）
     private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("userId"));
@@ -98,6 +107,8 @@ public class UserDao {
         user.setHeight(rs.getDouble("height"));
         user.setWeight(rs.getDouble("weight"));
         user.setPreferences(rs.getString("preferences"));
+        user.setAllergens(rs.getString("allergens"));
+        user.setChronicDiseases(rs.getString("chronic_diseases"));
         Timestamp ts = rs.getTimestamp("createTime");
         if (ts != null) user.setCreateTime(ts.toLocalDateTime());
         return user;
