@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -22,6 +23,25 @@ public class MainController {
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
     @FXML private Region backdrop;
+    @FXML private Button toggleNavBtn;
+    @FXML private Button btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank;
+
+    private boolean navExpanded = true;
+    private static final String[][] NAV_TEXTS = {
+        {"首页", "🏠"}, {"BMI 记录", "📊"}, {"历史记录", "📋"}, {"折线图", "📈"},
+        {"趋势预测", "🔮"}, {"膳食推荐", "🥗"}, {"食物对比", "🍎"}, {"食物榜单", "🏆"}
+    };
+    private static final String[] NAV_BTN_IDS = {"btnHome", "btnBmi", "btnHistory", "btnChart", "btnPredict", "btnDiet", "btnCompare", "btnRank"};
+
+    @FXML
+    void toggleNav() {
+        navExpanded = !navExpanded;
+        toggleNavBtn.setText(navExpanded ? "«" : "»");
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank};
+        for (int i = 0; i < btns.length; i++) {
+            btns[i].setText(navExpanded ? NAV_TEXTS[i][0] : NAV_TEXTS[i][1]);
+        }
+    }
 
     @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
     @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
