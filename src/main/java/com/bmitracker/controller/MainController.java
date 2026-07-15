@@ -11,6 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
@@ -25,22 +30,29 @@ public class MainController {
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
     @FXML private Button btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank;
+    @FXML private VBox sidebar;
 
     private boolean navExpanded = true;
-    private static final String[][] NAV_TEXTS = {
-        {"首页", "🏠"}, {"BMI 记录", "📊"}, {"历史记录", "📋"}, {"折线图", "📈"},
-        {"趋势预测", "🔮"}, {"膳食推荐", "🥗"}, {"食物对比", "🍎"}, {"食物榜单", "🏆"}
-    };
-    private static final String[] NAV_BTN_IDS = {"btnHome", "btnBmi", "btnHistory", "btnChart", "btnPredict", "btnDiet", "btnCompare", "btnRank"};
 
     @FXML
     void toggleNav() {
         navExpanded = !navExpanded;
-        toggleNavBtn.setText(navExpanded ? "«" : "»");
+        double target = navExpanded ? 150 : 48;
         Button[] btns = {btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank};
+        String[] icons = {"🏠", "📊", "📋", "📈", "🔮", "🥗", "🍎", "🏆"};
+        String[] texts = {"首页", "BMI 记录", "历史记录", "折线图", "趋势预测", "膳食推荐", "食物对比", "食物榜单"};
+
+        Timeline anim = new Timeline(
+            new KeyFrame(Duration.millis(200),
+                new KeyValue(sidebar.prefWidthProperty(), target))
+        );
+        anim.play();
+
         for (int i = 0; i < btns.length; i++) {
-            btns[i].setText(navExpanded ? NAV_TEXTS[i][0] : NAV_TEXTS[i][1]);
+            btns[i].setText(navExpanded ? "  " + texts[i] : icons[i]);
+            btns[i].setMaxWidth(navExpanded ? Double.MAX_VALUE : 34);
         }
+        toggleNavBtn.setText(navExpanded ? "« 收起" : "»");
     }
 
     @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }

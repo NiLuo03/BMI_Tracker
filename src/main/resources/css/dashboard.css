@@ -485,3 +485,18 @@
 .menu .label {
     -fx-text-fill: #d0d0d0;
 }
+
+/* --- 侧边栏按钮 --- */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8c8c8c;
+    -fx-font-size: 12px;
+    -fx-padding: 8px 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+.sidebar-btn:hover {
+    -fx-background-color: rgba(16,185,129,0.08);
+    -fx-text-fill: #10b981;
+}
