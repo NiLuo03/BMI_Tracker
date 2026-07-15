@@ -13,7 +13,7 @@
     <BorderPane>
         <left>
             <!-- ====== 纵向可折叠侧边栏 ====== -->
-            <VBox fx:id="sidebar" spacing="4" style="-fx-background-color: rgba(255,255,255,0.02); -fx-border-color: rgba(255,255,255,0.04); -fx-border-width: 0 1px 0 0; -fx-padding: 12px 6px;" prefWidth="150" minWidth="50">
+            <VBox fx:id="sidebar" spacing="4" style="-fx-background-color: transparent; -fx-padding: 12px 6px;" prefWidth="150" minWidth="50">
 
                 <Label text="BMI" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981; -fx-padding: 4px 8px 0 8px;"/>
                 <Separator style="-fx-background-color: rgba(16,185,129,0.10);">
