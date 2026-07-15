@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 public class RegisterController {
 
-    // 注册表单字段
     @FXML private TextField userNameField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmField;
@@ -33,10 +32,8 @@ public class RegisterController {
             showAlert("请输入有效年龄");
             return;
         }
-        // 性别单选：男=0，女=1
         int sex = maleRadio.isSelected() ? 0 : 1;
 
-        // 调用注册服务，成功则跳转登录页
         String error = userService.register(userName, password, confirmPwd, age, sex);
         if (error == null) {
             showInfo("注册成功！请登录");
