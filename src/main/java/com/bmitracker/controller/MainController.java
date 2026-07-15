@@ -41,13 +41,15 @@ public class MainController {
     @FXML
     void showHome(ActionEvent event) {
         try {
+            String savedColor = backdrop.getStyle();
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Scene scene = new Scene(loader.load(), 1200, 800);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-            scene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                    new Stop(0, Color.web("#050f0a")),
-                    new Stop(1, Color.web("#000000"))));
+            MainController newCtrl = loader.getController();
+            if (newCtrl != null && newCtrl.backdrop != null) {
+                newCtrl.backdrop.setStyle(savedColor);
+            }
             stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
