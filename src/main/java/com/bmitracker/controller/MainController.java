@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Color;
@@ -20,6 +21,14 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
+    @FXML private Region backdrop;
+
+    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
+    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
+    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
+    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); }
+    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); }
+    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); }
 
     @FXML
     void initialize() {
@@ -33,13 +42,15 @@ public class MainController {
     @FXML
     void showHome(ActionEvent event) {
         try {
+            String savedColor = backdrop.getStyle();
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Scene scene = new Scene(loader.load(), 1200, 800);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-            scene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                    new Stop(0, Color.web("#050f0a")),
-                    new Stop(1, Color.web("#000000"))));
+            MainController newCtrl = loader.getController();
+            if (newCtrl != null && newCtrl.backdrop != null) {
+                newCtrl.backdrop.setStyle(savedColor);
+            }
             stage.setScene(scene);
             stage.centerOnScreen();
         } catch (Exception e) {
