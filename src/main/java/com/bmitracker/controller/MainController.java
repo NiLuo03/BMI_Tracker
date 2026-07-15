@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Color;
@@ -20,6 +21,7 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
+    @FXML private Region backdrop;
 
     @FXML
     void initialize() {

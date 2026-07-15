@@ -34,6 +34,9 @@
 
     <center>
         <StackPane fx:id="contentPane">
+            <!-- 幕布背景层 -->
+            <Region fx:id="backdrop" style="-fx-background-color: #050f0a;"/>
+
             <ScrollPane fitToWidth="true" fitToHeight="true"
                         style="-fx-background: transparent; -fx-background-color: transparent;">
                 <content>
