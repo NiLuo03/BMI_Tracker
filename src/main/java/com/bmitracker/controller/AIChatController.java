@@ -401,7 +401,7 @@ public class AIChatController {
             prompt.append("- 暂无饮食推荐记录\n");
         }
 
-        prompt.append("\n请根据以上数据给出针对性的健康建议。可以包括：体重管理建议、饮食调整建议、运动计划建议等。");
+        prompt.append("\n以上信息仅用作背景参考，不要在回答中主动提及、罗列或复述这些数据。只有当用户主动询问健康、饮食、运动等相关话题时，再据此给出建议。用户问不相关问题时正常回答即可，不要强行联系健康数据。");
         systemPrompt = prompt.toString();
     }
 
