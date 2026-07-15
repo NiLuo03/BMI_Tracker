@@ -19,7 +19,6 @@ import javafx.scene.text.FontWeight;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +43,6 @@ public class FoodCompareController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // combo 选择后立即触发对比构建
         foodCombo1.setOnAction(e -> { f1 = foodCombo1.getValue(); buildComparison(); });
         foodCombo2.setOnAction(e -> { f2 = foodCombo2.getValue(); buildComparison(); });
 
@@ -52,7 +50,6 @@ public class FoodCompareController implements Initializable {
     }
 
     private void loadFoods() {
-        // 初始化加载食物数据，绑定各筛选器变更事件
         try {
             List<Food> list = foodService.getAllFoods();
             LOG.info("加载到 " + (list == null ? 0 : list.size()) + " 种食物");
@@ -76,7 +73,6 @@ public class FoodCompareController implements Initializable {
     }
 
     private void loadFilterOptions() {
-        // 为每个筛选下拉框填充可选项
         filterCategory.setItems(FXCollections.observableArrayList(foodService.getAllCategories()));
         filterMealType.setItems(FXCollections.observableArrayList(foodService.getAllMealTypes()));
         filterTexture.setItems(FXCollections.observableArrayList(foodService.getAllTextures()));
@@ -87,7 +83,6 @@ public class FoodCompareController implements Initializable {
 
     @FXML
     private void resetFilters() {
-        // 一键清空所有筛选条件
         filterCategory.setValue(null);
         filterMealType.setValue(null);
         filterTexture.setValue(null);
@@ -98,7 +93,6 @@ public class FoodCompareController implements Initializable {
     }
 
     private void applyFilters() {
-        // 六项筛选条件对流过滤食物列表
         String cat = filterCategory.getValue();
         String meal = filterMealType.getValue();
         String tex = filterTexture.getValue();
@@ -119,28 +113,26 @@ public class FoodCompareController implements Initializable {
         foodCombo1.setItems(items);
         foodCombo2.setItems(items);
 
-        // 若已选食物被过滤掉则清空选择
         if (f1 != null && !filtered.contains(f1)) { f1 = null; foodCombo1.setValue(null); }
         if (f2 != null && !filtered.contains(f2)) { f2 = null; foodCombo2.setValue(null); }
         buildComparison();
     }
 
     private void buildComparison() {
-        // 构建左右对比布局：图片卡片 + 分隔线 + 逐行属性比较
         compareContent.getChildren().clear();
 
         if (f1 == null && f2 == null) {
             Label hint = new Label("在上方选择两种食物开始对比");
-            hint.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 16;");
+            hint.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 16;");
             VBox.setVgrow(hint, Priority.ALWAYS);
             compareContent.getChildren().add(hint);
             return;
         }
 
-        // 左右两张食物卡片并排展示
-        HBox cardRow = new HBox(50);
+        // Card area: two images + names
+        HBox cardRow = new HBox(30);
         cardRow.setAlignment(Pos.CENTER);
-        cardRow.setPadding(new Insets(10, 0, 20, 0));
+        cardRow.setPadding(new Insets(20, 0, 30, 0));
 
         VBox leftCard = foodCard(f1);
         VBox rightCard = foodCard(f2);
@@ -149,105 +141,99 @@ public class FoodCompareController implements Initializable {
         compareContent.getChildren().add(cardRow);
 
         // Separator
-        Region sep = new Region();
-        sep.setMinHeight(1);
-        sep.setMaxHeight(1);
-        sep.setStyle("-fx-background-color: rgba(16,185,129,0.10);");
-        sep.setPadding(new Insets(10, 0, 10, 0));
+        Separator sep = new Separator();
+        sep.setStyle("-fx-background-color: #e2e8f0;");
         compareContent.getChildren().add(sep);
 
-        // 逐行对比营养指标和属性，左列 f1 右列 f2
-        buildSpecRow("热量", f1, f2, f -> String.format("%.0f", f.getCalories()), "大卡");
-        buildSpecRow("蛋白质", f1, f2, f -> String.format("%.1f", f.getProtein()), "g");
-        buildSpecRow("脂肪", f1, f2, f -> String.format("%.1f", f.getFat()), "g");
-        buildSpecRow("碳水化合物", f1, f2, f -> String.format("%.1f", f.getCarb()), "g");
-        buildSpecRow("餐食类型", f1, f2, f -> nullToDash(f.getMealType()), null);
-        buildSpecRow("口感", f1, f2, f -> nullToDash(f.getFoodTexture()), null);
-        buildSpecRow("口味", f1, f2, f -> nullToDash(f.getFlavor()), null);
-        buildSpecRow("储存方式", f1, f2, f -> nullToDash(f.getStorage()), null);
-        buildSpecRow("烹饪方式", f1, f2, f -> nullToDash(f.getCookingMethod()), null);
+        // Spec rows
+        buildSpecRow("热量", f1, f2, f -> String.format("%.0f 大卡", f.getCalories()));
+        buildSpecRow("蛋白质", f1, f2, f -> String.format("%.1f g", f.getProtein()));
+        buildSpecRow("脂肪", f1, f2, f -> String.format("%.1f g", f.getFat()));
+        buildSpecRow("碳水化合物", f1, f2, f -> String.format("%.1f g", f.getCarb()));
+        buildSpecRow("餐食类型", f1, f2, f -> nullToDash(f.getMealType()));
+        buildSpecRow("口感", f1, f2, f -> nullToDash(f.getFoodTexture()));
+        buildSpecRow("口味", f1, f2, f -> nullToDash(f.getFlavor()));
+        buildSpecRow("储存方式", f1, f2, f -> nullToDash(f.getStorage()));
+        buildSpecRow("烹饪方式", f1, f2, f -> nullToDash(f.getCookingMethod()));
 
+        // Add some bottom padding
         compareContent.getChildren().add(new Region() {{ setMinHeight(40); }});
     }
 
-    // 单张食物卡片：图片 + 名称 + 分类标签
     private VBox foodCard(Food f) {
-        VBox card = new VBox(10);
+        VBox card = new VBox(8);
         card.setAlignment(Pos.TOP_CENTER);
-        card.setPrefWidth(280);
-        card.setStyle("-fx-background-color: rgba(255,255,255,0.03); -fx-background-radius: 16; -fx-padding: 24; -fx-border-color: rgba(16,185,129,0.10); -fx-border-width: 1; -fx-border-radius: 16;");
+        card.setPrefWidth(260);
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);");
 
         if (f == null) {
             Label placeholder = new Label("未选择");
-            placeholder.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 14;");
+            placeholder.setStyle("-fx-text-fill: #cbd5e1; -fx-font-size: 14;");
             card.getChildren().add(placeholder);
             return card;
         }
 
+        // Image — background loading, 180x180
         ImageView imgView = new ImageView();
-        imgView.setFitWidth(280);
-        imgView.setFitHeight(280);
+        imgView.setFitWidth(180);
+        imgView.setFitHeight(180);
         imgView.setPreserveRatio(true);
         try {
             String imgUrl = getClass().getResource("/images/foods/" + f.getImage()).toExternalForm();
-            Image img = new Image(imgUrl, 280, 280, true, true, true);
+            Image img = new Image(imgUrl, 180, 180, true, true, true);
             imgView.setImage(img);
         } catch (Exception e) {
             LOG.log(Level.FINE, "图片加载失败: " + f.getImage(), e);
         }
         card.getChildren().add(imgView);
 
+        // Name
         Label nameLabel = new Label(f.getFoodName());
-        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
-        nameLabel.setStyle("-fx-text-fill: #d0d0d0;");
+        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
+        nameLabel.setStyle("-fx-text-fill: #1e293b;");
         card.getChildren().add(nameLabel);
 
+        // Category tag
         Label catLabel = new Label(f.getCategory());
-        catLabel.setStyle("-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #34d399; -fx-background-radius: 6; -fx-padding: 3 10; -fx-font-size: 12;");
+        catLabel.setStyle("-fx-background-color: #dcfce7; -fx-text-fill: #166534; -fx-background-radius: 4; -fx-padding: 2 8; -fx-font-size: 12;");
         card.getChildren().add(catLabel);
 
         return card;
     }
 
-    // 单行属性对比：左食物值 | 属性名 | 右食物值，支持单位后缀
-    private void buildSpecRow(String label, Food f1, Food f2, Function<Food, String> valueExtractor, String unit) {
-        HBox row = new HBox(135);
-        row.setAlignment(Pos.CENTER);
-        row.setPadding(new Insets(18, 40, 18, 40));
+    private void buildSpecRow(String label, Food f1, Food f2, java.util.function.Function<Food, String> extractor) {
+        HBox row = new HBox();
+        row.setPadding(new Insets(12, 0, 12, 0));
+        row.setStyle("-fx-border-color: transparent transparent #f1f5f9 transparent; -fx-border-width: 0 0 1 0;");
 
-        VBox leftCol = new VBox(2);
-        leftCol.setAlignment(Pos.CENTER);
-        leftCol.setPrefWidth(240);
+        // Three columns: left value, metric name (center), right value
+        Region leftSpacer = new Region();
+        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
 
-        String leftText = f1 != null ? valueExtractor.apply(f1) : "-";
-        Label leftVal = new Label(unit != null ? leftText + " " + unit : leftText);
-        leftVal.setFont(Font.font("System", FontWeight.BOLD, 22));
-        leftVal.setStyle("-fx-text-fill: #d0d0d0;");
+        Label metricLabel = new Label(label);
+        metricLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13;");
+        metricLabel.setMinWidth(100);
+        metricLabel.setAlignment(Pos.CENTER);
 
-        Label leftName = new Label(label);
-        leftName.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12;");
+        Region rightSpacer = new Region();
+        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
-        leftCol.getChildren().addAll(leftVal, leftName);
+        // Left food value (at start of row)
+        Label leftVal = new Label(f1 != null ? extractor.apply(f1) : "-");
+        leftVal.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 14;");
+        leftVal.setMinWidth(200);
+        leftVal.setAlignment(Pos.CENTER);
 
-        VBox rightCol = new VBox(2);
-        rightCol.setAlignment(Pos.CENTER);
-        rightCol.setPrefWidth(240);
+        // Right food value (at end of row)
+        Label rightVal = new Label(f2 != null ? extractor.apply(f2) : "-");
+        rightVal.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 14;");
+        rightVal.setMinWidth(200);
+        rightVal.setAlignment(Pos.CENTER);
 
-        String rightText = f2 != null ? valueExtractor.apply(f2) : "-";
-        Label rightVal = new Label(unit != null ? rightText + " " + unit : rightText);
-        rightVal.setFont(Font.font("System", FontWeight.BOLD, 22));
-        rightVal.setStyle("-fx-text-fill: #d0d0d0;");
-
-        Label rightName = new Label(label);
-        rightName.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12;");
-
-        rightCol.getChildren().addAll(rightVal, rightName);
-
-        row.getChildren().addAll(leftCol, rightCol);
+        row.getChildren().addAll(leftVal, leftSpacer, metricLabel, rightSpacer, rightVal);
         compareContent.getChildren().add(row);
     }
 
-    // 空值或空串转占位符 "-"
     private static String nullToDash(String s) {
         return s != null && !s.isEmpty() ? s : "-";
     }
