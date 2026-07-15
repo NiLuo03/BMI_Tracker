@@ -1,6 +1,7 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.ParticleTextCanvas;
 import javafx.animation.KeyFrame;
@@ -35,7 +36,6 @@ public class LoginController {
     @FXML
     void initialize() {
         if (particleCanvas != null) {
-            // 初始化粒子动画背景，展示动态文字
             particleText = new ParticleTextCanvas(
                     1200, 800,
                     new String[]{"BMI", "PHYSICAL", "ASSESSMENT", "PREDICTION", "HEALTH"});
@@ -62,35 +62,11 @@ public class LoginController {
         int userId = userService.login(userName, password);
         if (userId > 0) {
             BMIApplication.currentUserId = userId;
-            try {
-                // 加载主场景，配置深色渐变背景
-                Stage stage = (Stage) userNameField.getScene().getWindow();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-                Scene newScene = new Scene(loader.load(), 1200, 800);
-                newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-                newScene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                    new Stop(0, javafx.scene.paint.Color.web("#050f0a")),
-                    new Stop(1, javafx.scene.paint.Color.web("#000000"))));
-
-                // 淡入动画
-                Scene oldScene = stage.getScene();
-                Node oldRoot = oldScene.getRoot();
-                Parent newRoot = newScene.getRoot();
-                newRoot.setOpacity(0);
-
-                stage.setScene(newScene);
-                stage.setResizable(true);
-
-                // 透明度 0→1 过渡，400ms 淡入
-                Timeline fadeIn = new Timeline(
-                    new KeyFrame(Duration.millis(400),
-                        new KeyValue(newRoot.opacityProperty(), 1))
-                );
-                fadeIn.play();
-
-                if (particleText != null) particleText.stop();
-            } catch (Exception e) {
-                showAlert("系统繁忙，请稍后再试");
+            User user = userService.getUserById(userId);
+            if (user != null && user.needsHealthProfile()) {
+                navigateToHealthSetup();
+            } else {
+                navigateToMain();
             }
         } else {
             showAlert("账号或密码错误");
@@ -109,6 +85,49 @@ public class LoginController {
             stage.centerOnScreen();
         } catch (Exception e) {
             showAlert("页面加载失败");
+        }
+    }
+
+    private void navigateToHealthSetup() {
+        try {
+            Stage stage = (Stage) userNameField.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/health_setup.fxml"));
+            Scene scene = new Scene(loader.load(), 1200, 800);
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            scene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, javafx.scene.paint.Color.web("#050f0a")),
+                new Stop(1, javafx.scene.paint.Color.web("#000000"))));
+            stage.setScene(scene);
+            if (particleText != null) particleText.stop();
+        } catch (Exception e) {
+            showAlert("页面加载失败");
+        }
+    }
+
+    private void navigateToMain() {
+        try {
+            Stage stage = (Stage) userNameField.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+            Scene newScene = new Scene(loader.load(), 1200, 800);
+            newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            newScene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, javafx.scene.paint.Color.web("#050f0a")),
+                new Stop(1, javafx.scene.paint.Color.web("#000000"))));
+
+            Parent newRoot = newScene.getRoot();
+            newRoot.setOpacity(0);
+
+            stage.setScene(newScene);
+            stage.setResizable(true);
+
+            Timeline fadeIn = new Timeline(
+                new KeyFrame(Duration.millis(400), new KeyValue(newRoot.opacityProperty(), 1))
+            );
+            fadeIn.play();
+
+            if (particleText != null) particleText.stop();
+        } catch (Exception e) {
+            showAlert("系统繁忙，请稍后再试");
         }
     }
 
