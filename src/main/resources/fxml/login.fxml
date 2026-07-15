@@ -7,9 +7,9 @@
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.bmitracker.controller.LoginController"
-           style="-fx-background-color: #0a0a0f;">
+           style="-fx-background-color: transparent;">
 
-    <StackPane fx:id="particlePane" style="-fx-background-color: #0a0a0f;">
+    <StackPane fx:id="particlePane" style="-fx-background-color: transparent;">
         <Canvas fx:id="particleCanvas" width="1200" height="800"/>
     </StackPane>
 

@@ -16,6 +16,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -63,7 +66,9 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
                 Scene newScene = new Scene(loader.load(), 1200, 800);
                 newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-                newScene.setFill(null);
+                newScene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                    new Stop(0, javafx.scene.paint.Color.web("#050f0a")),
+                    new Stop(1, javafx.scene.paint.Color.web("#000000"))));
 
                 // 淡入动画
                 Scene oldScene = stage.getScene();

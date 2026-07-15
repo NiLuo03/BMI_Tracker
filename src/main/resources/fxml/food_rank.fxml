@@ -7,7 +7,7 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodRankController"
-      style="-fx-background-color: #000000;">
+      style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="食物榜单" styleClass="label-heading"/>
