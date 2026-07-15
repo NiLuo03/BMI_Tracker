@@ -13,7 +13,6 @@ public class FoodDao {
         return queryList(sql, ps -> ps.setString(1, category));
     }
 
-    // 按 ID 列表查，动态拼 IN 子句
     public List<Food> findByIds(List<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) return new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM foods WHERE foodId IN (");
@@ -28,7 +27,6 @@ public class FoodDao {
         });
     }
 
-    // 获取各类枚举值（分类/餐型/口感等）
     public List<String> findAllCategories() throws SQLException {
         return queryDistinct("SELECT DISTINCT category FROM foods ORDER BY category", "category");
     }
@@ -53,7 +51,6 @@ public class FoodDao {
         return queryDistinct("SELECT DISTINCT cooking_method FROM foods WHERE cooking_method IS NOT NULL ORDER BY cooking_method", "cooking_method");
     }
 
-    // 多条件筛选，动态拼接 WHERE 子句
     public List<Food> findFiltered(String category, String mealType, String texture, String flavor, String storage, String cooking) throws SQLException {
         StringBuilder sql = new StringBuilder("SELECT * FROM foods WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -71,7 +68,6 @@ public class FoodDao {
         });
     }
 
-    // 动态追加 AND 条件到 SQL
     private void appendParam(StringBuilder sql, List<Object> params, String value, String column) {
         if (value != null && !value.isEmpty()) {
             sql.append(" AND ").append(column).append(" = ?");
@@ -79,13 +75,11 @@ public class FoodDao {
         }
     }
 
-    // 参数绑定回调接口
     @FunctionalInterface
     private interface ParamBinder {
         void bind(PreparedStatement ps) throws SQLException;
     }
 
-    // 通用查询：执行 SQL 并映射为 Food 列表
     private List<Food> queryList(String sql, ParamBinder binder) throws SQLException {
         List<Food> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
@@ -98,7 +92,6 @@ public class FoodDao {
         return list;
     }
 
-    // 查单列去重值
     private List<String> queryDistinct(String sql, String column) throws SQLException {
         List<String> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
@@ -109,7 +102,6 @@ public class FoodDao {
         return list;
     }
 
-    // 将 ResultSet 行映射为 Food 对象
     private Food mapFood(ResultSet rs) throws SQLException {
         Food f = new Food();
         f.setFoodId(rs.getInt("foodId"));
