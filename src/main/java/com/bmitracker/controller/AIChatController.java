@@ -22,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -39,6 +38,13 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import javax.imageio.ImageIO;
+
+import com.bmitracker.model.User;
+import com.bmitracker.model.BmiRecord;
+import com.bmitracker.model.Recommendation;
+import com.bmitracker.service.UserService;
+import com.bmitracker.service.BmiService;
+import com.bmitracker.dao.RecommendationDao;
 
 public class AIChatController {
 
@@ -58,6 +64,7 @@ public class AIChatController {
     private double dragStartX, dragStartY;
     private double stageStartX, stageStartY;
     private boolean dragging = false;
+    private javafx.beans.value.ChangeListener<Number> mainXListener, mainYListener;
     private boolean longPressed = false;
     private Timeline longPressTimer;
 
@@ -65,8 +72,22 @@ public class AIChatController {
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
     private static final String MODEL = "ep-20260714154339-vkt22";
 
+    private static final ImageView aiAvatar;
+    static {
+        Image img = new Image(AIChatController.class.getResourceAsStream("/images/ai_ball.png"));
+        aiAvatar = new ImageView(img);
+        aiAvatar.setFitWidth(24);
+        aiAvatar.setFitHeight(24);
+        aiAvatar.setPreserveRatio(true);
+    }
+
     private final HttpClient httpClient;
     private final List<ChatMessage> messages = new ArrayList<>();
+    private String systemPrompt;
+
+    private final UserService userService = new UserService();
+    private final BmiService bmiService = new BmiService();
+    private final RecommendationDao recommendationDao = new RecommendationDao();
 
     private AIChatController() {
         httpClient = HttpClient.newBuilder()
@@ -95,8 +116,12 @@ public class AIChatController {
     }
 
     public void setMainStage(Stage stage) {
+        if (mainStage != null) {
+            mainStage.xProperty().removeListener(mainXListener);
+            mainStage.yProperty().removeListener(mainYListener);
+        }
         this.mainStage = stage;
-        mainStage.xProperty().addListener((obs, oldX, newX) -> {
+        mainXListener = (obs, oldX, newX) -> {
             if (ballStage != null && ballStage.isShowing()) {
                 double dx = newX.doubleValue() - oldX.doubleValue();
                 ballStage.setX(ballStage.getX() + dx);
@@ -104,8 +129,8 @@ public class AIChatController {
                     particleStage.setX(particleStage.getX() + dx);
                 }
             }
-        });
-        mainStage.yProperty().addListener((obs, oldY, newY) -> {
+        };
+        mainYListener = (obs, oldY, newY) -> {
             if (ballStage != null && ballStage.isShowing()) {
                 double dy = newY.doubleValue() - oldY.doubleValue();
                 ballStage.setY(ballStage.getY() + dy);
@@ -113,7 +138,9 @@ public class AIChatController {
                     particleStage.setY(particleStage.getY() + dy);
                 }
             }
-        });
+        };
+        mainStage.xProperty().addListener(mainXListener);
+        mainStage.yProperty().addListener(mainYListener);
     }
 
     public void hide() {
@@ -136,57 +163,13 @@ public class AIChatController {
         ballStage.setX(0);
         ballStage.setY(100);
 
-        Circle face = new Circle(17);
-        face.setFill(Color.WHITE);
-        face.setStroke(Color.web("#ddd"));
-        face.setStrokeWidth(0.5);
+        Image ballImage = new Image(getClass().getResourceAsStream("/images/ai_ball.png"));
+        ImageView ballView = new ImageView(ballImage);
+        ballView.setFitWidth(44);
+        ballView.setFitHeight(44);
+        ballView.setPreserveRatio(true);
 
-        Ellipse earL = new Ellipse(8, 7);
-        earL.setFill(Color.web("#222"));
-        earL.setCenterX(-12);
-        earL.setCenterY(-12);
-
-        Ellipse earR = new Ellipse(8, 7);
-        earR.setFill(Color.web("#222"));
-        earR.setCenterX(12);
-        earR.setCenterY(-12);
-
-        Ellipse eyeL = new Ellipse(3.5, 4);
-        eyeL.setFill(Color.web("#222"));
-        eyeL.setCenterX(-6);
-        eyeL.setCenterY(-3);
-
-        Ellipse eyeR = new Ellipse(3.5, 4);
-        eyeR.setFill(Color.web("#222"));
-        eyeR.setCenterX(6);
-        eyeR.setCenterY(-3);
-
-        Ellipse eyeL2 = new Ellipse(1.5, 2);
-        eyeL2.setFill(Color.WHITE);
-        eyeL2.setCenterX(-5);
-        eyeL2.setCenterY(-4.5);
-
-        Ellipse eyeR2 = new Ellipse(1.5, 2);
-        eyeR2.setFill(Color.WHITE);
-        eyeR2.setCenterX(7);
-        eyeR2.setCenterY(-4.5);
-
-        Ellipse nose = new Ellipse(2.5, 2);
-        nose.setFill(Color.web("#333"));
-        nose.setCenterX(0);
-        nose.setCenterY(3);
-
-        Ellipse cheekL = new Ellipse(4, 3);
-        cheekL.setFill(Color.web("#ffcdd2"));
-        cheekL.setCenterX(-10);
-        cheekL.setCenterY(4);
-
-        Ellipse cheekR = new Ellipse(4, 3);
-        cheekR.setFill(Color.web("#ffcdd2"));
-        cheekR.setCenterX(10);
-        cheekR.setCenterY(4);
-
-        StackPane ballPane = new StackPane(face, earL, earR, eyeL, eyeR, eyeL2, eyeR2, nose, cheekL, cheekR);
+        StackPane ballPane = new StackPane(ballView);
         ballPane.setPrefSize(44, 44);
         Circle clip = new Circle(22, 22, 22);
         ballPane.setClip(clip);
@@ -361,6 +344,67 @@ public class AIChatController {
         chatStage.show();
     }
 
+    private void buildSystemPrompt() {
+        int userId = com.bmitracker.BMIApplication.currentUserId;
+        if (userId < 0) {
+            systemPrompt = "你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。";
+            return;
+        }
+
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("你是一位专业的健康管理顾问和营养师。请根据以下用户数据，提供个性化的健康建议、饮食指导和运动推荐。用中文回答，语气亲切自然。\n\n");
+
+        prompt.append("【用户信息】\n");
+        User user = userService.getUserById(userId);
+        if (user != null) {
+            prompt.append("- 年龄：").append(user.getUserAge()).append("岁\n");
+            prompt.append("- 性别：").append(user.getSex() == 1 ? "男" : "女").append("\n");
+            if (user.getHeight() > 0) prompt.append("- 身高：").append(user.getHeight()).append("cm\n");
+            if (user.getWeight() > 0) prompt.append("- 体重：").append(user.getWeight()).append("kg\n");
+            if (user.getPreferences() != null && !user.getPreferences().isEmpty()) {
+                prompt.append("- 饮食偏好：").append(user.getPreferences()).append("\n");
+            }
+        }
+
+        prompt.append("\n【BMI健康状况】\n");
+        Double latestBmi = bmiService.getLatestBmi(userId);
+        if (latestBmi != null) {
+            String status = bmiService.getHealthStatus(latestBmi);
+            prompt.append("- 当前BMI：").append(latestBmi).append("（").append(status).append("）\n");
+
+            List<BmiRecord> records = bmiService.getRecordsDesc(userId);
+            if (records != null && records.size() >= 3) {
+                prompt.append("- BMI历史趋势（最近").append(Math.min(records.size(), 5)).append("次）：");
+                for (int i = Math.min(records.size(), 5) - 1; i >= 0; i--) {
+                    prompt.append(records.get(i).getBmi());
+                    if (i > 0) prompt.append(" → ");
+                }
+                prompt.append("\n");
+            }
+            prompt.append("- 记录总数：").append(records != null ? records.size() : 0).append("条\n");
+        } else {
+            prompt.append("- 暂无BMI记录\n");
+        }
+
+        prompt.append("\n【最近饮食推荐】\n");
+        try {
+            Recommendation rec = recommendationDao.findLatestByUserId(userId);
+            if (rec != null) {
+                prompt.append("- 早餐：").append(rec.getBreakfast()).append("\n");
+                prompt.append("- 午餐：").append(rec.getLunch()).append("\n");
+                prompt.append("- 晚餐：").append(rec.getDinner()).append("\n");
+                prompt.append("- 总热量：").append(rec.getTotalCal()).append("\n");
+            } else {
+                prompt.append("- 暂无饮食推荐记录\n");
+            }
+        } catch (java.sql.SQLException e) {
+            prompt.append("- 暂无饮食推荐记录\n");
+        }
+
+        prompt.append("\n请根据以上数据给出针对性的健康建议。可以包括：体重管理建议、饮食调整建议、运动计划建议等。");
+        systemPrompt = prompt.toString();
+    }
+
     private void createChatStage() {
         chatStage = new Stage();
         chatStage.initStyle(StageStyle.UTILITY);
@@ -369,14 +413,14 @@ public class AIChatController {
         chatStage.setResizable(false);
 
         VBox titleBar = new VBox(0);
-        titleBar.setStyle("-fx-background-color: #10b981; -fx-padding: 6 12 4 12;");
+        titleBar.setStyle("-fx-background-color: #b8e4e4; -fx-padding: 6 12 4 12;");
         titleBar.setAlignment(Pos.TOP_CENTER);
         Label titleLabel = new Label("AI 助手");
-        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setTextFill(Color.web("#222"));
         titleLabel.setFont(Font.font("System Bold", 14));
 
         Label subtitleLabel = new Label("内容由AI生成");
-        subtitleLabel.setTextFill(Color.WHITE);
+        subtitleLabel.setTextFill(Color.web("#222"));
         subtitleLabel.setFont(Font.font("System", 10));
         subtitleLabel.setOpacity(0.8);
 
@@ -389,7 +433,8 @@ public class AIChatController {
         scrollPane = new ScrollPane(messageArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(320);
-        scrollPane.setStyle("-fx-background: linear-gradient(from 0% 0% to 0% 100%, #c8ecec, #fffdf5); -fx-border-color: transparent;");
+        scrollPane.setStyle("-fx-background: linear-gradient(from 0% 0% to 0% 100%, #c8ecec, #fffdf5); -fx-border-color: transparent; -fx-background-insets: 0; -fx-padding: 0;");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         inputField = new TextField();
         inputField.setPromptText("输入消息...");
@@ -402,8 +447,8 @@ public class AIChatController {
         inputField.setOnAction(e -> sendMessage());
 
         Button cameraBtn = new Button("📷");
-        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #666; -fx-font-size: 18; -fx-cursor: hand; -fx-padding: 0 4;");
-        cameraBtn.setPrefHeight(36);
+        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4a9e9e; -fx-font-size: 18; -fx-cursor: hand; -fx-padding: 0; -fx-background-radius: 18; -fx-border-radius: 18; -fx-border-color: #9ad5d5; -fx-border-width: 2; -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36; -fx-alignment: center;");
+        cameraBtn.setPrefSize(36, 36);
         cameraBtn.setOnAction(e -> handleCameraCapture());
         Tooltip tt = new Tooltip("拍摄食物并识别热量");
         Tooltip.install(cameraBtn, tt);
@@ -423,12 +468,15 @@ public class AIChatController {
         chatStage.setScene(chatScene);
 
         messages.clear();
+        buildSystemPrompt();
 
         chatStage.setOnCloseRequest(e -> {
             chatStage = null;
         });
 
-        addMessage("AI", "你好！我是AI助手，有什么可以帮你的吗？");
+        addMessage("AI", systemPrompt.contains("【用户信息】")
+                ? "你好！我已了解你的健康数据，可以为你提供个性化的健康建议。有什么想咨询的吗？"
+                : "你好！我是AI助手，有什么可以帮你的吗？");
     }
 
     private void sendMessage() {
@@ -582,11 +630,17 @@ public class AIChatController {
         label.setMaxWidth(240);
         label.setPadding(new Insets(8, 12, 8, 12));
 
-        HBox box = new HBox();
+        HBox box = new HBox(6);
         if ("AI".equals(sender)) {
             label.setStyle("-fx-background-color: #e8f5e9; -fx-background-radius: 12; -fx-text-fill: #333; -fx-font-size: 13;");
-            box.getChildren().add(label);
-            box.setAlignment(Pos.CENTER_LEFT);
+            ImageView avatar = new ImageView(aiAvatar.getImage());
+            avatar.setFitWidth(36);
+            avatar.setFitHeight(36);
+            avatar.setPreserveRatio(true);
+            Circle avatarClip = new Circle(18, 18, 18);
+            avatar.setClip(avatarClip);
+            box.getChildren().addAll(avatar, label);
+            box.setAlignment(Pos.TOP_LEFT);
         } else {
             label.setStyle("-fx-background-color: #1a6b3c; -fx-background-radius: 12; -fx-text-fill: white; -fx-font-size: 13;");
             box.getChildren().add(label);
@@ -598,7 +652,9 @@ public class AIChatController {
 
     private String callCozeChat(List<ChatMessage> chatMessages) throws Exception {
         StringBuilder messagesJson = new StringBuilder();
-        messagesJson.append("{\"role\":\"system\",\"content\":\"你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。\"}");
+        String safePrompt = systemPrompt != null ? systemPrompt
+                : "你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。";
+        messagesJson.append("{\"role\":\"system\",\"content\":\"").append(escapeJson(safePrompt)).append("\"}");
 
         for (ChatMessage msg : chatMessages) {
             messagesJson.append(",{\"role\":\"")
