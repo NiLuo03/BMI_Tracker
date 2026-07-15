@@ -2,7 +2,6 @@ package com.bmitracker.model;
 
 import javafx.beans.property.*;
 
-// 食物模型：基本信息 + 五维标签 + 营养成分（每100g）
 public class Food {
     private final IntegerProperty foodId = new SimpleIntegerProperty();
     private final StringProperty foodName = new SimpleStringProperty();
