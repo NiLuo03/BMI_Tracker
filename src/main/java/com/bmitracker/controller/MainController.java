@@ -7,9 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
@@ -22,29 +28,42 @@ public class MainController {
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
     @FXML private Region backdrop;
+    @FXML private Button toggleNavBtn;
+    @FXML private Button btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank;
+    @FXML private VBox sidebar;
 
-    // 背景主题切换，让用户自定义界面氛围
-    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); removeLightTheme(); }
-    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); removeLightTheme(); }
-    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); removeLightTheme(); }
-    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); removeLightTheme(); }
-    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); removeLightTheme(); }
-    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); addLightTheme(); }
+    private boolean navExpanded = true;
 
-    private void addLightTheme() {
-        if (backdrop.getScene() != null && backdrop.getScene().getRoot() != null) {
-            backdrop.getScene().getRoot().getStyleClass().add("light-theme");
+    @FXML
+    void toggleNav() {
+        navExpanded = !navExpanded;
+        double target = navExpanded ? 150 : 48;
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank};
+        String[] icons = {"🏠", "📊", "📋", "📈", "🔮", "🥗", "🍎", "🏆"};
+        String[] texts = {"首页", "BMI 记录", "历史记录", "折线图", "趋势预测", "膳食推荐", "食物对比", "食物榜单"};
+
+        Timeline anim = new Timeline(
+            new KeyFrame(Duration.millis(200),
+                new KeyValue(sidebar.prefWidthProperty(), target))
+        );
+        anim.play();
+
+        for (int i = 0; i < btns.length; i++) {
+            btns[i].setText(navExpanded ? "  " + texts[i] : icons[i]);
+            btns[i].setMaxWidth(navExpanded ? Double.MAX_VALUE : 34);
         }
+        toggleNavBtn.setText(navExpanded ? "« 收起" : "»");
     }
-    private void removeLightTheme() {
-        if (backdrop.getScene() != null && backdrop.getScene().getRoot() != null) {
-            backdrop.getScene().getRoot().getStyleClass().remove("light-theme");
-        }
-    }
+
+    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
+    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
+    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
+    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); }
+    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); }
+    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); }
 
     @FXML
     void initialize() {
-        // 应用启动后自动弹出 AI 悬浮助手
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
             ai.setMainStage((Stage) contentPane.getScene().getWindow());
@@ -54,7 +73,6 @@ public class MainController {
 
     @FXML
     void showHome(ActionEvent event) {
-        // 刷新首页时完整重载主布局，保留用户选中的背景色
         try {
             String savedColor = backdrop.getStyle();
             Stage stage = (Stage) contentPane.getScene().getWindow();
@@ -67,16 +85,11 @@ public class MainController {
             }
             stage.setScene(scene);
             stage.centerOnScreen();
-            // 恢复浅色主题 class
-            if (newCtrl != null && savedColor != null && savedColor.contains("#ffffff")) {
-                newCtrl.addLightTheme();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // 各功能导航按钮：统一走 loadView 切换内容区、更新标题
     @FXML
     void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); setTitle("BMI 记录"); }
     @FXML
@@ -114,7 +127,6 @@ public class MainController {
         }
     }
 
-    // 将指定 fxml 渲染到中央内容区域，实现子页面切换
     private void loadView(String fxml) {
         try {
             Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
