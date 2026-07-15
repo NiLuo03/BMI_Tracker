@@ -58,7 +58,7 @@
                             style="-fx-background: transparent; -fx-background-color: transparent;">
                     <content>
                         <StackPane style="-fx-padding: 20px 28px 40px 28px;">
-                            <VBox spacing="24"
+                            <StackPane fx:id="glassPanel"
                                   style="-fx-background-color: rgba(128,128,128,0.15);
                                          -fx-background-radius: 20px;
                                          -fx-border-color: rgba(128,128,128,0.12);
@@ -66,7 +66,8 @@
                                          -fx-border-radius: 20px;
                                          -fx-padding: 28px 24px;">
 
-                                <HBox spacing="20">
+                                <VBox spacing="24" fx:id="homeContent">
+                                    <HBox spacing="20">
                                     <VBox styleClass="feature-card-semi" spacing="8" HBox.hgrow="ALWAYS">
                                         <Label text="BMI 计算与记录" style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;"/>
                                         <Label text="输入身高和体重，系统自动计算 BMI 指数并匹配健康区间。"
@@ -114,6 +115,7 @@
                                 </HBox>
 
                             </VBox>
+                            </StackPane>
                         </StackPane>
                     </content>
                 </ScrollPane>

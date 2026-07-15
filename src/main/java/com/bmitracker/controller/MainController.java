@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 public class MainController {
 
     @FXML private StackPane contentPane;
+    @FXML private StackPane glassPanel;
     @FXML private Label pageTitle;
     @FXML private Label userLabel;
     @FXML private Region backdrop;
@@ -88,6 +89,7 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setTitle("首页");
     }
 
     @FXML
@@ -130,7 +132,7 @@ public class MainController {
     private void loadView(String fxml) {
         try {
             Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
-            contentPane.getChildren().setAll(view);
+            glassPanel.getChildren().setAll(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
