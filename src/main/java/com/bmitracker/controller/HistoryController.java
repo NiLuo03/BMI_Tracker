@@ -26,7 +26,6 @@ public class HistoryController {
 
     @FXML
     void initialize() {
-        // 绑定表格列到 BmiRecord 字段，日期列自定义格式化
         colId.setCellValueFactory(new PropertyValueFactory<>("recordId"));
         colHeight.setCellValueFactory(new PropertyValueFactory<>("height"));
         colWeight.setCellValueFactory(new PropertyValueFactory<>("weight"));
@@ -43,13 +42,11 @@ public class HistoryController {
     }
 
     private void loadData() {
-        // 按时间倒序拉取当前用户的所有 BMI 记录
         List<BmiRecord> records = bmiService.getRecordsDesc(BMIApplication.currentUserId);
         if (records != null && !records.isEmpty()) {
             tableView.getItems().setAll(records);
             infoLabel.setText("");
         } else {
-            // 无记录时显示空状态提示
             infoLabel.setText("暂无记录");
         }
     }
