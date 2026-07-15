@@ -39,6 +39,13 @@ import java.util.Base64;
 import java.util.List;
 import javax.imageio.ImageIO;
 
+import com.bmitracker.model.User;
+import com.bmitracker.model.BmiRecord;
+import com.bmitracker.model.Recommendation;
+import com.bmitracker.service.UserService;
+import com.bmitracker.service.BmiService;
+import com.bmitracker.dao.RecommendationDao;
+
 public class AIChatController {
 
     private static AIChatController instance;
@@ -57,6 +64,7 @@ public class AIChatController {
     private double dragStartX, dragStartY;
     private double stageStartX, stageStartY;
     private boolean dragging = false;
+    private javafx.beans.value.ChangeListener<Number> mainXListener, mainYListener;
     private boolean longPressed = false;
     private Timeline longPressTimer;
 
@@ -75,6 +83,11 @@ public class AIChatController {
 
     private final HttpClient httpClient;
     private final List<ChatMessage> messages = new ArrayList<>();
+    private String systemPrompt;
+
+    private final UserService userService = new UserService();
+    private final BmiService bmiService = new BmiService();
+    private final RecommendationDao recommendationDao = new RecommendationDao();
 
     private AIChatController() {
         httpClient = HttpClient.newBuilder()
@@ -103,8 +116,12 @@ public class AIChatController {
     }
 
     public void setMainStage(Stage stage) {
+        if (mainStage != null) {
+            mainStage.xProperty().removeListener(mainXListener);
+            mainStage.yProperty().removeListener(mainYListener);
+        }
         this.mainStage = stage;
-        mainStage.xProperty().addListener((obs, oldX, newX) -> {
+        mainXListener = (obs, oldX, newX) -> {
             if (ballStage != null && ballStage.isShowing()) {
                 double dx = newX.doubleValue() - oldX.doubleValue();
                 ballStage.setX(ballStage.getX() + dx);
@@ -112,8 +129,8 @@ public class AIChatController {
                     particleStage.setX(particleStage.getX() + dx);
                 }
             }
-        });
-        mainStage.yProperty().addListener((obs, oldY, newY) -> {
+        };
+        mainYListener = (obs, oldY, newY) -> {
             if (ballStage != null && ballStage.isShowing()) {
                 double dy = newY.doubleValue() - oldY.doubleValue();
                 ballStage.setY(ballStage.getY() + dy);
@@ -121,7 +138,9 @@ public class AIChatController {
                     particleStage.setY(particleStage.getY() + dy);
                 }
             }
-        });
+        };
+        mainStage.xProperty().addListener(mainXListener);
+        mainStage.yProperty().addListener(mainYListener);
     }
 
     public void hide() {
@@ -325,6 +344,67 @@ public class AIChatController {
         chatStage.show();
     }
 
+    private void buildSystemPrompt() {
+        int userId = com.bmitracker.BMIApplication.currentUserId;
+        if (userId < 0) {
+            systemPrompt = "你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。";
+            return;
+        }
+
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("你是一位专业的健康管理顾问和营养师。请根据以下用户数据，提供个性化的健康建议、饮食指导和运动推荐。用中文回答，语气亲切自然。\n\n");
+
+        prompt.append("【用户信息】\n");
+        User user = userService.getUserById(userId);
+        if (user != null) {
+            prompt.append("- 年龄：").append(user.getUserAge()).append("岁\n");
+            prompt.append("- 性别：").append(user.getSex() == 1 ? "男" : "女").append("\n");
+            if (user.getHeight() > 0) prompt.append("- 身高：").append(user.getHeight()).append("cm\n");
+            if (user.getWeight() > 0) prompt.append("- 体重：").append(user.getWeight()).append("kg\n");
+            if (user.getPreferences() != null && !user.getPreferences().isEmpty()) {
+                prompt.append("- 饮食偏好：").append(user.getPreferences()).append("\n");
+            }
+        }
+
+        prompt.append("\n【BMI健康状况】\n");
+        Double latestBmi = bmiService.getLatestBmi(userId);
+        if (latestBmi != null) {
+            String status = bmiService.getHealthStatus(latestBmi);
+            prompt.append("- 当前BMI：").append(latestBmi).append("（").append(status).append("）\n");
+
+            List<BmiRecord> records = bmiService.getRecordsDesc(userId);
+            if (records != null && records.size() >= 3) {
+                prompt.append("- BMI历史趋势（最近").append(Math.min(records.size(), 5)).append("次）：");
+                for (int i = Math.min(records.size(), 5) - 1; i >= 0; i--) {
+                    prompt.append(records.get(i).getBmi());
+                    if (i > 0) prompt.append(" → ");
+                }
+                prompt.append("\n");
+            }
+            prompt.append("- 记录总数：").append(records != null ? records.size() : 0).append("条\n");
+        } else {
+            prompt.append("- 暂无BMI记录\n");
+        }
+
+        prompt.append("\n【最近饮食推荐】\n");
+        try {
+            Recommendation rec = recommendationDao.findLatestByUserId(userId);
+            if (rec != null) {
+                prompt.append("- 早餐：").append(rec.getBreakfast()).append("\n");
+                prompt.append("- 午餐：").append(rec.getLunch()).append("\n");
+                prompt.append("- 晚餐：").append(rec.getDinner()).append("\n");
+                prompt.append("- 总热量：").append(rec.getTotalCal()).append("\n");
+            } else {
+                prompt.append("- 暂无饮食推荐记录\n");
+            }
+        } catch (java.sql.SQLException e) {
+            prompt.append("- 暂无饮食推荐记录\n");
+        }
+
+        prompt.append("\n请根据以上数据给出针对性的健康建议。可以包括：体重管理建议、饮食调整建议、运动计划建议等。");
+        systemPrompt = prompt.toString();
+    }
+
     private void createChatStage() {
         chatStage = new Stage();
         chatStage.initStyle(StageStyle.UTILITY);
@@ -388,12 +468,15 @@ public class AIChatController {
         chatStage.setScene(chatScene);
 
         messages.clear();
+        buildSystemPrompt();
 
         chatStage.setOnCloseRequest(e -> {
             chatStage = null;
         });
 
-        addMessage("AI", "你好！我是AI助手，有什么可以帮你的吗？");
+        addMessage("AI", systemPrompt.contains("【用户信息】")
+                ? "你好！我已了解你的健康数据，可以为你提供个性化的健康建议。有什么想咨询的吗？"
+                : "你好！我是AI助手，有什么可以帮你的吗？");
     }
 
     private void sendMessage() {
@@ -569,7 +652,9 @@ public class AIChatController {
 
     private String callCozeChat(List<ChatMessage> chatMessages) throws Exception {
         StringBuilder messagesJson = new StringBuilder();
-        messagesJson.append("{\"role\":\"system\",\"content\":\"你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。\"}");
+        String safePrompt = systemPrompt != null ? systemPrompt
+                : "你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。";
+        messagesJson.append("{\"role\":\"system\",\"content\":\"").append(escapeJson(safePrompt)).append("\"}");
 
         for (ChatMessage msg : chatMessages) {
             messagesJson.append(",{\"role\":\"")
