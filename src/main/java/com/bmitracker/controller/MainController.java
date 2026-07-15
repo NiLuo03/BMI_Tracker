@@ -23,6 +23,12 @@ public class MainController {
     @FXML private Label userLabel;
     @FXML private Region backdrop;
 
+    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
+    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
+    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
+    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); }
+    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); }
+
     @FXML
     void initialize() {
         Platform.runLater(() -> {
