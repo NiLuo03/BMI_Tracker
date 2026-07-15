@@ -574,3 +574,30 @@
     -fx-font-size: 12px;
     -fx-text-fill: rgba(52,211,153,0.40);
 }
+
+/* --- 设置菜单暗黑样式 --- */
+.menu-button > .arrow-button > .arrow {
+    -fx-background-color: #10b981;
+}
+.menu-item {
+    -fx-background-color: #141414;
+    -fx-text-fill: #d0d0d0;
+    -fx-padding: 6px 20px;
+}
+.menu-item:hover {
+    -fx-background-color: rgba(16,185,129,0.12);
+}
+.menu-item:focused {
+    -fx-background-color: rgba(16,185,129,0.18);
+}
+.context-menu {
+    -fx-background-color: #141414;
+    -fx-border-color: rgba(16,185,129,0.12);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 4px;
+}
+.menu .label {
+    -fx-text-fill: #d0d0d0;
+}
