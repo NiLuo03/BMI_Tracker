@@ -40,11 +40,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import com.bmitracker.model.User;
-import com.bmitracker.model.BmiRecord;
-import com.bmitracker.model.Recommendation;
 import com.bmitracker.service.UserService;
 import com.bmitracker.service.BmiService;
-import com.bmitracker.dao.RecommendationDao;
 
 public class AIChatController {
 
@@ -87,7 +84,6 @@ public class AIChatController {
 
     private final UserService userService = new UserService();
     private final BmiService bmiService = new BmiService();
-    private final RecommendationDao recommendationDao = new RecommendationDao();
 
     private AIChatController() {
         httpClient = HttpClient.newBuilder()
@@ -377,34 +373,8 @@ public class AIChatController {
         if (latestBmi != null) {
             String status = bmiService.getHealthStatus(latestBmi);
             prompt.append("- 当前BMI：").append(latestBmi).append("（").append(status).append("）\n");
-
-            List<BmiRecord> records = bmiService.getRecordsDesc(userId);
-            if (records != null && records.size() >= 3) {
-                prompt.append("- BMI历史趋势（最近").append(Math.min(records.size(), 5)).append("次）：");
-                for (int i = Math.min(records.size(), 5) - 1; i >= 0; i--) {
-                    prompt.append(records.get(i).getBmi());
-                    if (i > 0) prompt.append(" → ");
-                }
-                prompt.append("\n");
-            }
-            prompt.append("- 记录总数：").append(records != null ? records.size() : 0).append("条\n");
         } else {
             prompt.append("- 暂无BMI记录\n");
-        }
-
-        prompt.append("\n【最近饮食推荐】\n");
-        try {
-            Recommendation rec = recommendationDao.findLatestByUserId(userId);
-            if (rec != null) {
-                prompt.append("- 早餐：").append(rec.getBreakfast()).append("\n");
-                prompt.append("- 午餐：").append(rec.getLunch()).append("\n");
-                prompt.append("- 晚餐：").append(rec.getDinner()).append("\n");
-                prompt.append("- 总热量：").append(rec.getTotalCal()).append("\n");
-            } else {
-                prompt.append("- 暂无饮食推荐记录\n");
-            }
-        } catch (java.sql.SQLException e) {
-            prompt.append("- 暂无饮食推荐记录\n");
         }
 
         prompt.append("\n以上信息仅用作背景参考，不要在回答中主动提及、罗列或复述这些数据。只有当用户主动询问健康、饮食、运动等相关话题时，再据此给出建议。用户问不相关问题时正常回答即可，不要强行联系健康数据。");
@@ -486,6 +456,9 @@ public class AIChatController {
 
         messages.clear();
         buildSystemPrompt();
+
+        messageArea.heightProperty().addListener((obs, ov, nv) ->
+                scrollPane.setVvalue(1.0));
 
         chatStage.setOnCloseRequest(e -> {
             chatStage = null;
@@ -589,9 +562,7 @@ public class AIChatController {
     }
 
     private void scrollToBottom() {
-        Platform.runLater(() -> {
-            if (scrollPane != null) scrollPane.setVvalue(1.0);
-        });
+        if (scrollPane != null) scrollPane.setVvalue(1.0);
     }
 
     private String callCozeWithImage(String text, String base64Image) throws Exception {
@@ -601,7 +572,7 @@ public class AIChatController {
         String messagesJson = "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"}";
         messagesJson += ",{\"role\":\"user\",\"content\":\"" + userContent + "\"}";
 
-        String json = "{\"model\":\"" + MODEL + "\",\"messages\":[" + messagesJson + "]}";
+        String json = "{\"model\":\"" + MODEL + "\",\"max_tokens\":200,\"messages\":[" + messagesJson + "]}";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
@@ -612,9 +583,9 @@ public class AIChatController {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        String body = response.body();
+        String respBody = response.body();
         if (response.statusCode() == 200) {
-            String msg = extractMessage(body);
+            String msg = extractMessage(respBody);
             if (msg != null && !msg.isEmpty() && !msg.contains("不支持") && !msg.contains("无法识别")) {
                 return msg;
             }
@@ -681,7 +652,7 @@ public class AIChatController {
                     .append("\"}");
         }
 
-        String json = "{\"model\":\"" + MODEL + "\",\"messages\":[" + messagesJson + "]}";
+        String json = "{\"model\":\"" + MODEL + "\",\"max_tokens\":200,\"messages\":[" + messagesJson + "]}";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
