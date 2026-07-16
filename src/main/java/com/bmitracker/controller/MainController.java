@@ -131,12 +131,14 @@ public class MainController {
     }
 
     private void loadView(String fxml) {
-        try {
-            Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
-            glassPanel.getChildren().setAll(view);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            try {
+                Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
+                Platform.runLater(() -> glassPanel.getChildren().setAll(view));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void setTitle(String title) {
