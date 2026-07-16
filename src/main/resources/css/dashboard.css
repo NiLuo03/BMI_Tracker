@@ -499,3 +499,14 @@
     -fx-background-color: rgba(16,185,129,0.08);
     -fx-text-fill: #10b981;
 }
+
+/* --- 筛选面板 --- */
+.filter-panel > .title {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
+}
+.filter-panel > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}

@@ -2,55 +2,49 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodCompareController"
       style="-fx-background-color: transparent;">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
     <Label text="食物对比" styleClass="label-heading"/>
     <Label text="选择两种食物，对比营养成分与标签" styleClass="label-subheading"/>
 
-    <TitledPane text="筛选条件" expanded="false">
-        <VBox spacing="8">
+    <TitledPane text="筛选条件（可选）" expanded="false" styleClass="filter-panel">
+        <VBox spacing="8" style="-fx-padding: 10px 0;">
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="分类" prefWidth="80" styleClass="field-label"/>
-                <ComboBox fx:id="filterCategory" prefWidth="150" promptText="全部"/>
+                <ComboBox fx:id="filterCategory" prefWidth="150" promptText="全部" styleClass="combo-box-dark"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="餐食类型" prefWidth="80" styleClass="field-label"/>
-                <ComboBox fx:id="filterMealType" prefWidth="150" promptText="全部"/>
+                <ComboBox fx:id="filterMealType" prefWidth="150" promptText="全部" styleClass="combo-box-dark"/>
                 <Label text="口感" prefWidth="60" styleClass="field-label"/>
-                <ComboBox fx:id="filterTexture" prefWidth="150" promptText="全部"/>
+                <ComboBox fx:id="filterTexture" prefWidth="150" promptText="全部" styleClass="combo-box-dark"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="口味" prefWidth="80" styleClass="field-label"/>
-                <ComboBox fx:id="filterFlavor" prefWidth="150" promptText="全部"/>
+                <ComboBox fx:id="filterFlavor" prefWidth="150" promptText="全部" styleClass="combo-box-dark"/>
                 <Label text="储存方式" prefWidth="60" styleClass="field-label"/>
-                <ComboBox fx:id="filterStorage" prefWidth="150" promptText="全部"/>
+                <ComboBox fx:id="filterStorage" prefWidth="150" promptText="全部" styleClass="combo-box-dark"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="烹饪方式" prefWidth="80" styleClass="field-label"/>
-                <ComboBox fx:id="filterCooking" prefWidth="150" promptText="全部"/>
-                <Button text="重置筛选" onAction="#resetFilters"/>
+                <ComboBox fx:id="filterCooking" prefWidth="150" promptText="全部" styleClass="combo-box-dark"/>
+                <Button text="重置" onAction="#resetFilters" styleClass="btn-secondary"/>
             </HBox>
         </VBox>
     </TitledPane>
 
-    <HBox spacing="20" alignment="CENTER_LEFT">
-        <ComboBox fx:id="foodCombo1" promptText="选择食物 1" prefWidth="200" styleClass="combo-box-dark"/>
-        <Label text="VS" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #16a34a;"/>
-        <ComboBox fx:id="foodCombo2" promptText="选择食物 2" prefWidth="200" styleClass="combo-box-dark"/>
+    <HBox spacing="16" alignment="CENTER_LEFT">
+        <ComboBox fx:id="foodCombo1" promptText="选择食物 1" prefWidth="220" styleClass="combo-box-dark"/>
+        <Label text="VS" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        <ComboBox fx:id="foodCombo2" promptText="选择食物 2" prefWidth="220" styleClass="combo-box-dark"/>
     </HBox>
 
-    <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS"
-                style="-fx-background: transparent; -fx-border-color: transparent;">
-        <VBox fx:id="compareContent" spacing="0" alignment="TOP_CENTER">
-            <!-- 对比结果由 Java 代码动态填充 -->
-            <Label text="在上方选择两种食物开始对比" style="-fx-text-fill: #94a3b8; -fx-font-size: 16;" VBox.vgrow="ALWAYS"/>
-        </VBox>
-    </ScrollPane>
+    <VBox fx:id="compareContent" spacing="0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+        <Label text="在上方选择两种食物开始对比" style="-fx-text-fill: #6b7280; -fx-font-size: 16;" VBox.vgrow="ALWAYS"/>
+    </VBox>
 </VBox>
