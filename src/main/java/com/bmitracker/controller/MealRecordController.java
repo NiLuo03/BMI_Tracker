@@ -1,29 +1,33 @@
-
 package com.bmitracker.controller;
 
+import com.bmitracker.BMIApplication;
 import com.bmitracker.model.Food;
+import com.bmitracker.model.MealRecord;
 import com.bmitracker.service.FoodService;
 import com.bmitracker.service.FoodServiceImpl;
+import com.bmitracker.service.MealRecordService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.Pos;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MealRecordController {
 
+    @FXML private Label dateLabel, foodCountLabel, mealCalLabel, totalCalLabel, savedLabel;
     @FXML private Button mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn;
     @FXML private TextField searchField;
-    @FXML private FlowPane foodGrid;
-    @FXML private Label foodCountLabel;
+    @FXML private FlowPane foodGrid, selectedFlow;
     @FXML private ScrollPane selectedScrollPane;
-    @FXML private FlowPane selectedFlow;
-    @FXML private Label mealCalLabel, totalCalLabel;
+    @FXML private VBox weekPanel, weekSummaryList;
 
     private final FoodService foodService = new FoodServiceImpl();
+    private final MealRecordService recordService = new MealRecordService();
 
     private List<Food> allFoods = Collections.emptyList();
 
@@ -33,23 +37,33 @@ public class MealRecordController {
         double getCalories() { return food.getCalories() * grams / 100.0; }
     }
 
-    private final List<FoodEntry> breakfastEntries = new ArrayList<>();
-    private final List<FoodEntry> lunchEntries = new ArrayList<>();
-    private final List<FoodEntry> dinnerEntries = new ArrayList<>();
-    private final List<FoodEntry> snackEntries = new ArrayList<>();
+    private final Map<String, List<FoodEntry>> entries = new HashMap<>();
 
     private enum Meal { BREAKFAST, LUNCH, DINNER, SNACK }
     private Meal currentMeal = Meal.BREAKFAST;
 
+    private LocalDate currentDate = LocalDate.now();
+    private boolean loaded = false;
+
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FMT_CN = DateTimeFormatter.ofPattern("M月d日");
+
     @FXML
     void initialize() {
+        entries.put("BREAKFAST", new ArrayList<>());
+        entries.put("LUNCH", new ArrayList<>());
+        entries.put("DINNER", new ArrayList<>());
+        entries.put("SNACK", new ArrayList<>());
+
+        updateDateLabel();
+
         new Thread(() -> {
             allFoods = foodService.getAllFoods();
             Platform.runLater(() -> {
                 if (allFoods.isEmpty()) {
                     showAlert("食物库为空，请确认数据库已正确初始化");
                 }
-                updateFoodGrid("");
+                loadRecordsForDate();
                 searchField.textProperty().addListener((o, ov, nv) -> updateFoodGrid(nv));
             });
         }).start();
@@ -59,6 +73,100 @@ public class MealRecordController {
     @FXML void selectLunch() { setMeal(Meal.LUNCH); }
     @FXML void selectDinner() { setMeal(Meal.DINNER); }
     @FXML void selectSnack() { setMeal(Meal.SNACK); }
+
+    @FXML void prevDay() {
+        currentDate = currentDate.minusDays(1);
+        updateDateLabel();
+        loadRecordsForDate();
+    }
+
+    @FXML void nextDay() {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        if (currentDate.isBefore(LocalDate.now())) {
+            currentDate = currentDate.plusDays(1);
+            updateDateLabel();
+            loadRecordsForDate();
+        }
+    }
+
+    @FXML void handleSave() {
+        int uid = BMIApplication.currentUserId;
+        if (uid < 0) { showAlert("请先登录"); return; }
+
+        savedLabel.setText("保存中...");
+        new Thread(() -> {
+            try {
+                List<MealRecord> all = new ArrayList<>();
+                for (Map.Entry<String, List<FoodEntry>> e : entries.entrySet()) {
+                    for (FoodEntry fe : e.getValue()) {
+                        MealRecord mr = new MealRecord();
+                        mr.setUserId(uid);
+                        mr.setFoodId(fe.food.getFoodId());
+                        mr.setMealType(e.getKey());
+                        mr.setGrams(fe.grams);
+                        mr.setRecordDate(currentDate);
+                        all.add(mr);
+                    }
+                }
+                recordService.saveRecords(uid, currentDate, all);
+                Platform.runLater(() -> savedLabel.setText("已保存 " + DATE_FMT.format(currentDate)));
+            } catch (Exception ex) {
+                Platform.runLater(() -> savedLabel.setText("保存失败"));
+            }
+        }).start();
+    }
+
+    @FXML void showWeekSummary() {
+        boolean vis = weekPanel.isVisible();
+        weekPanel.setVisible(!vis);
+        weekPanel.setManaged(!vis);
+        if (!vis) loadWeekSummary();
+    }
+
+    private void loadWeekSummary() {
+        int uid = BMIApplication.currentUserId;
+        if (uid < 0) return;
+
+        new Thread(() -> {
+            LocalDate today = LocalDate.now();
+            List<MealRecord> records = recordService.getRecordsInRange(uid, today.minusDays(6), today);
+            Platform.runLater(() -> {
+                weekSummaryList.getChildren().clear();
+                if (records.isEmpty()) {
+                    weekSummaryList.getChildren().add(new Label("近7天暂无记录"));
+                    return;
+                }
+
+                Map<LocalDate, List<MealRecord>> byDate = records.stream()
+                        .collect(Collectors.groupingBy(MealRecord::getRecordDate));
+
+                for (LocalDate d : byDate.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
+                    List<MealRecord> dayRecs = byDate.get(d);
+                    double total = dayRecs.stream().mapToDouble(MealRecord::getCalories).sum();
+                    HBox row = new HBox(10);
+                    row.setAlignment(Pos.CENTER_LEFT);
+                    Label dateLbl = new Label(DATE_FMT_CN.format(d));
+                    dateLbl.setStyle("-fx-text-fill: #d0d0d0; -fx-font-size: 12px; -fx-font-weight: bold; -fx-min-width: 50;");
+                    Label calLbl = new Label(String.format("%.0f kcal", total));
+                    calLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px;");
+                    Label detailLbl = new Label(formatDaySummary(dayRecs));
+                    detailLbl.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
+                    row.getChildren().addAll(dateLbl, calLbl, detailLbl);
+                    weekSummaryList.getChildren().add(row);
+                }
+            });
+        }).start();
+    }
+
+    private String formatDaySummary(List<MealRecord> records) {
+        Map<String, Integer> count = new HashMap<>();
+        for (MealRecord r : records) {
+            count.merge(r.getMealType(), 1, Integer::sum);
+        }
+        return count.entrySet().stream()
+                .map(e -> e.getKey().charAt(0) + e.getKey().substring(1).toLowerCase() + " " + e.getValue() + "种")
+                .collect(Collectors.joining(" · "));
+    }
 
     private void setMeal(Meal meal) {
         currentMeal = meal;
@@ -79,12 +187,7 @@ public class MealRecordController {
     }
 
     private List<FoodEntry> getEntries() {
-        return switch (currentMeal) {
-            case BREAKFAST -> breakfastEntries;
-            case LUNCH -> lunchEntries;
-            case DINNER -> dinnerEntries;
-            case SNACK -> snackEntries;
-        };
+        return entries.get(currentMeal.name());
     }
 
     private String getMealName() {
@@ -94,6 +197,39 @@ public class MealRecordController {
             case DINNER -> "晚餐";
             case SNACK -> "加餐";
         };
+    }
+
+    private void updateDateLabel() {
+        dateLabel.setText(DATE_FMT.format(currentDate));
+        savedLabel.setText("");
+    }
+
+    private void loadRecordsForDate() {
+        int uid = BMIApplication.currentUserId;
+        if (uid < 0) return;
+
+        for (var list : entries.values()) list.clear();
+
+        new Thread(() -> {
+            List<MealRecord> records = recordService.getRecords(uid, currentDate);
+            Platform.runLater(() -> {
+                if (!records.isEmpty()) {
+                    savedLabel.setText("已加载 " + DATE_FMT.format(currentDate));
+                }
+                for (MealRecord mr : records) {
+                    List<FoodEntry> list = entries.get(mr.getMealType());
+                    if (list == null) continue;
+                    Food food = allFoods.stream()
+                            .filter(f -> f.getFoodId() == mr.getFoodId())
+                            .findFirst().orElse(null);
+                    if (food == null) continue;
+                    list.add(new FoodEntry(food, mr.getGrams()));
+                }
+                refreshSelected();
+                updateFoodGrid(searchField.getText());
+                loaded = true;
+            });
+        }).start();
     }
 
     private void updateFoodGrid(String keyword) {
@@ -121,13 +257,13 @@ public class MealRecordController {
             );
             int fid = food.getFoodId();
             btn.setOnAction(e -> {
-                List<FoodEntry> entries = getEntries();
-                Optional<FoodEntry> existing = entries.stream()
+                List<FoodEntry> entryList = getEntries();
+                Optional<FoodEntry> existing = entryList.stream()
                         .filter(en -> en.food.getFoodId() == fid).findFirst();
                 if (existing.isPresent()) {
-                    entries.remove(existing.get());
+                    entryList.remove(existing.get());
                 } else {
-                    entries.add(new FoodEntry(food, 100));
+                    entryList.add(new FoodEntry(food, 100));
                 }
                 refreshSelected();
                 updateFoodGrid(searchField.getText());
@@ -139,10 +275,10 @@ public class MealRecordController {
     }
 
     private void refreshSelected() {
-        List<FoodEntry> entries = getEntries();
+        List<FoodEntry> entryList = getEntries();
         selectedFlow.getChildren().clear();
 
-        if (entries.isEmpty()) {
+        if (entryList.isEmpty()) {
             Label empty = new Label("暂无选择");
             empty.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 12px;");
             selectedFlow.getChildren().add(empty);
@@ -153,8 +289,8 @@ public class MealRecordController {
         }
 
         double mealCal = 0;
-        for (int i = 0; i < entries.size(); i++) {
-            FoodEntry entry = entries.get(i);
+        for (int i = 0; i < entryList.size(); i++) {
+            FoodEntry entry = entryList.get(i);
             mealCal += entry.getCalories();
             final int idx = i;
 
@@ -184,7 +320,7 @@ public class MealRecordController {
 
             Button removeBtn = new Button("✕");
             removeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 1 4;");
-            removeBtn.setOnAction(e -> { entries.remove(idx); refreshSelected(); updateFoodGrid(searchField.getText()); });
+            removeBtn.setOnAction(e -> { entryList.remove(idx); refreshSelected(); updateFoodGrid(searchField.getText()); });
 
             card.getChildren().addAll(name, gramField, unit, cal, removeBtn);
             selectedFlow.getChildren().add(card);
@@ -197,41 +333,40 @@ public class MealRecordController {
 
     private void updateTotal() {
         double total = 0;
-        for (var list : List.of(breakfastEntries, lunchEntries, dinnerEntries, snackEntries))
+        for (var list : entries.values())
             for (FoodEntry e : list) total += e.getCalories();
         totalCalLabel.setText(String.format("%.0f kcal", total));
     }
 
     @FXML
     void handleAiAdvice() {
-        if (breakfastEntries.isEmpty() && lunchEntries.isEmpty() && dinnerEntries.isEmpty() && snackEntries.isEmpty()) {
-            showAlert("请先添加食物记录");
-            return;
-        }
+        boolean empty = true;
+        for (var list : entries.values()) if (!list.isEmpty()) { empty = false; break; }
+        if (empty) { showAlert("请先添加食物记录"); return; }
 
         StringBuilder sb = new StringBuilder("请评价我今天的膳食并提供改进建议：\n\n");
         String[][] mealData = {
-            {"早餐", mealToString(breakfastEntries)},
-            {"午餐", mealToString(lunchEntries)},
-            {"晚餐", mealToString(dinnerEntries)},
-            {"加餐", mealToString(snackEntries)}
+            {"早餐", mealToString(entries.get("BREAKFAST"))},
+            {"午餐", mealToString(entries.get("LUNCH"))},
+            {"晚餐", mealToString(entries.get("DINNER"))},
+            {"加餐", mealToString(entries.get("SNACK"))}
         };
         for (var md : mealData) {
             if (!md[1].isEmpty()) sb.append("【").append(md[0]).append("】\n").append(md[1]);
         }
 
         double total = 0;
-        for (var list : List.of(breakfastEntries, lunchEntries, dinnerEntries, snackEntries))
+        for (var list : entries.values())
             for (FoodEntry e : list) total += e.getCalories();
         sb.append(String.format("\n总热量：%.0f kcal\n\n请给出简洁的营养评价和改进建议，用中文回复。", total));
 
         AIChatController.getInstance().sendUserMessage(sb.toString());
     }
 
-    private String mealToString(List<FoodEntry> entries) {
-        if (entries.isEmpty()) return "";
+    private String mealToString(List<FoodEntry> list) {
+        if (list.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
-        for (FoodEntry e : entries)
+        for (FoodEntry e : list)
             sb.append(String.format("- %s %.0fg (%.0f kcal)\n", e.food.getFoodName(), e.grams, e.getCalories()));
         return sb.toString();
     }

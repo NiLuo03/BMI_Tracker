@@ -12,6 +12,20 @@
     <Label text="膳食记录" styleClass="label-heading"/>
     <Label text="选择食物和克数，查看营养摄入汇总" styleClass="label-subheading"/>
 
+    <!-- 日期导航 -->
+    <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
+        <Button text="◀" onAction="#prevDay"
+                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+        <Label fx:id="dateLabel" text="" style="-fx-font-size: 14px; -fx-text-fill: #d0d0d0; -fx-font-weight: bold;"/>
+        <Button text="▶" onAction="#nextDay"
+                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="💾 保存记录" onAction="#handleSave"
+                style="-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #10b981; -fx-font-size: 12px; -fx-padding: 4 12; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold;"/>
+        <Button text="📅 近7天" onAction="#showWeekSummary"
+                style="-fx-background-color: rgba(255,255,255,0.04); -fx-text-fill: #6b7280; -fx-font-size: 11px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+    </HBox>
+
     <!-- 餐次选择标签 -->
     <HBox spacing="6" style="-fx-padding: 4 0 0 0;">
         <Button fx:id="mealBreakfastBtn" text="🌅 早餐" onAction="#selectBreakfast"
@@ -58,7 +72,15 @@
         <Label text="总热量：" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;"/>
         <Label fx:id="totalCalLabel" text="0 kcal" styleClass="calorie-highlight"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="💾 保存记录" onAction="#handleSave" styleClass="btn-secondary" prefWidth="120"/>
+        <Label fx:id="savedLabel" text=""
+               style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
         <Button text="🤖 AI 建议" onAction="#handleAiAdvice" styleClass="btn-primary" prefWidth="120"/>
     </HBox>
+
+    <!-- 近7天汇总（默认隐藏） -->
+    <VBox fx:id="weekPanel" visible="false" managed="false" spacing="6"
+          style="-fx-background-color: rgba(16,185,129,0.04); -fx-background-radius: 10; -fx-padding: 12; -fx-border-color: rgba(16,185,129,0.1); -fx-border-radius: 10;">
+        <Label text="近7天膳食汇总" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        <VBox fx:id="weekSummaryList" spacing="4"/>
+    </VBox>
 </VBox>

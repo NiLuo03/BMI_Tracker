@@ -1,31 +1,50 @@
 package com.bmitracker.model;
 
+import javafx.beans.property.*;
 import java.time.LocalDate;
 
 public class MealRecord {
-    private int recordId;
-    private int userId;
-    private String mealType;
-    private int foodId;
-    private double grams;
-    private LocalDate recordDate;
-    private String foodName;
-    private double calories;
+    private final IntegerProperty recordId = new SimpleIntegerProperty();
+    private final IntegerProperty userId = new SimpleIntegerProperty();
+    private final IntegerProperty foodId = new SimpleIntegerProperty();
+    private final StringProperty mealType = new SimpleStringProperty();
+    private final DoubleProperty grams = new SimpleDoubleProperty();
+    private final ObjectProperty<LocalDate> recordDate = new SimpleObjectProperty<>();
 
-    public int getRecordId() { return recordId; }
-    public void setRecordId(int v) { recordId = v; }
-    public int getUserId() { return userId; }
-    public void setUserId(int v) { userId = v; }
-    public String getMealType() { return mealType; }
-    public void setMealType(String v) { mealType = v; }
-    public int getFoodId() { return foodId; }
-    public void setFoodId(int v) { foodId = v; }
-    public double getGrams() { return grams; }
-    public void setGrams(double v) { grams = v; }
-    public LocalDate getRecordDate() { return recordDate; }
-    public void setRecordDate(LocalDate v) { recordDate = v; }
+    private String foodName;
+    private double foodCalories;
+
+    public MealRecord() {}
+
+    public int getRecordId() { return recordId.get(); }
+    public IntegerProperty recordIdProperty() { return recordId; }
+    public void setRecordId(int v) { recordId.set(v); }
+
+    public int getUserId() { return userId.get(); }
+    public IntegerProperty userIdProperty() { return userId; }
+    public void setUserId(int v) { userId.set(v); }
+
+    public int getFoodId() { return foodId.get(); }
+    public IntegerProperty foodIdProperty() { return foodId; }
+    public void setFoodId(int v) { foodId.set(v); }
+
+    public String getMealType() { return mealType.get(); }
+    public StringProperty mealTypeProperty() { return mealType; }
+    public void setMealType(String v) { mealType.set(v); }
+
+    public double getGrams() { return grams.get(); }
+    public DoubleProperty gramsProperty() { return grams; }
+    public void setGrams(double v) { grams.set(v); }
+
+    public LocalDate getRecordDate() { return recordDate.get(); }
+    public ObjectProperty<LocalDate> recordDateProperty() { return recordDate; }
+    public void setRecordDate(LocalDate v) { recordDate.set(v); }
+
     public String getFoodName() { return foodName; }
     public void setFoodName(String v) { foodName = v; }
-    public double getCalories() { return calories; }
-    public void setCalories(double v) { calories = v; }
+
+    public double getFoodCalories() { return foodCalories; }
+    public void setFoodCalories(double v) { foodCalories = v; }
+
+    public double getCalories() { return foodCalories * getGrams() / 100.0; }
 }
