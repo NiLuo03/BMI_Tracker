@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class MealRecordController {
 
     @FXML private Label dateLabel, foodCountLabel, mealCalLabel, totalCalLabel, savedLabel;
-    @FXML private Button mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn, clearMealBtn;
+    @FXML private Button mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn, clearMealBtn, nextDayBtn;
     @FXML private TextField searchField;
     @FXML private FlowPane foodGrid, selectedFlow;
     @FXML private ScrollPane selectedScrollPane;
@@ -98,6 +98,8 @@ public class MealRecordController {
         foodSection.setManaged(isToday);
         clearMealBtn.setVisible(isToday);
         clearMealBtn.setManaged(isToday);
+        nextDayBtn.setVisible(!isToday);
+        nextDayBtn.setManaged(!isToday);
         selectedScrollPane.setPrefHeight(isToday ? 115 : 200);
     }
 

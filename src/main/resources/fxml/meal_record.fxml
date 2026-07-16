@@ -17,7 +17,7 @@
         <Button text="◀" onAction="#prevDay"
                 style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
         <Label fx:id="dateLabel" text="" style="-fx-font-size: 14px; -fx-text-fill: #d0d0d0; -fx-font-weight: bold;"/>
-        <Button text="▶" onAction="#nextDay"
+        <Button fx:id="nextDayBtn" text="▶" onAction="#nextDay"
                 style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="💾 保存记录" onAction="#handleSave"
