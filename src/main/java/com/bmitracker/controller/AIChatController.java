@@ -364,6 +364,12 @@ public class AIChatController {
             if (user.getPreferences() != null && !user.getPreferences().isEmpty()) {
                 prompt.append("- 饮食偏好：").append(user.getPreferences()).append("\n");
             }
+            if (user.getAllergens() != null && !user.getAllergens().isEmpty()) {
+                prompt.append("- 过敏原：").append(user.getAllergens()).append("\n");
+            }
+            if (user.getChronicDiseases() != null && !user.getChronicDiseases().isEmpty()) {
+                prompt.append("- 慢性病史：").append(user.getChronicDiseases()).append("\n");
+            }
         }
 
         prompt.append("\n【BMI健康状况】\n");
@@ -402,6 +408,7 @@ public class AIChatController {
         }
 
         prompt.append("\n以上信息仅用作背景参考，不要在回答中主动提及、罗列或复述这些数据。只有当用户主动询问健康、饮食、运动等相关话题时，再据此给出建议。用户问不相关问题时正常回答即可，不要强行联系健康数据。");
+        prompt.append("\n当用户询问饮食建议或食物推荐时，必须避开过敏原和慢性病禁忌食物。如果用户问不相关的问题，忽略健康数据正常回答。");
         systemPrompt = prompt.toString();
     }
 
