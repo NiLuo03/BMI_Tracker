@@ -55,7 +55,7 @@
     <HBox spacing="6" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
         <Label text="已选食物：" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="🗑 清空该餐" onAction="#handleClearMeal"
+        <Button fx:id="clearMealBtn" text="🗑 清空该餐" onAction="#handleClearMeal"
                 style="-fx-background-color: rgba(239,68,68,0.08); -fx-text-fill: #ef4444; -fx-font-size: 11px; -fx-padding: 2 8; -fx-background-radius: 4; -fx-cursor: hand;"/>
     </HBox>
     <ScrollPane fx:id="selectedScrollPane" fitToWidth="true" prefHeight="115"
