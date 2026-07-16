@@ -32,6 +32,7 @@ public class MainController {
     @FXML private Button toggleNavBtn;
     @FXML private Button btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank;
     @FXML private VBox sidebar;
+    @FXML private VBox homeContent;
 
     private boolean navExpanded = true;
 
@@ -75,21 +76,7 @@ public class MainController {
 
     @FXML
     void showHome(ActionEvent event) {
-        try {
-            String savedColor = backdrop.getStyle();
-            Stage stage = (Stage) contentPane.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
-            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-            MainController newCtrl = loader.getController();
-            if (newCtrl != null && newCtrl.backdrop != null) {
-                newCtrl.backdrop.setStyle(savedColor);
-            }
-            stage.setScene(scene);
-            stage.centerOnScreen();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        glassPanel.getChildren().setAll(homeContent);
         setTitle("首页");
     }
 

@@ -13,6 +13,12 @@ public class FoodDao {
         return queryList(sql, ps -> ps.setString(1, category));
     }
 
+    public List<Food> findRankByCategory(String category, String orderColumn, boolean asc) throws SQLException {
+        String dir = asc ? "ASC" : "DESC";
+        String sql = "SELECT * FROM foods WHERE category = ? ORDER BY " + orderColumn + " " + dir + " LIMIT 10";
+        return queryList(sql, ps -> ps.setString(1, category));
+    }
+
     public List<Food> findByIds(List<Integer> ids) throws SQLException {
         if (ids == null || ids.isEmpty()) return new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM foods WHERE foodId IN (");

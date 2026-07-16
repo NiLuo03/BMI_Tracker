@@ -4,6 +4,7 @@ import com.bmitracker.dao.FoodDao;
 import com.bmitracker.model.Food;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,6 +39,17 @@ public class FoodServiceImpl implements FoodService {
     public List<Food> getTopByCategory(String category) {
         if (category == null || category.isEmpty()) return getAllFoods();
         return getFoodsByCategory(category);
+    }
+
+    @Override
+    public List<Food> getRankByCategoryAndNutrient(String category, String nutrient, boolean asc) {
+        List<String> valid = Arrays.asList("calories", "protein", "fat", "carb", "foodName");
+        if (!valid.contains(nutrient)) return Collections.emptyList();
+        try {
+            return foodDao.findRankByCategory(category, nutrient, asc);
+        } catch (SQLException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
