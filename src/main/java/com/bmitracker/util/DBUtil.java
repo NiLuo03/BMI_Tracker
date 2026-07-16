@@ -11,25 +11,14 @@ public class DBUtil {
 
     private static final Logger LOG = Logger.getLogger(DBUtil.class.getName());
 
-    /** true=前端预览(不走DB)， false=正常模式 */
     public static boolean PREVIEW_MODE = false;
 
-    /** H2本地文件数据库，MySQL兼容模式 */
     private static final String H2_URL = "jdbc:h2:file:./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE";
-    /** 队友的MySQL地址 */
-    private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/bmi_db?useSSL=false&serverTimezone=Asia/Shanghai&connectTimeout=3000&socketTimeout=3000";
-    private static final String USER = "root";
-    private static final String PASS = "23456789";
-
-    /** true=使用内嵌H2， false=连队友MySQL */
-    public static boolean USE_H2 = true;
 
     static {
         try {
             Class.forName("org.h2.Driver");
-            if (USE_H2) {
-                initH2Database();
-            }
+            initH2Database();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "数据库初始化失败", e);
         }
@@ -50,7 +39,6 @@ public class DBUtil {
                     "preferences VARCHAR(200)," +
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
-            // 兼容旧表：添加健康档案字段
             for (String col : new String[]{"allergens VARCHAR(200)", "chronic_diseases VARCHAR(200)"}) {
                 try { stmt.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS " + col); } catch (SQLException ignored) {}
             }
@@ -79,7 +67,6 @@ public class DBUtil {
                     "storage VARCHAR(10)," +
                     "cooking_method VARCHAR(10)," +
                     "image VARCHAR(50))");
-            // 兼容旧表：尝试添加新列（表已存在时会跳过）
             for (String col : new String[]{"meal_type","food_texture","flavor","storage","cooking_method","image"}) {
                 try { stmt.execute("ALTER TABLE foods ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(10)"); } catch (SQLException ignored) {}
             }
@@ -104,7 +91,6 @@ public class DBUtil {
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY (userId) REFERENCES users(userId))");
 
-            // 检查是否需要初始化食物数据（空表或旧表缺标签）
             boolean needsSeed;
             try {
                 ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM foods WHERE meal_type IS NOT NULL");
@@ -112,7 +98,7 @@ public class DBUtil {
                 needsSeed = rs.getInt(1) == 0;
                 rs.close();
             } catch (SQLException e) {
-                needsSeed = true; // 表不存在或列缺失时执行 seed
+                needsSeed = true;
             }
             if (needsSeed) {
                 stmt.execute("DELETE FROM foods");
@@ -149,9 +135,6 @@ public class DBUtil {
         if (PREVIEW_MODE) {
             throw new SQLException("前端预览模式，已跳过数据库连接");
         }
-        if (USE_H2) {
-            return DriverManager.getConnection(H2_URL, "sa", "");
-        }
-        return DriverManager.getConnection(MYSQL_URL, USER, PASS);
+        return DriverManager.getConnection(H2_URL, "sa", "");
     }
 }

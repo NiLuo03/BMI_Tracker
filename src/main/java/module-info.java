@@ -2,7 +2,6 @@ module com.bmitracker {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-    requires mysql.connector.j;
     requires java.net.http;
     requires java.desktop;
 
