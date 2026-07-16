@@ -11,7 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.List;
@@ -144,8 +148,23 @@ public class FoodCompareController implements Initializable {
             return card;
         }
         Label nameLabel = new Label(f.getFoodName());
-        nameLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;");
+        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
+        nameLabel.setStyle("-fx-text-fill: #d0d0d0;");
         card.getChildren().add(nameLabel);
+
+        // 食物图片
+        try {
+            String imgPath = f.getImage();
+            if (imgPath != null && !imgPath.isEmpty()) {
+                ImageView imgView = new ImageView();
+                imgView.setFitWidth(180);
+                imgView.setFitHeight(180);
+                imgView.setPreserveRatio(true);
+                Image img = new Image(getClass().getResource("/images/foods/" + imgPath).toExternalForm(), 180, 180, true, true, true);
+                imgView.setImage(img);
+                card.getChildren().add(imgView);
+            }
+        } catch (Exception ignored) {}
 
         Label catLabel = new Label(f.getCategory());
         catLabel.setStyle("-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #10b981; -fx-background-radius: 4; -fx-padding: 2 8; -fx-font-size: 12;");
