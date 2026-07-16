@@ -412,6 +412,16 @@ public class AIChatController {
         systemPrompt = prompt.toString();
     }
 
+    public void sendUserMessage(String text) {
+        Platform.runLater(() -> {
+            if (chatStage == null || !chatStage.isShowing()) {
+                toggleChat();
+            }
+            inputField.setText(text);
+            sendMessage();
+        });
+    }
+
     private void createChatStage() {
         chatStage = new Stage();
         chatStage.initStyle(StageStyle.UTILITY);

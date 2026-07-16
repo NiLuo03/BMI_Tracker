@@ -52,7 +52,6 @@
 
                 <Label text="生活服务" styleClass="sidebar-category"/>
                 <Button fx:id="btnDiet" text="🥗 膳食推荐" onAction="#showDiet" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnMealRecord" text="📝 膳食记录" onAction="#showMealRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnCompare" text="🍎 食物对比" onAction="#showFood" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnRank" text="🏆 食物榜单" onAction="#showFoodRank" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnMealRecord" text="📝 膳食记录" onAction="#showMealRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
@@ -124,21 +123,25 @@
 
                                             <HBox spacing="10">
                                                 <VBox styleClass="summary-card" spacing="4" HBox.hgrow="ALWAYS">
-                                                    <Label text="📋 历史记录" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                                                    <Label text="📋 历史记录" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"
+                                                           onMouseClicked="#showHistory"/>
                                                     <Label fx:id="historySummary" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" wrapText="true"/>
                                                 </VBox>
                                                 <VBox styleClass="summary-card" spacing="4" HBox.hgrow="ALWAYS">
-                                                    <Label text="🥗 膳食推荐" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                                                    <Label text="🥗 膳食推荐" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"
+                                                           onMouseClicked="#showDiet"/>
                                                     <Label text="点击生成今日推荐" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" wrapText="true"/>
                                                 </VBox>
                                             </HBox>
                                             <HBox spacing="10">
                                                 <VBox styleClass="summary-card" spacing="4" HBox.hgrow="ALWAYS">
-                                                    <Label text="🔮 趋势预测" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                                                    <Label text="🔮 趋势预测" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"
+                                                           onMouseClicked="#showPrediction"/>
                                                     <Label text="需4条以上记录" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" wrapText="true"/>
                                                 </VBox>
                                                 <VBox styleClass="summary-card" spacing="4" HBox.hgrow="ALWAYS">
-                                                    <Label text="🍎 食物对比" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                                                    <Label text="🍎 食物对比" style="-fx-text-fill: #d0d0d0; -fx-font-weight: bold; -fx-font-size: 12px;"
+                                                           onMouseClicked="#showFood"/>
                                                     <Label text="横向对比营养" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" wrapText="true"/>
                                                 </VBox>
                                             </HBox>

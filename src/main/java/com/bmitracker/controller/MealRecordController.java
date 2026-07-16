@@ -1,32 +1,19 @@
+
 package com.bmitracker.controller;
 
-import com.bmitracker.BMIApplication;
-import com.bmitracker.dao.MealRecordDao;
 import com.bmitracker.model.Food;
-import com.bmitracker.model.MealRecord;
-import com.bmitracker.model.User;
 import com.bmitracker.service.FoodService;
 import com.bmitracker.service.FoodServiceImpl;
-import com.bmitracker.service.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.Pos;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MealRecordController {
-
-    private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
-    private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
-    private static final String MODEL = "ep-20260714154339-vkt22";
 
     @FXML private Button mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn;
     @FXML private TextField searchField;
@@ -37,9 +24,6 @@ public class MealRecordController {
     @FXML private Label mealCalLabel, totalCalLabel;
 
     private final FoodService foodService = new FoodServiceImpl();
-    private final UserService userService = new UserService();
-    private final MealRecordDao mealRecordDao = new MealRecordDao();
-    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     private List<Food> allFoods = Collections.emptyList();
 
@@ -65,7 +49,6 @@ public class MealRecordController {
                 if (allFoods.isEmpty()) {
                     showAlert("食物库为空，请确认数据库已正确初始化");
                 }
-                loadTodaysRecords();
                 updateFoodGrid("");
                 searchField.textProperty().addListener((o, ov, nv) -> updateFoodGrid(nv));
             });
@@ -226,7 +209,7 @@ public class MealRecordController {
             return;
         }
 
-        StringBuilder sb = new StringBuilder("用户今天吃了以下食物，请给出营养评价和健康建议：\n\n");
+        StringBuilder sb = new StringBuilder("请评价我今天的膳食并提供改进建议：\n\n");
         String[][] mealData = {
             {"早餐", mealToString(breakfastEntries)},
             {"午餐", mealToString(lunchEntries)},
@@ -240,47 +223,9 @@ public class MealRecordController {
         double total = 0;
         for (var list : List.of(breakfastEntries, lunchEntries, dinnerEntries, snackEntries))
             for (FoodEntry e : list) total += e.getCalories();
-        sb.append(String.format("\n总热量：%.0f kcal", total));
+        sb.append(String.format("\n总热量：%.0f kcal\n\n请给出简洁的营养评价和改进建议，用中文回复。", total));
 
-        User user = userService.getUserById(BMIApplication.currentUserId);
-        if (user != null) {
-            sb.append("\n\n用户信息：");
-            sb.append(String.format("年龄%d岁，性别%s", user.getUserAge(), user.getSex() == 1 ? "女" : "男"));
-            if (user.getHeight() > 0) sb.append(String.format("，身高%.1fcm", user.getHeight()));
-            if (user.getWeight() > 0) sb.append(String.format("，体重%.1fkg", user.getWeight()));
-            if (user.getAllergens() != null && !user.getAllergens().isEmpty())
-                sb.append("，过敏原：").append(user.getAllergens());
-            if (user.getChronicDiseases() != null && !user.getChronicDiseases().isEmpty())
-                sb.append("，慢性病史：").append(user.getChronicDiseases());
-        }
-        sb.append("\n\n请给出简洁的营养评价和改进建议（200字以内），用中文回复。");
-
-        String prompt = sb.toString();
-        Alert loading = new Alert(Alert.AlertType.INFORMATION);
-        loading.setTitle("AI 分析中");
-        loading.setHeaderText(null);
-        loading.setContentText("正在分析您的膳食记录，请稍候...");
-        loading.show();
-
-        new Thread(() -> {
-            try {
-                String response = callAi(prompt);
-                Platform.runLater(() -> {
-                    loading.close();
-                    Alert result = new Alert(Alert.AlertType.INFORMATION);
-                    result.setTitle("AI 膳食建议");
-                    result.setHeaderText("营养评价");
-                    TextArea area = new TextArea(response);
-                    area.setWrapText(true); area.setEditable(false);
-                    area.setPrefSize(400, 250);
-                    area.setStyle("-fx-background-color: rgba(16,185,129,0.04); -fx-text-fill: #d0d0d0; -fx-control-inner-background: #0a0a1a;");
-                    result.getDialogPane().setContent(area);
-                    result.showAndWait();
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> { loading.close(); showAlert("AI 服务繁忙，请稍后再试"); });
-            }
-        }).start();
+        AIChatController.getInstance().sendUserMessage(sb.toString());
     }
 
     private String mealToString(List<FoodEntry> entries) {
@@ -291,125 +236,10 @@ public class MealRecordController {
         return sb.toString();
     }
 
-    private String callAi(String userMessage) throws Exception {
-        String json = "{\"model\":\"" + MODEL + "\",\"messages\":["
-                + "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，根据用户膳食记录给出评价和建议。用中文回答，简洁明了，200字以内。\"},"
-                + "{\"role\":\"user\",\"content\":\"" + escapeJson(userMessage) + "\"}"
-                + "]}";
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL)).header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + API_KEY)
-                .timeout(java.time.Duration.ofSeconds(30))
-                .POST(HttpRequest.BodyPublishers.ofString(json)).build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) return extractMessage(response.body());
-        throw new RuntimeException("API error: " + response.statusCode());
-    }
-
-    private String extractMessage(String body) {
-        String key = "\"message\":{\"content\":\"";
-        int start = body.indexOf(key);
-        if (start < 0) return body;
-        start += key.length();
-        StringBuilder r = new StringBuilder();
-        for (int i = start; i < body.length(); i++) {
-            char c = body.charAt(i);
-            if (c == '\\' && i + 1 < body.length()) {
-                char n = body.charAt(i + 1);
-                if (n == '"') { r.append('"'); i++; }
-                else if (n == 'n') { r.append('\n'); i++; }
-                else if (n == 'r') { r.append('\r'); i++; }
-                else if (n == 't') { r.append('\t'); i++; }
-                else if (n == '\\') { r.append('\\'); i++; }
-                else r.append(c);
-            } else if (c == '"') break;
-            else r.append(c);
-        }
-        return r.toString();
-    }
-
-    private String escapeJson(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            switch (c) {
-                case '\\' -> sb.append("\\\\");
-                case '"' -> sb.append("\\\""); case '\n' -> sb.append("\\n");
-                case '\r' -> sb.append("\\r"); case '\t' -> sb.append("\\t");
-                default -> sb.append(c);
-            }
-        }
-        return sb.toString();
-    }
-
     @FXML void handleClearMeal() {
         getEntries().clear();
         refreshSelected();
         updateFoodGrid(searchField.getText());
-    }
-
-    private Map<String, List<FoodEntry>> mealEntries() {
-        Map<String, List<FoodEntry>> map = new LinkedHashMap<>();
-        map.put("BREAKFAST", breakfastEntries);
-        map.put("LUNCH", lunchEntries);
-        map.put("DINNER", dinnerEntries);
-        map.put("SNACK", snackEntries);
-        return map;
-    }
-
-    @FXML
-    void handleSave() {
-        if (breakfastEntries.isEmpty() && lunchEntries.isEmpty() && dinnerEntries.isEmpty() && snackEntries.isEmpty()) {
-            showAlert("请先添加食物再保存");
-            return;
-        }
-        int uid = BMIApplication.currentUserId;
-        if (uid < 0) { showAlert("未登录"); return; }
-
-        LocalDate today = LocalDate.now();
-        new Thread(() -> {
-            try {
-                mealRecordDao.deleteByUserAndDate(uid, today);
-                for (var entry : mealEntries().entrySet()) {
-                    String mealType = entry.getKey();
-                    for (FoodEntry fe : entry.getValue()) {
-                        mealRecordDao.insert(uid, mealType, fe.food.getFoodId(), fe.grams, today);
-                    }
-                }
-                Platform.runLater(() -> {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION);
-                    a.setTitle("保存成功"); a.setHeaderText(null);
-                    a.setContentText("今日膳食记录已保存到数据库");
-                    a.showAndWait();
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> showAlert("保存失败：" + e.getMessage()));
-            }
-        }).start();
-    }
-
-    private void loadTodaysRecords() {
-        int uid = BMIApplication.currentUserId;
-        if (uid < 0) return;
-        LocalDate today = LocalDate.now();
-        try {
-            List<MealRecord> records = mealRecordDao.findByUserAndDate(uid, today);
-            if (records.isEmpty()) return;
-            for (MealRecord r : records) {
-                Food food = allFoods.stream().filter(f -> f.getFoodId() == r.getFoodId()).findFirst().orElse(null);
-                if (food == null) continue;
-                FoodEntry entry = new FoodEntry(food, r.getGrams());
-                List<FoodEntry> list = switch (r.getMealType()) {
-                    case "BREAKFAST" -> breakfastEntries;
-                    case "LUNCH" -> lunchEntries;
-                    case "DINNER" -> dinnerEntries;
-                    case "SNACK" -> snackEntries;
-                    default -> null;
-                };
-                if (list != null) list.add(entry);
-            }
-            setMeal(currentMeal);
-            updateFoodGrid(searchField.getText());
-        } catch (Exception ignored) {}
     }
 
     private void showAlert(String msg) {
