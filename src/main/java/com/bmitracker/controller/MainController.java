@@ -29,10 +29,9 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private StackPane glassPanel;
     @FXML private Label pageTitle;
-    @FXML private Label userLabel;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
-    @FXML private Button btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord;
+    @FXML private Button btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank;
     @FXML private VBox sidebar;
     @FXML private Label avatarLabel, sidebarUserName, dateLabel;
     @FXML private Label welcomeLabel, bmiStatusLabel, trendLabel;
@@ -47,9 +46,9 @@ public class MainController {
     void toggleNav() {
         navExpanded = !navExpanded;
         double target = navExpanded ? 150 : 48;
-        Button[] btns = {btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord};
-        String[] icons = {"🏠", "📊", "📋", "📈", "🔮", "🥗", "🍎", "🏆", "📝"};
-        String[] texts = {"首页", "BMI 记录", "历史记录", "折线图", "趋势预测", "膳食推荐", "食物对比", "食物榜单", "膳食记录"};
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnChart, btnPredict, btnDiet, btnCompare, btnRank};
+        String[] icons = {"🏠", "📊", "📋", "📈", "🔮", "🥗", "🍎", "🏆"};
+        String[] texts = {"首页", "BMI 记录", "历史记录", "折线图", "趋势预测", "膳食推荐", "食物对比", "食物榜单"};
 
         Timeline anim = new Timeline(
             new KeyFrame(Duration.millis(200),
