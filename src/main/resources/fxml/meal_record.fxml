@@ -38,18 +38,18 @@
                 styleClass="meal-tab" prefWidth="90"/>
     </HBox>
 
-    <!-- 搜索 -->
-    <TextField fx:id="searchField" promptText="输入关键字筛选食物..."
-               styleClass="text-field-dark" HBox.hgrow="ALWAYS"/>
-
-    <!-- 食物网格 -->
-    <Label fx:id="foodCountLabel" text=""
-           style="-fx-font-size: 11px; -fx-text-fill: #6b7280; -fx-padding: 0 0 0 2;"/>
-    <ScrollPane fitToWidth="true" prefHeight="200"
-                style="-fx-background: transparent; -fx-background-color: rgba(16,185,129,0.02); -fx-background-radius: 10; -fx-border-color: rgba(16,185,129,0.06); -fx-border-radius: 10; -fx-border-width: 1;">
-        <FlowPane fx:id="foodGrid" hgap="5" vgap="5" prefWrapLength="600"
-                  style="-fx-padding: 12; -fx-background-color: transparent;"/>
-    </ScrollPane>
+    <!-- 食物选择区（仅当天显示） -->
+    <VBox fx:id="foodSection" spacing="10">
+        <TextField fx:id="searchField" promptText="输入关键字筛选食物..."
+                   styleClass="text-field-dark" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="foodCountLabel" text=""
+               style="-fx-font-size: 11px; -fx-text-fill: #6b7280; -fx-padding: 0 0 0 2;"/>
+        <ScrollPane fitToWidth="true" prefHeight="180"
+                    style="-fx-background: transparent; -fx-background-color: rgba(16,185,129,0.02); -fx-background-radius: 10; -fx-border-color: rgba(16,185,129,0.06); -fx-border-radius: 10; -fx-border-width: 1;">
+            <FlowPane fx:id="foodGrid" hgap="5" vgap="5" prefWrapLength="600"
+                      style="-fx-padding: 12; -fx-background-color: transparent;"/>
+        </ScrollPane>
+    </VBox>
 
     <!-- 已选 -->
     <HBox spacing="6" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">

@@ -24,7 +24,7 @@ public class MealRecordController {
     @FXML private TextField searchField;
     @FXML private FlowPane foodGrid, selectedFlow;
     @FXML private ScrollPane selectedScrollPane;
-    @FXML private VBox weekPanel, weekSummaryList;
+    @FXML private VBox foodSection, weekPanel, weekSummaryList;
 
     private final FoodService foodService = new FoodServiceImpl();
     private final MealRecordService recordService = new MealRecordService();
@@ -56,6 +56,7 @@ public class MealRecordController {
         entries.put("SNACK", new ArrayList<>());
 
         updateDateLabel();
+        updateLayoutForDate();
 
         new Thread(() -> {
             allFoods = foodService.getAllFoods();
@@ -77,6 +78,7 @@ public class MealRecordController {
     @FXML void prevDay() {
         currentDate = currentDate.minusDays(1);
         updateDateLabel();
+        updateLayoutForDate();
         loadRecordsForDate();
     }
 
@@ -85,8 +87,16 @@ public class MealRecordController {
         if (currentDate.isBefore(LocalDate.now())) {
             currentDate = currentDate.plusDays(1);
             updateDateLabel();
+            updateLayoutForDate();
             loadRecordsForDate();
         }
+    }
+
+    private void updateLayoutForDate() {
+        boolean isToday = currentDate.equals(LocalDate.now());
+        foodSection.setVisible(isToday);
+        foodSection.setManaged(isToday);
+        selectedScrollPane.setPrefHeight(isToday ? 115 : 200);
     }
 
     @FXML void handleSave() {
