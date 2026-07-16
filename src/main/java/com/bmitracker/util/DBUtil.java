@@ -84,6 +84,16 @@ public class DBUtil {
                 try { stmt.execute("ALTER TABLE foods ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(10)"); } catch (SQLException ignored) {}
             }
 
+            stmt.execute("CREATE TABLE IF NOT EXISTS meal_records (" +
+                    "recordId INT AUTO_INCREMENT PRIMARY KEY," +
+                    "userId INT NOT NULL," +
+                    "mealType VARCHAR(10) NOT NULL," +
+                    "foodId INT NOT NULL," +
+                    "grams DECIMAL(6,1) NOT NULL DEFAULT 100," +
+                    "recordDate DATE NOT NULL," +
+                    "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                    "FOREIGN KEY (userId) REFERENCES users(userId))");
+
             stmt.execute("CREATE TABLE IF NOT EXISTS recommendations (" +
                     "recId INT AUTO_INCREMENT PRIMARY KEY," +
                     "userId INT NOT NULL," +

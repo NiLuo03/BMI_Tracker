@@ -52,6 +52,7 @@
 
                 <Label text="生活服务" styleClass="sidebar-category"/>
                 <Button fx:id="btnDiet" text="🥗 膳食推荐" onAction="#showDiet" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                <Button fx:id="btnMealRecord" text="📝 膳食记录" onAction="#showMealRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnCompare" text="🍎 食物对比" onAction="#showFood" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnRank" text="🏆 食物榜单" onAction="#showFoodRank" styleClass="sidebar-btn" maxWidth="Infinity"/>
 

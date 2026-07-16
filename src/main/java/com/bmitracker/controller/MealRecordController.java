@@ -1,7 +1,9 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.dao.MealRecordDao;
 import com.bmitracker.model.Food;
+import com.bmitracker.model.MealRecord;
 import com.bmitracker.model.User;
 import com.bmitracker.service.FoodService;
 import com.bmitracker.service.FoodServiceImpl;
@@ -16,6 +18,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,7 @@ public class MealRecordController {
 
     private final FoodService foodService = new FoodServiceImpl();
     private final UserService userService = new UserService();
+    private final MealRecordDao mealRecordDao = new MealRecordDao();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     private List<Food> allFoods = Collections.emptyList();
@@ -61,6 +65,7 @@ public class MealRecordController {
                 if (allFoods.isEmpty()) {
                     showAlert("食物库为空，请确认数据库已正确初始化");
                 }
+                loadTodaysRecords();
                 updateFoodGrid("");
                 searchField.textProperty().addListener((o, ov, nv) -> updateFoodGrid(nv));
             });
@@ -340,6 +345,71 @@ public class MealRecordController {
         getEntries().clear();
         refreshSelected();
         updateFoodGrid(searchField.getText());
+    }
+
+    private Map<String, List<FoodEntry>> mealEntries() {
+        Map<String, List<FoodEntry>> map = new LinkedHashMap<>();
+        map.put("BREAKFAST", breakfastEntries);
+        map.put("LUNCH", lunchEntries);
+        map.put("DINNER", dinnerEntries);
+        map.put("SNACK", snackEntries);
+        return map;
+    }
+
+    @FXML
+    void handleSave() {
+        if (breakfastEntries.isEmpty() && lunchEntries.isEmpty() && dinnerEntries.isEmpty() && snackEntries.isEmpty()) {
+            showAlert("请先添加食物再保存");
+            return;
+        }
+        int uid = BMIApplication.currentUserId;
+        if (uid < 0) { showAlert("未登录"); return; }
+
+        LocalDate today = LocalDate.now();
+        new Thread(() -> {
+            try {
+                mealRecordDao.deleteByUserAndDate(uid, today);
+                for (var entry : mealEntries().entrySet()) {
+                    String mealType = entry.getKey();
+                    for (FoodEntry fe : entry.getValue()) {
+                        mealRecordDao.insert(uid, mealType, fe.food.getFoodId(), fe.grams, today);
+                    }
+                }
+                Platform.runLater(() -> {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("保存成功"); a.setHeaderText(null);
+                    a.setContentText("今日膳食记录已保存到数据库");
+                    a.showAndWait();
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> showAlert("保存失败：" + e.getMessage()));
+            }
+        }).start();
+    }
+
+    private void loadTodaysRecords() {
+        int uid = BMIApplication.currentUserId;
+        if (uid < 0) return;
+        LocalDate today = LocalDate.now();
+        try {
+            List<MealRecord> records = mealRecordDao.findByUserAndDate(uid, today);
+            if (records.isEmpty()) return;
+            for (MealRecord r : records) {
+                Food food = allFoods.stream().filter(f -> f.getFoodId() == r.getFoodId()).findFirst().orElse(null);
+                if (food == null) continue;
+                FoodEntry entry = new FoodEntry(food, r.getGrams());
+                List<FoodEntry> list = switch (r.getMealType()) {
+                    case "BREAKFAST" -> breakfastEntries;
+                    case "LUNCH" -> lunchEntries;
+                    case "DINNER" -> dinnerEntries;
+                    case "SNACK" -> snackEntries;
+                    default -> null;
+                };
+                if (list != null) list.add(entry);
+            }
+            setMeal(currentMeal);
+            updateFoodGrid(searchField.getText());
+        } catch (Exception ignored) {}
     }
 
     private void showAlert(String msg) {

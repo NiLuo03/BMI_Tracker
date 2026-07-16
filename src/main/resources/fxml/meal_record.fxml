@@ -58,6 +58,7 @@
         <Label text="总热量：" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;"/>
         <Label fx:id="totalCalLabel" text="0 kcal" styleClass="calorie-highlight"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="💾 保存记录" onAction="#handleSave" styleClass="btn-secondary" prefWidth="120"/>
         <Button text="🤖 AI 建议" onAction="#handleAiAdvice" styleClass="btn-primary" prefWidth="120"/>
     </HBox>
 </VBox>
