@@ -77,33 +77,24 @@
     -fx-text-fill: #34d399;
 }
 
-/* --- 侧边栏按钮（蓝光边框风格） --- */
+/* --- 侧边栏按钮 --- */
 .sidebar-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -sidebar-text;
     -fx-font-size: 13px;
-    -fx-font-weight: 600;
     -fx-font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-    -fx-padding: 10px 20px;
-    -fx-background-radius: 7px;
-    -fx-border-color: #3d6aff;
-    -fx-border-width: 1px;
-    -fx-border-radius: 7px;
+    -fx-padding: 9px 10px;
+    -fx-background-radius: 8px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 0);
 }
 .sidebar-btn:hover {
-    -fx-background-color: #3d6aff;
-    -fx-text-fill: #ffffff;
-    -fx-effect: dropshadow(gaussian, rgba(0,142,236,0.815), 30, 0.5, 0, 0);
-    -fx-border-color: #3d6aff;
-}
-.sidebar-btn:pressed {
-    -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 0);
+    -fx-background-color: rgba(16,185,129,0.12);
+    -fx-text-fill: #34d399;
 }
 .sidebar-btn.active {
-    -fx-background-color: rgba(61,106,255,0.15);
-    -fx-border-color: #3d6aff;
+    -fx-background-color: rgba(16,185,129,0.12);
+    -fx-text-fill: #10b981;
+    -fx-border-color: #10b981;
     -fx-border-width: 0 0 0 3px;
     -fx-border-radius: 3px;
 }
