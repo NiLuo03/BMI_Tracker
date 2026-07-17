@@ -35,7 +35,7 @@ public class MainController {
     @FXML private Label pageTitle;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
-    @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnHealth, btnDiet, btnCompare, btnRank, btnMealRecord;
+    @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord;
     @FXML private VBox sidebar;
     @FXML private Label avatarLabel, sidebarUserName, dateLabel;
     @FXML private Label welcomeLabel, bmiStatusLabel, trendLabel;
@@ -50,9 +50,9 @@ public class MainController {
     void toggleNav() {
         navExpanded = !navExpanded;
         double target = navExpanded ? 150 : 48;
-        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnHealth, btnDiet, btnCompare, btnRank, btnMealRecord};
-        String[] icons = {"🏠", "📊", "📊", "🔮", "🏥", "🥗", "🍎", "🏆", "📝"};
-        String[] texts = {"首页", "BMI 记录", "数据分析", "趋势预测", "健康档案", "膳食推荐", "食物对比", "食物榜单", "膳食记录"};
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord};
+        String[] icons = {"🏠", "📊", "📊", "🔮", "🥗", "🍎", "🏆", "📝"};
+        String[] texts = {"首页", "BMI 记录", "数据分析", "趋势预测", "膳食推荐", "食物对比", "食物榜单", "膳食记录"};
 
         Timeline anim = new Timeline(
             new KeyFrame(Duration.millis(200),
@@ -160,8 +160,6 @@ public class MainController {
     void showChart(ActionEvent event) { loadView("chart.fxml"); setTitle("BMI 折线图"); }
     @FXML
     void showPrediction(ActionEvent event) { loadView("prediction.fxml"); setTitle("趋势预测"); }
-    @FXML
-    void showHealthProfile(ActionEvent event) { loadView("health_profile.fxml"); setTitle("健康档案"); }
     @FXML
     void showDiet(ActionEvent event) { loadView("diet.fxml"); setTitle("AI 膳食推荐"); }
     @FXML

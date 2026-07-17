@@ -48,7 +48,6 @@
                 <Button fx:id="btnBmi" text="📊 BMI 记录" onAction="#showBmiRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnHistory" text="📊 数据分析" onAction="#showHistory" styleClass="sidebar-btn" maxWidth="Infinity"/>
                 <Button fx:id="btnPredict" text="🔮 趋势预测" onAction="#showPrediction" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnHealth" text="🏥 健康档案" onAction="#showHealthProfile" styleClass="sidebar-btn" maxWidth="Infinity"/>
 
                 <Label text="生活服务" styleClass="sidebar-category"/>
                 <Button fx:id="btnDiet" text="🥗 膳食推荐" onAction="#showDiet" styleClass="sidebar-btn" maxWidth="Infinity"/>
