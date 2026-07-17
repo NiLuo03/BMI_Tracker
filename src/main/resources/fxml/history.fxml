@@ -28,14 +28,14 @@
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <Label text="BMI 变化趋势" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                 <HBox HBox.hgrow="ALWAYS"/>
-                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
             </HBox>
             <LineChart fx:id="previewChart" prefHeight="200" styleClass="chart-dark"
                        mouseTransparent="true">
                 <xAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></xAxis>
                 <yAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></yAxis>
             </LineChart>
-            <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
 
         <!-- 卡片2：历史记录预览 -->
@@ -51,7 +51,7 @@
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <Label text="历史记录" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                 <HBox HBox.hgrow="ALWAYS"/>
-                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
             </HBox>
             <TableView fx:id="previewTable" prefHeight="200" styleClass="table-view-dark" mouseTransparent="true">
                 <columns>
@@ -60,14 +60,14 @@
                     <TableColumn fx:id="preColDate" text="日期" prefWidth="100"/>
                 </columns>
             </TableView>
-            <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
     </HBox>
 
     <!-- 折线图详情面板（默认隐藏） -->
     <VBox fx:id="chartDetail" spacing="10" visible="false" managed="false" VBox.vgrow="ALWAYS">
         <Button text="← 返回数据分析" onAction="#closeDetail"
-                style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-cursor: hand;"/>
+                style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-cursor: hand;"/>
         <Label text="BMI 变化趋势" styleClass="label-heading"/>
         <LineChart fx:id="chart" prefHeight="400" VBox.vgrow="ALWAYS" styleClass="chart-dark">
             <xAxis><NumberAxis label="记录序号"/></xAxis>
@@ -78,7 +78,7 @@
     <!-- 历史记录详情面板（默认隐藏） -->
     <VBox fx:id="tableDetail" spacing="10" visible="false" managed="false" VBox.vgrow="ALWAYS">
         <Button text="← 返回数据分析" onAction="#closeDetail"
-                style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-cursor: hand;"/>
+                style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-cursor: hand;"/>
         <Label text="历史记录" styleClass="label-heading"/>
         <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
             <columns>

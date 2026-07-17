@@ -20,34 +20,34 @@
         <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor1">
             <Rectangle width="64" height="64" fill="#050f0a" arcWidth="12" arcHeight="12"
                        stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <Label text="墨绿" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label text="墨绿" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
         <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor2">
             <Rectangle width="64" height="64" fill="#0a0a1a" arcWidth="12" arcHeight="12"
                        stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <Label text="深蓝" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label text="深蓝" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
         <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor3">
             <Rectangle width="64" height="64" fill="#100a1a" arcWidth="12" arcHeight="12"
                        stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <Label text="暗紫" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label text="暗紫" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
         <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor4">
             <Rectangle width="64" height="64" fill="#000000" arcWidth="12" arcHeight="12"
                        stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <Label text="纯黑" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label text="纯黑" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
         <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor5">
             <Rectangle width="64" height="64" fill="#111111" arcWidth="12" arcHeight="12"
                        stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <Label text="炭灰" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label text="炭灰" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
         <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor6">
             <Rectangle width="64" height="64" fill="#ffffff" arcWidth="12" arcHeight="12"
                        stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <Label text="纯白" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            <Label text="纯白" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         </VBox>
     </FlowPane>
 
-    <Label fx:id="hintLabel" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
+    <Label fx:id="hintLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
 </VBox>

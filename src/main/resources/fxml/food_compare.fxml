@@ -45,6 +45,6 @@
     </HBox>
 
     <VBox fx:id="compareContent" spacing="0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
-        <Label text="在上方选择两种食物开始对比" style="-fx-text-fill: #6b7280; -fx-font-size: 16;" VBox.vgrow="ALWAYS"/>
+        <Label text="在上方选择两种食物开始对比" style="-fx-text-fill: -text-secondary; -fx-font-size: 16;" VBox.vgrow="ALWAYS"/>
     </VBox>
 </VBox>

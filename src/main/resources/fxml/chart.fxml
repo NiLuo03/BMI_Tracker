@@ -11,7 +11,7 @@
 
     <!-- 返回按钮 -->
     <HBox>
-        <Button text="← 返回" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-cursor: hand;"/>
+        <Button text="← 返回" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-cursor: hand;"/>
     </HBox>
 
     <Label text="BMI 折线图" styleClass="label-heading"/>
@@ -23,5 +23,5 @@
         <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
     </LineChart>
 
-    <Label fx:id="chartNote" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" wrapText="true"/>
+    <Label fx:id="chartNote" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;" wrapText="true"/>
 </VBox>

@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -47,6 +48,11 @@ public class MainController {
     private boolean navExpanded = true;
     private final BmiService bmiService = new BmiService();
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private Pane rootPane;
+
+    private static final String[] BACKDROP_COLORS = {
+        "#050f0a", "#0a0a1a", "#100a1a", "#000000", "#111111", "#ffffff"
+    };
 
     @FXML
     void toggleNav() {
@@ -70,12 +76,21 @@ public class MainController {
         toggleNavBtn.setText(navExpanded ? "« 收起" : "»");
     }
 
-    @FXML void setBackdrop1() { backdrop.setStyle("-fx-background-color: #050f0a;"); }
-    @FXML void setBackdrop2() { backdrop.setStyle("-fx-background-color: #0a0a1a;"); }
-    @FXML void setBackdrop3() { backdrop.setStyle("-fx-background-color: #100a1a;"); }
-    @FXML void setBackdrop4() { backdrop.setStyle("-fx-background-color: #000000;"); }
-    @FXML void setBackdrop5() { backdrop.setStyle("-fx-background-color: #111111;"); }
-    @FXML void setBackdrop6() { backdrop.setStyle("-fx-background-color: #ffffff;"); }
+    public void changeBackdrop(String hexColor) {
+        backdrop.setStyle("-fx-background-color: " + hexColor + ";");
+        if (rootPane == null) return;
+        boolean isLight = "#ffffff".equals(hexColor);
+        rootPane.getStyleClass().removeAll("light-theme");
+        if (isLight) {
+            rootPane.getStyleClass().add("light-theme");
+        }
+    }
+
+    public void changeBackdrop(int idx) {
+        if (idx >= 0 && idx < BACKDROP_COLORS.length) {
+            changeBackdrop(BACKDROP_COLORS[idx]);
+        }
+    }
 
     @FXML
     void initialize() {
@@ -83,6 +98,10 @@ public class MainController {
         loadSidebarUser();
         loadDashboardData();
         if (dateLabel != null) dateLabel.setText(LocalDate.now().format(DATE_FMT));
+        if (backdrop != null && backdrop.getParent() instanceof Pane p) {
+            rootPane = p;
+        }
+        changeBackdrop("#ffffff");
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
             ai.setMainStage((Stage) contentPane.getScene().getWindow());
@@ -145,7 +164,8 @@ public class MainController {
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             MainController newCtrl = loader.getController();
             if (newCtrl != null && newCtrl.backdrop != null) {
-                newCtrl.backdrop.setStyle(savedColor);
+                String hex = savedColor.replaceAll(".*?(#[a-fA-F0-9]{6}).*", "$1");
+                newCtrl.changeBackdrop(hex);
             }
             stage.setScene(scene);
             stage.centerOnScreen();

@@ -15,10 +15,10 @@
     <!-- 步骤指示器 -->
     <HBox spacing="8" alignment="CENTER">
         <Label fx:id="step1Indicator" text="❶ 选择种类" style="-fx-text-fill: #10b981; -fx-font-size: 13; -fx-font-weight: bold;"/>
-        <Label text="→" style="-fx-text-fill: #4b5563;"/>
-        <Label fx:id="step2Indicator" text="❷ 选择营养" style="-fx-text-fill: #4b5563; -fx-font-size: 13;"/>
-        <Label text="→" style="-fx-text-fill: #4b5563;"/>
-        <Label fx:id="step3Indicator" text="❸ 查看排行" style="-fx-text-fill: #4b5563; -fx-font-size: 13;"/>
+        <Label text="→" style="-fx-text-fill: -text-tertiary;"/>
+        <Label fx:id="step2Indicator" text="❷ 选择营养" style="-fx-text-fill: -text-tertiary; -fx-font-size: 13;"/>
+        <Label text="→" style="-fx-text-fill: -text-tertiary;"/>
+        <Label fx:id="step3Indicator" text="❸ 查看排行" style="-fx-text-fill: -text-tertiary; -fx-font-size: 13;"/>
     </HBox>
 
     <Separator style="-fx-background-color: rgba(16,185,129,0.10);"/>
@@ -27,8 +27,8 @@
     <VBox fx:id="step1Panel" spacing="12">
         <padding><Insets top="16"/></padding>
 
-        <Label text="选择食物种类" style="-fx-text-fill: #d0d0d0; -fx-font-size: 15; -fx-font-weight: bold;"/>
-        <Label text="先确定你想看哪一类食物" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+        <Label text="选择食物种类" style="-fx-text-fill: -text-primary; -fx-font-size: 15; -fx-font-weight: bold;"/>
+        <Label text="先确定你想看哪一类食物" style="-fx-text-fill: -text-secondary; -fx-font-size: 12;"/>
 
         <ComboBox fx:id="categoryCombo" promptText="请选择分类" prefWidth="220" styleClass="combo-box-dark"/>
 
@@ -45,21 +45,21 @@
     <VBox fx:id="step2Panel" spacing="12" visible="false" managed="false">
         <padding><Insets top="16"/></padding>
 
-        <Label text="选择营养指标" style="-fx-text-fill: #d0d0d0; -fx-font-size: 15; -fx-font-weight: bold;"/>
-        <Label text="按哪种营养排名？" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+        <Label text="选择营养指标" style="-fx-text-fill: -text-primary; -fx-font-size: 15; -fx-font-weight: bold;"/>
+        <Label text="按哪种营养排名？" style="-fx-text-fill: -text-secondary; -fx-font-size: 12;"/>
 
         <VBox spacing="8" fx:id="nutrientGroup">
-            <RadioButton text="热量从低到高（低卡排行）" userData="calories:true" style="-fx-text-fill: #d0d0d0; -fx-font-size: 13;"/>
-            <RadioButton text="蛋白质从高到低（高蛋白排行）" userData="protein:false" style="-fx-text-fill: #d0d0d0; -fx-font-size: 13;"/>
-            <RadioButton text="脂肪从低到高（低脂排行）" userData="fat:true" style="-fx-text-fill: #d0d0d0; -fx-font-size: 13;"/>
-            <RadioButton text="碳水化合物从低到高（低碳排行）" userData="carb:true" style="-fx-text-fill: #d0d0d0; -fx-font-size: 13;"/>
+            <RadioButton text="热量从低到高（低卡排行）" userData="calories:true" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
+            <RadioButton text="蛋白质从高到低（高蛋白排行）" userData="protein:false" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
+            <RadioButton text="脂肪从低到高（低脂排行）" userData="fat:true" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
+            <RadioButton text="碳水化合物从低到高（低碳排行）" userData="carb:true" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
         </VBox>
 
         <Region VBox.vgrow="ALWAYS"/>
 
         <HBox spacing="12" alignment="CENTER">
             <Button text="← 上一步" onAction="#onStep2Back"
-                    style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 13; -fx-cursor: hand; -fx-border-color: #4b5563; -fx-border-radius: 8; -fx-padding: 10 20; -fx-border-width: 1;"/>
+                    style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 13; -fx-cursor: hand; -fx-border-color: #4b5563; -fx-border-radius: 8; -fx-padding: 10 20; -fx-border-width: 1;"/>
             <Button fx:id="step2Next" text="查看排行 →" disable="true" onAction="#onStep2Next"
                     style="-fx-background-color: rgba(16,185,129,0.10); -fx-text-fill: #34d399; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 24; -fx-background-radius: 8; -fx-cursor: hand;"/>
         </HBox>
@@ -70,7 +70,7 @@
         <padding><Insets top="16"/></padding>
 
         <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label fx:id="rankTitle" text="" style="-fx-text-fill: #d0d0d0; -fx-font-size: 16; -fx-font-weight: bold;"/>
+            <Label fx:id="rankTitle" text="" style="-fx-text-fill: -text-primary; -fx-font-size: 16; -fx-font-weight: bold;"/>
         </HBox>
 
         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
@@ -80,7 +80,7 @@
 
         <HBox alignment="CENTER">
             <Button text="← 重新选择" onAction="#onStep3Back"
-                    style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 13; -fx-cursor: hand; -fx-border-color: #4b5563; -fx-border-radius: 8; -fx-padding: 10 20; -fx-border-width: 1;"
+                    style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 13; -fx-cursor: hand; -fx-border-color: #4b5563; -fx-border-radius: 8; -fx-padding: 10 20; -fx-border-width: 1;"
                     maxWidth="160"/>
         </HBox>
     </VBox>

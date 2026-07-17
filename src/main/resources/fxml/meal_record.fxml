@@ -15,15 +15,15 @@
     <!-- 日期导航 -->
     <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
         <Button text="◀" onAction="#prevDay"
-                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
-        <Label fx:id="dateLabel" text="" style="-fx-font-size: 14px; -fx-text-fill: #d0d0d0; -fx-font-weight: bold;"/>
+                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: -text-secondary; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+        <Label fx:id="dateLabel" text="" style="-fx-font-size: 14px; -fx-text-fill: -text-primary; -fx-font-weight: bold;"/>
         <Button fx:id="nextDayBtn" text="▶" onAction="#nextDay"
-                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: -text-secondary; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="💾 保存记录" onAction="#handleSave"
                 style="-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #10b981; -fx-font-size: 12px; -fx-padding: 4 12; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold;"/>
         <Button text="📅 近7天" onAction="#showWeekSummary"
-                style="-fx-background-color: rgba(255,255,255,0.04); -fx-text-fill: #6b7280; -fx-font-size: 11px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                style="-fx-background-color: rgba(255,255,255,0.04); -fx-text-fill: -text-secondary; -fx-font-size: 11px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
     </HBox>
 
     <!-- 餐次选择标签 -->
@@ -43,7 +43,7 @@
         <TextField fx:id="searchField" promptText="输入关键字筛选食物..."
                    styleClass="text-field-dark" HBox.hgrow="ALWAYS"/>
         <Label fx:id="foodCountLabel" text=""
-               style="-fx-font-size: 11px; -fx-text-fill: #6b7280; -fx-padding: 0 0 0 2;"/>
+               style="-fx-font-size: 11px; -fx-text-fill: -text-secondary; -fx-padding: 0 0 0 2;"/>
         <ScrollPane fitToWidth="true" prefHeight="180"
                     style="-fx-background: transparent; -fx-background-color: rgba(16,185,129,0.02); -fx-background-radius: 10; -fx-border-color: rgba(16,185,129,0.06); -fx-border-radius: 10; -fx-border-width: 1;">
             <FlowPane fx:id="foodGrid" hgap="5" vgap="5" prefWrapLength="600"
@@ -53,7 +53,7 @@
 
     <!-- 已选 -->
     <HBox spacing="6" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
-        <Label text="已选食物：" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
+        <Label text="已选食物：" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="clearMealBtn" text="🗑 清空该餐" onAction="#handleClearMeal"
                 style="-fx-background-color: rgba(239,68,68,0.08); -fx-text-fill: #ef4444; -fx-font-size: 11px; -fx-padding: 2 8; -fx-background-radius: 4; -fx-cursor: hand;"/>
@@ -69,11 +69,11 @@
     <!-- 汇总 -->
     <Separator style="-fx-background: rgba(255,255,255,0.1);"/>
     <HBox spacing="20" alignment="CENTER_LEFT">
-        <Label text="总热量：" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #d0d0d0;"/>
+        <Label text="总热量：" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
         <Label fx:id="totalCalLabel" text="0 kcal" styleClass="calorie-highlight"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="savedLabel" text=""
-               style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+               style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
         <Button text="🤖 AI 建议" onAction="#handleAiAdvice" styleClass="btn-primary" prefWidth="120"/>
     </HBox>
 
