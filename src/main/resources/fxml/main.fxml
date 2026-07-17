@@ -26,8 +26,10 @@
         <left>
             <VBox fx:id="sidebar" spacing="4" style="-fx-background-color: transparent; -fx-padding: 12px 6px;" prefWidth="150" minWidth="50">
 
-                <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4px 8px 6px 8px; -fx-cursor: hand;" onMouseClicked="#showProfile">
-                    <StackPane styleClass="user-avatar">
+                <Button style="-fx-background-color: transparent; -fx-padding: 0;" onAction="#showProfile">
+                    <graphic>
+                        <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4px 8px 6px 8px;">
+                            <StackPane styleClass="user-avatar">
                         <Label fx:id="avatarLabel" text="U"/>
                     </StackPane>
                     <VBox spacing="1">
@@ -38,6 +40,8 @@
                         </HBox>
                     </VBox>
                 </HBox>
+                    </graphic>
+                </Button>
 
                 <Separator style="-fx-background-color: rgba(16,185,129,0.08);">
                     <VBox.margin><Insets top="4" bottom="6"/></VBox.margin>
