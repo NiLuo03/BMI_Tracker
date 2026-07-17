@@ -3,6 +3,7 @@ package com.bmitracker.controller;
 import com.bmitracker.model.Food;
 import com.bmitracker.service.FoodService;
 import com.bmitracker.service.FoodServiceImpl;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,14 +34,6 @@ public class FoodRankController {
 
     @FXML
     void initialize() {
-        List<String> categories = foodService.getAllCategories();
-        if (categories != null) categoryCombo.getItems().addAll(categories);
-
-        categoryCombo.setOnAction(e -> {
-            selectedCategory = categoryCombo.getValue();
-            step1Next.setDisable(selectedCategory == null);
-        });
-
         nutrientToggle = new ToggleGroup();
         for (var node : nutrientGroup.getChildren()) {
             if (node instanceof RadioButton rb) {
@@ -56,6 +49,17 @@ public class FoodRankController {
                 selectedAsc = Boolean.parseBoolean(parts[1]);
             }
         });
+
+        new Thread(() -> {
+            List<String> categories = foodService.getAllCategories();
+            Platform.runLater(() -> {
+                if (categories != null) categoryCombo.getItems().addAll(categories);
+                categoryCombo.setOnAction(e -> {
+                    selectedCategory = categoryCombo.getValue();
+                    step1Next.setDisable(selectedCategory == null);
+                });
+            });
+        }).start();
     }
 
     @FXML

@@ -209,6 +209,11 @@ public class MainController {
     }
 
     private void loadView(String fxml) {
+        Label loading = new Label("加载中…");
+        loading.setStyle("-fx-text-fill: -text-secondary; -fx-font-size: 14px;");
+        StackPane.setAlignment(loading, javafx.geometry.Pos.CENTER);
+        glassPanel.getChildren().setAll(loading);
+
         new Thread(() -> {
             try {
                 Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
