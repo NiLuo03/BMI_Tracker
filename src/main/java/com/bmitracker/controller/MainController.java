@@ -212,22 +212,31 @@ public class MainController {
 
     private void loadView(String fxml) {
         int myId = loadId.incrementAndGet();
-        Label loading = new Label("加载中…");
-        loading.setStyle("-fx-text-fill: -text-secondary; -fx-font-size: 14px;");
-        StackPane.setAlignment(loading, javafx.geometry.Pos.CENTER);
-        glassPanel.getChildren().setAll(loading);
-
-        new Thread(() -> {
+        glassPanel.getChildren().setAll(loadingLabel());
+        Platform.runLater(() -> {
             try {
+                if (loadId.get() != myId) return;
                 Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
-                Platform.runLater(() -> {
-                    if (loadId.get() != myId) return;
-                    glassPanel.getChildren().setAll(view);
-                });
+                glassPanel.getChildren().setAll(view);
             } catch (Exception e) {
                 e.printStackTrace();
+                glassPanel.getChildren().setAll(errorLabel("页面加载失败"));
             }
-        }).start();
+        });
+    }
+
+    private Label loadingLabel() {
+        Label l = new Label("加载中…");
+        l.setStyle("-fx-text-fill: -text-secondary; -fx-font-size: 14px;");
+        StackPane.setAlignment(l, javafx.geometry.Pos.CENTER);
+        return l;
+    }
+
+    private Label errorLabel(String msg) {
+        Label l = new Label(msg);
+        l.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 14px;");
+        StackPane.setAlignment(l, javafx.geometry.Pos.CENTER);
+        return l;
     }
 
     private void setTitle(String title) {
