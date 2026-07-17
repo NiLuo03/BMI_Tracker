@@ -116,40 +116,12 @@
                                             </VBox>
 
                                             <HBox spacing="10">
-                                                <Button styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showHistory">
-                                                    <graphic>
-                                                        <VBox spacing="4">
-                                                            <Label text="📋 历史记录" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-                                                            <Label fx:id="historySummary" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;" wrapText="true"/>
-                                                        </VBox>
-                                                    </graphic>
-                                                </Button>
-                                                <Button styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showDiet">
-                                                    <graphic>
-                                                        <VBox spacing="4">
-                                                            <Label text="🥗 膳食推荐" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-                                                            <Label text="点击生成今日推荐" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;" wrapText="true"/>
-                                                        </VBox>
-                                                    </graphic>
-                                                </Button>
+                                                <Button text="📋 历史记录" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showHistory"/>
+                                                <Button text="🥗 膳食推荐" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showDiet"/>
                                             </HBox>
                                             <HBox spacing="10">
-                                                <Button styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showPrediction">
-                                                    <graphic>
-                                                        <VBox spacing="4">
-                                                            <Label text="🔮 趋势预测" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-                                                            <Label text="需4条以上记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;" wrapText="true"/>
-                                                        </VBox>
-                                                    </graphic>
-                                                </Button>
-                                                <Button styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showFood">
-                                                    <graphic>
-                                                        <VBox spacing="4">
-                                                            <Label text="🍎 食物对比" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-                                                            <Label text="横向对比营养" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;" wrapText="true"/>
-                                                        </VBox>
-                                                    </graphic>
-                                                </Button>
+                                                <Button text="🔮 趋势预测" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showPrediction"/>
+                                                <Button text="🍎 食物对比" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showFood"/>
                                             </HBox>
                                         </VBox>
 
