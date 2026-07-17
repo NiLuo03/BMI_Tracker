@@ -6,7 +6,6 @@ import com.bmitracker.service.BmiService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -180,18 +179,14 @@ public class MainController {
     void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); setTitle("BMI 记录"); }
     @FXML
     void showHistory(ActionEvent event) { loadView("history.fxml"); setTitle("历史记录"); }
-    @FXML void showHistory(MouseEvent e) { loadView("history.fxml"); setTitle("历史记录"); }
     @FXML
     void showChart(ActionEvent event) { loadView("chart.fxml"); setTitle("BMI 折线图"); }
     @FXML
     void showPrediction(ActionEvent event) { loadView("prediction.fxml"); setTitle("趋势预测"); }
-    @FXML void showPrediction(MouseEvent e) { loadView("prediction.fxml"); setTitle("趋势预测"); }
     @FXML
     void showPersonalize(ActionEvent event) { loadView("personalize.fxml"); setTitle("个性设置"); }
     @FXML
     void showDiet(ActionEvent event) { loadView("diet.fxml"); setTitle("AI 膳食推荐"); }
-    @FXML void showDiet(MouseEvent e) { loadView("diet.fxml"); setTitle("AI 膳食推荐"); }
-    @FXML void showFood(MouseEvent e) { loadView("food_compare.fxml"); setTitle("食物对比"); }
 
     public static MainController getInstance() { return instance; }
     public Region getBackdrop() { return backdrop; }
