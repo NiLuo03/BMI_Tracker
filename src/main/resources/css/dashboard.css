@@ -31,19 +31,19 @@
     -text-tertiary: #6b7280;
     -text-muted: #9ca3af;
     -sidebar-text: #4b5563;
-    -card-bg: rgba(255,255,255,0.70);
-    -card-border: rgba(0,0,0,0.06);
-    -card-hover-bg: rgba(255,255,255,0.85);
-    -glass-bg: rgba(255,255,255,0.50);
-    -glass-border: rgba(255,255,255,0.30);
-    -topbar-bg: rgba(255,255,255,0.90);
-    -menu-bg: #f0f0f0;
-    -input-bg: rgba(255,255,255,0.70);
-    -dashboard-bg: rgba(255,255,255,0.40);
-    -welcome-bg: linear-gradient(to right, rgba(16,185,129,0.06), rgba(6,182,212,0.04));
-    -hero-card-bg: linear-gradient(to bottom right, rgba(16,185,129,0.06), rgba(6,182,212,0.04));
-    -feature-card-bg: rgba(255,255,255,0.50);
-    -banner-bg: linear-gradient(to right, rgba(16,185,129,0.04), rgba(6,182,212,0.03), rgba(16,185,129,0.04));
+    -card-bg: rgba(255,255,255,0.85);
+    -card-border: rgba(0,0,0,0.08);
+    -card-hover-bg: rgba(16,185,129,0.06);
+    -glass-bg: rgba(245,245,245,0.90);
+    -glass-border: rgba(200,200,200,0.35);
+    -topbar-bg: rgba(255,255,255,0.92);
+    -menu-bg: #f5f5f5;
+    -input-bg: rgba(255,255,255,0.80);
+    -dashboard-bg: rgba(245,245,245,0.60);
+    -welcome-bg: linear-gradient(to right, rgba(16,185,129,0.04), rgba(6,182,212,0.03));
+    -hero-card-bg: linear-gradient(to bottom right, rgba(16,185,129,0.05), rgba(6,182,212,0.03));
+    -feature-card-bg: rgba(255,255,255,0.70);
+    -banner-bg: linear-gradient(to right, rgba(16,185,129,0.03), rgba(6,182,212,0.02), rgba(16,185,129,0.03));
 }
 
 .bg-gradient {
