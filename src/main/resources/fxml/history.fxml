@@ -5,29 +5,56 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.HistoryController"
       style="-fx-background-color: transparent;">
     <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
 
-    <Label text="数据记录与趋势" styleClass="label-heading"/>
-    <Label fx:id="infoLabel" styleClass="label-subheading"/>
+    <Label text="数据分析" styleClass="label-heading"/>
+    <Label fx:id="infoLabel" text="查看您的 BMI 数据趋势与历史记录" styleClass="label-subheading"/>
 
-    <!-- 折线图 -->
-    <LineChart fx:id="chart" prefHeight="280" VBox.vgrow="NEVER" styleClass="chart-dark">
-        <xAxis><NumberAxis label="记录序号"/></xAxis>
-        <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
-    </LineChart>
+    <!-- 两张卡片 -->
+    <HBox spacing="14" VBox.vgrow="ALWAYS">
+        <!-- 卡片1：折线图 -->
+        <VBox HBox.hgrow="ALWAYS" spacing="8"
+              style="-fx-background-color: rgba(16,185,129,0.05);
+                     -fx-background-radius: 14px;
+                     -fx-border-color: rgba(16,185,129,0.12);
+                     -fx-border-width: 1px;
+                     -fx-border-radius: 14px;
+                     -fx-padding: 16px;">
+            <Label fx:id="chartTitle" text="BMI 变化趋势" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+            <LineChart fx:id="chart" prefHeight="260" VBox.vgrow="ALWAYS" styleClass="chart-dark"
+                       visible="false" managed="false">
+                <xAxis><NumberAxis label="记录序号"/></xAxis>
+                <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
+            </LineChart>
+            <Label fx:id="chartHint" text="点击查看折线图" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"
+                   VBox.vgrow="ALWAYS" onMouseClicked="#toggleChart"/>
+        </VBox>
 
-    <!-- 历史记录表格 -->
-    <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
-        <columns>
-            <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
-            <TableColumn fx:id="colDate" text="记录时间" prefWidth="170"/>
-            <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90"/>
-            <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90"/>
-            <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
-            <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90"/>
-        </columns>
-    </TableView>
+        <!-- 卡片2：历史记录 -->
+        <VBox HBox.hgrow="ALWAYS" spacing="8"
+              style="-fx-background-color: rgba(16,185,129,0.05);
+                     -fx-background-radius: 14px;
+                     -fx-border-color: rgba(16,185,129,0.12);
+                     -fx-border-width: 1px;
+                     -fx-border-radius: 14px;
+                     -fx-padding: 16px;">
+            <Label fx:id="tableTitle" text="历史记录" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark"
+                       visible="false" managed="false">
+                <columns>
+                    <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
+                    <TableColumn fx:id="colDate" text="记录时间" prefWidth="170"/>
+                    <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90"/>
+                    <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90"/>
+                    <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
+                    <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90"/>
+                </columns>
+            </TableView>
+            <Label fx:id="tableHint" text="点击查看历史记录" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"
+                   VBox.vgrow="ALWAYS" onMouseClicked="#toggleTable"/>
+        </VBox>
+    </HBox>
 </VBox>
