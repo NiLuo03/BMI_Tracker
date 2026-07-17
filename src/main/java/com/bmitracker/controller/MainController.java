@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
@@ -178,6 +179,8 @@ public class MainController {
     void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); setTitle("膳食记录"); }
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); setTitle("个人信息"); }
+    @FXML
+    void showProfile(MouseEvent event) { loadView("profile.fxml"); setTitle("个人信息"); }
 
     @FXML
     void showLogout(ActionEvent event) {
