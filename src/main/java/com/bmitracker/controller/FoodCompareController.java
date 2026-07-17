@@ -61,7 +61,6 @@ public class FoodCompareController implements Initializable {
                 Platform.runLater(() -> compareContent.getChildren().add(emptyHint("暂无食物数据")));
                 return;
             }
-            allFoods.setAll(list);
             List<String> categories = foodService.getAllCategories();
             List<String> mealTypes = foodService.getAllMealTypes();
             List<String> textures = foodService.getAllTextures();
@@ -69,6 +68,7 @@ public class FoodCompareController implements Initializable {
             List<String> storages = foodService.getAllStorages();
             List<String> cookings = foodService.getAllCookingMethods();
             Platform.runLater(() -> {
+                allFoods.setAll(list);
                 applyFilters();
                 filterCategory.setItems(FXCollections.observableArrayList(categories));
                 filterMealType.setItems(FXCollections.observableArrayList(mealTypes));

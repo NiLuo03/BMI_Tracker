@@ -208,14 +208,10 @@ public class MainController {
         }
     }
 
-    private final java.util.concurrent.atomic.AtomicInteger loadId = new java.util.concurrent.atomic.AtomicInteger(0);
-
     private void loadView(String fxml) {
-        int myId = loadId.incrementAndGet();
         glassPanel.getChildren().setAll(loadingLabel());
         Platform.runLater(() -> {
             try {
-                if (loadId.get() != myId) return;
                 Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
                 glassPanel.getChildren().setAll(view);
             } catch (Exception e) {
