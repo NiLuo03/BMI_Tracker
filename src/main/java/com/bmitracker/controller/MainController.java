@@ -216,7 +216,10 @@ public class MainController {
                 glassPanel.getChildren().setAll(view);
             } catch (Exception e) {
                 e.printStackTrace();
-                glassPanel.getChildren().setAll(errorLabel("页面加载失败"));
+                Label err = new Label("页面加载失败: " + e.getClass().getSimpleName());
+                err.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 14px;");
+                StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
+                glassPanel.getChildren().setAll(err);
             }
         });
     }
