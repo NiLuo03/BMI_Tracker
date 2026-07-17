@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.HistoryController"
       style="-fx-background-color: transparent;">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
 
-    <Label text="历史记录" styleClass="label-heading"/>
+    <Label text="数据记录与趋势" styleClass="label-heading"/>
     <Label fx:id="infoLabel" styleClass="label-subheading"/>
 
+    <!-- 折线图 -->
+    <LineChart fx:id="chart" prefHeight="280" VBox.vgrow="NEVER" styleClass="chart-dark">
+        <xAxis><NumberAxis label="记录序号"/></xAxis>
+        <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
+    </LineChart>
+
+    <!-- 历史记录表格 -->
     <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
         <columns>
             <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
