@@ -82,6 +82,7 @@ public class FoodCompareController implements Initializable {
         }
     }
 
+    @FXML
     private void resetFilters() {
         filterCategory.setValue(null); filterMealType.setValue(null); filterTexture.setValue(null);
         filterFlavor.setValue(null); filterStorage.setValue(null); filterCooking.setValue(null);

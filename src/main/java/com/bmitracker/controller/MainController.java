@@ -25,8 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -218,20 +216,14 @@ public class MainController {
                 glassPanel.getChildren().setAll(view);
             } catch (Exception e) {
                 e.printStackTrace();
-                StringWriter sw = new StringWriter(); e.printStackTrace(new PrintWriter(sw));
-                String trace = sw.toString();
-                String brief = trace.length() > 300 ? trace.substring(0, 300) + "..." : trace;
-                VBox errorBox = new VBox(6);
-                errorBox.setAlignment(javafx.geometry.Pos.CENTER);
-                Label title = new Label("页面加载失败: " + e.getClass().getSimpleName());
-                title.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 14px; -fx-font-weight: bold;");
-                Label detail = new Label(brief);
-                detail.setStyle("-fx-text-fill: #fbbf24; -fx-font-size: 11px; -fx-font-family: monospace;");
-                detail.setWrapText(true);
-                detail.setMaxWidth(600);
-                errorBox.getChildren().addAll(title, detail);
-                StackPane.setAlignment(errorBox, javafx.geometry.Pos.CENTER);
-                glassPanel.getChildren().setAll(errorBox);
+                String msg = e.getMessage();
+                if (msg != null && msg.length() > 120) msg = msg.substring(0, 120) + "…";
+                Label err = new Label("加载失败: " + (msg != null ? msg : e.getClass().getSimpleName()));
+                err.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px;");
+                err.setWrapText(true);
+                err.setMaxWidth(500);
+                StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
+                glassPanel.getChildren().setAll(err);
             }
         });
     }
