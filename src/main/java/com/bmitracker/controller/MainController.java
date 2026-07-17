@@ -30,6 +30,8 @@ import java.util.List;
 
 public class MainController {
 
+    private static MainController instance;
+
     @FXML private StackPane contentPane;
     @FXML private StackPane glassPanel;
     @FXML private Label pageTitle;
@@ -77,6 +79,7 @@ public class MainController {
 
     @FXML
     void initialize() {
+        instance = this;
         loadSidebarUser();
         loadDashboardData();
         if (dateLabel != null) dateLabel.setText(LocalDate.now().format(DATE_FMT));
@@ -161,7 +164,12 @@ public class MainController {
     @FXML
     void showPrediction(ActionEvent event) { loadView("prediction.fxml"); setTitle("趋势预测"); }
     @FXML
+    void showPersonalize(ActionEvent event) { loadView("personalize.fxml"); setTitle("个性设置"); }
+    @FXML
     void showDiet(ActionEvent event) { loadView("diet.fxml"); setTitle("AI 膳食推荐"); }
+
+    public static MainController getInstance() { return instance; }
+    public Region getBackdrop() { return backdrop; }
     @FXML
     void showFood(ActionEvent event) { loadView("food_compare.fxml"); setTitle("食物对比"); }
     @FXML

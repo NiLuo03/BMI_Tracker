@@ -26,7 +26,7 @@
         <left>
             <VBox fx:id="sidebar" spacing="4" style="-fx-background-color: transparent; -fx-padding: 12px 6px;" prefWidth="150" minWidth="50">
 
-                <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4px 8px 6px 8px;">
+                <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4px 8px 6px 8px; -fx-cursor: hand;" onMouseClicked="#showProfile">
                     <StackPane styleClass="user-avatar">
                         <Label fx:id="avatarLabel" text="U"/>
                     </StackPane>
@@ -61,16 +61,7 @@
                 </Button>
                 <MenuButton text="⚙" style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 14px; -fx-padding: 6px 12px; -fx-cursor: hand; -fx-background-radius: 8px;" maxWidth="Infinity">
                     <items>
-                        <Menu text="幕布配色">
-                            <MenuItem text="墨绿 #050f0a" onAction="#setBackdrop1"/>
-                            <MenuItem text="深蓝 #0a0a1a" onAction="#setBackdrop2"/>
-                            <MenuItem text="暗紫 #100a1a" onAction="#setBackdrop3"/>
-                            <MenuItem text="纯黑 #000000" onAction="#setBackdrop4"/>
-                            <MenuItem text="炭灰 #111111" onAction="#setBackdrop5"/>
-                            <MenuItem text="纯白 #ffffff" onAction="#setBackdrop6"/>
-                        </Menu>
-                        <SeparatorMenuItem/>
-                        <MenuItem text="个人信息" onAction="#showProfile"/>
+                        <MenuItem text="个性设置" onAction="#showPersonalize"/>
                         <MenuItem text="退出登录" onAction="#showLogout"/>
                     </items>
                 </MenuButton>

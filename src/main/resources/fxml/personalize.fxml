@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+
+<VBox spacing="16" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.PersonalizeController"
+      style="-fx-background-color: transparent;">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="个性设置" styleClass="label-heading"/>
+    <Label text="选择背景颜色，点击预览后确认应用" styleClass="label-subheading"/>
+
+    <Separator styleClass="separator-dark"/>
+
+    <Label text="背景颜色" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+
+    <!-- 颜色预览区 -->
+    <HBox spacing="12" alignment="CENTER">
+        <VBox fx:id="previewBox" alignment="CENTER" spacing="4"
+              style="-fx-background-color: #050f0a; -fx-background-radius: 14px; -fx-border-color: rgba(255,255,255,0.10); -fx-border-width: 1px; -fx-border-radius: 14px; -fx-min-height: 120;">
+            <Label fx:id="previewLabel" text="预览效果" style="-fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 14px;"/>
+            <Label fx:id="previewColorName" text="#050f0a 墨绿" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+        </VBox>
+    </HBox>
+
+    <!-- 颜色选项网格 -->
+    <FlowPane hgap="10" vgap="10">
+        <VBox fx:id="color1" spacing="2" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor1">
+            <Rectangle width="56" height="56" fill="#050f0a" arcWidth="10" arcHeight="10"
+                       stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+            <Label text="墨绿" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+        </VBox>
+        <VBox fx:id="color2" spacing="2" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor2">
+            <Rectangle width="56" height="56" fill="#0a0a1a" arcWidth="10" arcHeight="10"
+                       stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+            <Label text="深蓝" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+        </VBox>
+        <VBox fx:id="color3" spacing="2" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor3">
+            <Rectangle width="56" height="56" fill="#100a1a" arcWidth="10" arcHeight="10"
+                       stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+            <Label text="暗紫" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+        </VBox>
+        <VBox fx:id="color4" spacing="2" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor4">
+            <Rectangle width="56" height="56" fill="#000000" arcWidth="10" arcHeight="10"
+                       stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+            <Label text="纯黑" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+        </VBox>
+        <VBox fx:id="color5" spacing="2" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor5">
+            <Rectangle width="56" height="56" fill="#111111" arcWidth="10" arcHeight="10"
+                       stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+            <Label text="炭灰" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+        </VBox>
+        <VBox fx:id="color6" spacing="2" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectColor6">
+            <Rectangle width="56" height="56" fill="#ffffff" arcWidth="10" arcHeight="10"
+                       stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+            <Label text="纯白" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+        </VBox>
+    </FlowPane>
+
+    <Label fx:id="hintLabel" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
+
+    <Button text="应用背景" onAction="#applyColor" styleClass="btn-primary" maxWidth="200"/>
+</VBox>
