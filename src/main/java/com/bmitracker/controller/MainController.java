@@ -208,7 +208,10 @@ public class MainController {
         }
     }
 
+    private final java.util.concurrent.atomic.AtomicInteger loadId = new java.util.concurrent.atomic.AtomicInteger(0);
+
     private void loadView(String fxml) {
+        int myId = loadId.incrementAndGet();
         Label loading = new Label("加载中…");
         loading.setStyle("-fx-text-fill: -text-secondary; -fx-font-size: 14px;");
         StackPane.setAlignment(loading, javafx.geometry.Pos.CENTER);
@@ -217,7 +220,10 @@ public class MainController {
         new Thread(() -> {
             try {
                 Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
-                Platform.runLater(() -> glassPanel.getChildren().setAll(view));
+                Platform.runLater(() -> {
+                    if (loadId.get() != myId) return;
+                    glassPanel.getChildren().setAll(view);
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }

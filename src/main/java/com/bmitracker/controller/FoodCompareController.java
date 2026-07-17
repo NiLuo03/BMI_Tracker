@@ -62,27 +62,26 @@ public class FoodCompareController implements Initializable {
                 return;
             }
             allFoods.setAll(list);
+            List<String> categories = foodService.getAllCategories();
+            List<String> mealTypes = foodService.getAllMealTypes();
+            List<String> textures = foodService.getAllTextures();
+            List<String> flavors = foodService.getAllFlavors();
+            List<String> storages = foodService.getAllStorages();
+            List<String> cookings = foodService.getAllCookingMethods();
             Platform.runLater(() -> {
                 applyFilters();
-                loadFilterOptions();
+                filterCategory.setItems(FXCollections.observableArrayList(categories));
+                filterMealType.setItems(FXCollections.observableArrayList(mealTypes));
+                filterTexture.setItems(FXCollections.observableArrayList(textures));
+                filterFlavor.setItems(FXCollections.observableArrayList(flavors));
+                filterStorage.setItems(FXCollections.observableArrayList(storages));
+                filterCooking.setItems(FXCollections.observableArrayList(cookings));
             });
         } catch (Exception e) {
             Platform.runLater(() -> compareContent.getChildren().add(emptyHint("加载失败")));
         }
     }
 
-    private void loadFilterOptions() {
-        try {
-            filterCategory.setItems(FXCollections.observableArrayList(foodService.getAllCategories()));
-            filterMealType.setItems(FXCollections.observableArrayList(foodService.getAllMealTypes()));
-            filterTexture.setItems(FXCollections.observableArrayList(foodService.getAllTextures()));
-            filterFlavor.setItems(FXCollections.observableArrayList(foodService.getAllFlavors()));
-            filterStorage.setItems(FXCollections.observableArrayList(foodService.getAllStorages()));
-            filterCooking.setItems(FXCollections.observableArrayList(foodService.getAllCookingMethods()));
-        } catch (Exception ignored) {}
-    }
-
-    @FXML
     private void resetFilters() {
         filterCategory.setValue(null); filterMealType.setValue(null); filterTexture.setValue(null);
         filterFlavor.setValue(null); filterStorage.setValue(null); filterCooking.setValue(null);
