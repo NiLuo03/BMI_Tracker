@@ -26,7 +26,7 @@
 .top-nav-btn {
     -fx-background-color: transparent;
     -fx-text-fill: #6b7280;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-padding: 6px 14px;
     -fx-background-radius: 6px;
     -fx-cursor: hand;
@@ -198,7 +198,7 @@
     -fx-padding: 0 0 10 0;
 }
 .card-subtitle {
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-text-fill: #6b7280;
 }
 
@@ -214,7 +214,7 @@
     -fx-text-fill: #10b981;
 }
 .label-subheading {
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-text-fill: #6b7280;
 }
 
@@ -231,7 +231,7 @@
 /* --- 超链接 --- */
 .hyperlink-dark {
     -fx-text-fill: #10b981;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 
 /* --- 复选框 --- */
@@ -253,11 +253,11 @@
 .table-view-dark .column-header .label {
     -fx-text-fill: #10b981;
     -fx-font-weight: bold;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 .table-view-dark .cell {
     -fx-text-fill: #9ca3af;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 .table-view-dark .table-row-cell {
     -fx-background-color: transparent;
@@ -287,7 +287,7 @@
 }
 .chart-dark .axis-label {
     -fx-text-fill: #6b7280;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 .chart-dark .chart-plot-background {
     -fx-background-color: rgba(16,185,129,0.02);
@@ -444,7 +444,7 @@
 }
 .hyperlink-login {
     -fx-text-fill: rgba(16,185,129,0.50);
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 .hyperlink-login:hover {
     -fx-text-fill: #10b981;
@@ -455,7 +455,7 @@
     -fx-text-fill: rgba(255,255,255,0.85);
 }
 .login-subtitle {
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-text-fill: rgba(52,211,153,0.40);
 }
 
@@ -490,7 +490,7 @@
 .meal-tab {
     -fx-background-color: rgba(255,255,255,0.04);
     -fx-text-fill: #6b7280;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-padding: 6px 10px;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
@@ -505,7 +505,7 @@
 .meal-tab-active {
     -fx-background-color: rgba(16,185,129,0.15);
     -fx-text-fill: #10b981;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-padding: 6px 10px;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
@@ -519,8 +519,8 @@
 .sidebar-btn {
     -fx-background-color: transparent;
     -fx-text-fill: #8c8c8c;
-    -fx-font-size: 12px;
-    -fx-padding: 8px 10px;
+    -fx-font-size: 13px;
+    -fx-padding: 9px 10px;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
 }
@@ -535,7 +535,7 @@
     -fx-border-width: 0 0 0 3px;
     -fx-border-radius: 3px;
 }
-.sidebar-category { -fx-text-fill: #4b5563; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 12px 10px 4px 10px; }
+.sidebar-category { -fx-text-fill: #4b5563; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 12px 10px 4px 10px; }
 .user-avatar { -fx-background-color: linear-gradient(to bottom right, #10b981, #059669); -fx-background-radius: 50%; -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36; }
 .user-avatar .label { -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px; }
 .online-dot { -fx-background-color: #10b981; -fx-background-radius: 50%; -fx-min-width: 8; -fx-min-height: 8; -fx-max-width: 8; -fx-max-height: 8; }
@@ -562,7 +562,7 @@
 /* --- 侧栏分类标题 --- */
 .sidebar-category {
     -fx-text-fill: #4b5563;
-    -fx-font-size: 10px;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 12px 10px 4px 10px;
 }
@@ -658,7 +658,7 @@
 .filter-panel > .title {
     -fx-background-color: transparent;
     -fx-text-fill: #6b7280;
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
 }
 .filter-panel > .content {
     -fx-background-color: transparent;
