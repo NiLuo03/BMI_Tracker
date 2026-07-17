@@ -11,34 +11,19 @@
 
     <Label text="BMI 计算与记录" styleClass="label-heading"/>
     <Label text="输入身高体重，系统自动计算并保存 BMI 数据" styleClass="label-subheading"/>
-
     <Separator styleClass="separator-dark"/>
 
-    <!-- 身体数据 -->
-    <Label text="身体数据" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="身高(cm)" prefWidth="80" styleClass="field-label"/>
-        <TextField fx:id="heightField" promptText="请输入身高" prefWidth="180" styleClass="text-field-dark"/>
-    </HBox>
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="体重(kg)" prefWidth="80" styleClass="field-label"/>
-        <TextField fx:id="weightField" promptText="请输入体重" prefWidth="180" styleClass="text-field-dark"/>
-    </HBox>
-
-    <Separator styleClass="separator-dark"/>
-
-    <!-- 健康档案 -->
-    <Label text="健康档案（可选）" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="过敏源" prefWidth="80" styleClass="field-label"/>
-        <TextField fx:id="allergensField" promptText="如：花粉、海鲜、牛奶" prefWidth="300" styleClass="text-field-dark"/>
-    </HBox>
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="慢性疾病" prefWidth="80" styleClass="field-label"/>
-        <TextField fx:id="diseasesField" promptText="如：高血压、糖尿病" prefWidth="300" styleClass="text-field-dark"/>
-    </HBox>
-
-    <Button text="记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
-        <VBox.margin><Insets top="8.0"/></VBox.margin>
-    </Button>
+    <VBox spacing="12" maxWidth="380">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="身高(cm)" prefWidth="80" styleClass="field-label"/>
+            <TextField fx:id="heightField" promptText="请输入身高" prefWidth="200" styleClass="text-field-dark"/>
+        </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="体重(kg)" prefWidth="80" styleClass="field-label"/>
+            <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200" styleClass="text-field-dark"/>
+        </HBox>
+        <Button text="记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
+            <VBox.margin><Insets top="8.0"/></VBox.margin>
+        </Button>
+    </VBox>
 </VBox>
