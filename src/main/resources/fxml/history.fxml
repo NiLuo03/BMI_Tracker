@@ -11,50 +11,84 @@
     <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
 
     <Label text="数据分析" styleClass="label-heading"/>
-    <Label fx:id="infoLabel" text="查看您的 BMI 数据趋势与历史记录" styleClass="label-subheading"/>
+    <Label fx:id="infoLabel" text="点击卡片进入详情" styleClass="label-subheading"/>
 
-    <!-- 两张卡片 -->
+    <!-- 两张预览卡片 -->
     <HBox spacing="14" VBox.vgrow="ALWAYS">
-        <!-- 卡片1：折线图 -->
-        <VBox HBox.hgrow="ALWAYS" spacing="8"
+        <!-- 卡片1：折线图预览 -->
+        <VBox fx:id="chartCard" HBox.hgrow="ALWAYS" spacing="6"
               style="-fx-background-color: rgba(16,185,129,0.05);
                      -fx-background-radius: 14px;
                      -fx-border-color: rgba(16,185,129,0.12);
                      -fx-border-width: 1px;
                      -fx-border-radius: 14px;
-                     -fx-padding: 16px;">
-            <Label fx:id="chartTitle" text="BMI 变化趋势" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-            <LineChart fx:id="chart" prefHeight="260" VBox.vgrow="ALWAYS" styleClass="chart-dark"
-                       visible="false" managed="false">
-                <xAxis><NumberAxis label="记录序号"/></xAxis>
-                <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
+                     -fx-padding: 14px;
+                     -fx-cursor: hand;"
+              onMouseClicked="#openChartDetail">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="BMI 变化趋势" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <HBox HBox.hgrow="ALWAYS"/>
+                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            </HBox>
+            <LineChart fx:id="previewChart" prefHeight="200" styleClass="chart-dark"
+                       mouseTransparent="true">
+                <xAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></xAxis>
+                <yAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></yAxis>
             </LineChart>
-            <Label fx:id="chartHint" text="点击查看折线图" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"
-                   VBox.vgrow="ALWAYS" onMouseClicked="#toggleChart"/>
+            <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
         </VBox>
 
-        <!-- 卡片2：历史记录 -->
-        <VBox HBox.hgrow="ALWAYS" spacing="8"
+        <!-- 卡片2：历史记录预览 -->
+        <VBox fx:id="tableCard" HBox.hgrow="ALWAYS" spacing="6"
               style="-fx-background-color: rgba(16,185,129,0.05);
                      -fx-background-radius: 14px;
                      -fx-border-color: rgba(16,185,129,0.12);
                      -fx-border-width: 1px;
                      -fx-border-radius: 14px;
-                     -fx-padding: 16px;">
-            <Label fx:id="tableTitle" text="历史记录" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-            <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark"
-                       visible="false" managed="false">
+                     -fx-padding: 14px;
+                     -fx-cursor: hand;"
+              onMouseClicked="#openTableDetail">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="历史记录" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <HBox HBox.hgrow="ALWAYS"/>
+                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
+            </HBox>
+            <TableView fx:id="previewTable" prefHeight="200" styleClass="table-view-dark" mouseTransparent="true">
                 <columns>
-                    <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
-                    <TableColumn fx:id="colDate" text="记录时间" prefWidth="170"/>
-                    <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90"/>
-                    <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90"/>
-                    <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
-                    <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90"/>
+                    <TableColumn fx:id="preColId" text="#" prefWidth="40"/>
+                    <TableColumn fx:id="preColBmi" text="BMI" prefWidth="55"/>
+                    <TableColumn fx:id="preColDate" text="日期" prefWidth="100"/>
                 </columns>
             </TableView>
-            <Label fx:id="tableHint" text="点击查看历史记录" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;"
-                   VBox.vgrow="ALWAYS" onMouseClicked="#toggleTable"/>
+            <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;"/>
         </VBox>
     </HBox>
+
+    <!-- 折线图详情面板（默认隐藏） -->
+    <VBox fx:id="chartDetail" spacing="10" visible="false" managed="false" VBox.vgrow="ALWAYS">
+        <Button text="← 返回数据分析" onAction="#closeDetail"
+                style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-cursor: hand;"/>
+        <Label text="BMI 变化趋势" styleClass="label-heading"/>
+        <LineChart fx:id="chart" prefHeight="400" VBox.vgrow="ALWAYS" styleClass="chart-dark">
+            <xAxis><NumberAxis label="记录序号"/></xAxis>
+            <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
+        </LineChart>
+    </VBox>
+
+    <!-- 历史记录详情面板（默认隐藏） -->
+    <VBox fx:id="tableDetail" spacing="10" visible="false" managed="false" VBox.vgrow="ALWAYS">
+        <Button text="← 返回数据分析" onAction="#closeDetail"
+                style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-cursor: hand;"/>
+        <Label text="历史记录" styleClass="label-heading"/>
+        <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
+            <columns>
+                <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
+                <TableColumn fx:id="colDate" text="记录时间" prefWidth="170"/>
+                <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90"/>
+                <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90"/>
+                <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
+                <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90"/>
+            </columns>
+        </TableView>
+    </VBox>
 </VBox>
