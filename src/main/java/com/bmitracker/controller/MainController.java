@@ -44,6 +44,7 @@ public class MainController {
     @FXML private Label welcomeLabel, bmiStatusLabel, trendLabel;
     @FXML private Label dashBmi, dashStatus, dashIdealWeight, dashRecords, dashTrend;
     @FXML private Label historySummary;
+    @FXML private VBox homeContent;
 
     private boolean navExpanded = true;
     private final BmiService bmiService = new BmiService();
@@ -156,21 +157,9 @@ public class MainController {
 
     @FXML
     void showHome(ActionEvent event) {
-        try {
-            String savedColor = backdrop.getStyle();
-            Stage stage = (Stage) contentPane.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
-            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-            MainController newCtrl = loader.getController();
-            if (newCtrl != null && newCtrl.backdrop != null) {
-                String hex = savedColor.replaceAll(".*?(#[a-fA-F0-9]{6}).*", "$1");
-                newCtrl.changeBackdrop(hex);
-            }
-            stage.setScene(scene);
-            stage.centerOnScreen();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (homeContent != null && glassPanel != null) {
+            glassPanel.getChildren().setAll(homeContent);
+            loadDashboardData();
         }
         setTitle("首页");
     }
