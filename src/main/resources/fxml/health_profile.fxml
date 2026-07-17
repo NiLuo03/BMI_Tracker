@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.HealthProfileController"
+      style="-fx-background-color: transparent;">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="健康档案" styleClass="label-heading"/>
+    <Label text="记录过敏源和慢性疾病信息，方便膳食推荐参考" styleClass="label-subheading"/>
+    <Separator styleClass="separator-dark"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="过敏源" prefWidth="80" styleClass="field-label"/>
+        <TextField fx:id="allergensField" promptText="如：花粉、海鲜、牛奶、花生" prefWidth="350" styleClass="text-field-dark"/>
+    </HBox>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="慢性疾病" prefWidth="80" styleClass="field-label"/>
+        <TextField fx:id="diseasesField" promptText="如：高血压、糖尿病、心脏病" prefWidth="350" styleClass="text-field-dark"/>
+    </HBox>
+
+    <Label fx:id="statusLabel" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;"/>
+
+    <Button text="保存档案" onAction="#handleSave" maxWidth="280" styleClass="btn-primary">
+        <VBox.margin><Insets top="8.0"/></VBox.margin>
+    </Button>
+</VBox>
