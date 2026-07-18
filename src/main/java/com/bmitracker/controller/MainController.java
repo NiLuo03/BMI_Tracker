@@ -1,6 +1,7 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.component.TitleBar;
 import com.bmitracker.model.BmiRecord;
 import com.bmitracker.service.BmiService;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -36,6 +38,9 @@ public class MainController {
     @FXML private StackPane contentPane;
     @FXML private StackPane glassPanel;
     @FXML private Label pageTitle;
+    @FXML private TitleBar titleBar;
+    @FXML private StackPane root;
+    @FXML private Rectangle rootClip;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
     @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord;
@@ -101,13 +106,13 @@ public class MainController {
 
     @FXML
     void initialize() {
+        rootClip.widthProperty().bind(root.widthProperty());
+        rootClip.heightProperty().bind(root.heightProperty());
         instance = this;
         loadSidebarUser();
         loadDashboardData();
         if (dateLabel != null) dateLabel.setText(LocalDate.now().format(DATE_FMT));
-        if (backdrop != null && backdrop.getParent() instanceof Pane p) {
-            rootPane = p;
-        }
+        if (root != null) rootPane = root;
         changeBackdrop("#ffffff");
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();

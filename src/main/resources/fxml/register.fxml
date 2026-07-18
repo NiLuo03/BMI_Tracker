@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.bmitracker.component.TitleBar?>
 <?import com.bmitracker.component.WheelPicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.bmitracker.controller.RegisterController"
-            style="-fx-background-color: #0a0a0f;">
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.RegisterController"
+      style="-fx-background-color: #0a0a0f; -fx-background-radius: 12;">
+    <clip>
+        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
+    </clip>
+
+    <TitleBar/>
+
+    <BorderPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a0f;">
 
     <left>
         <StackPane style="-fx-background-color: #0a0a0f;" prefWidth="660">
@@ -73,3 +82,5 @@
     </center>
 
 </BorderPane>
+
+</VBox>

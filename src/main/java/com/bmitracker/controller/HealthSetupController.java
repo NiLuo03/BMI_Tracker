@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -51,6 +52,8 @@ public class HealthSetupController {
     @FXML private VBox step1Panel, step2Panel, step3Panel, step4Panel;
     @FXML private Button step1Btn, step2Btn, step3Btn;
     @FXML private Label allergenNoneLabel, diseaseNoneLabel;
+    @FXML private VBox root;
+    @FXML private Rectangle rootClip;
 
     private final UserService userService = new UserService();
     private final Set<String> selectedAllergens = new HashSet<>();
@@ -58,6 +61,8 @@ public class HealthSetupController {
 
     @FXML
     void initialize() {
+        rootClip.widthProperty().bind(root.widthProperty());
+        rootClip.heightProperty().bind(root.heightProperty());
         ParticleTextCanvas canvas = new ParticleTextCanvas(1200, 800,
                 new String[]{"HEALTH", "PROFILE", "ALLERGEN", "DISEASE", "RECORD"});
         particlePane.getChildren().clear();
@@ -209,10 +214,8 @@ public class HealthSetupController {
             Stage stage = (Stage) particlePane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Scene newScene = new Scene(loader.load(), 1200, 800);
+            newScene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-            newScene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                new Stop(0, javafx.scene.paint.Color.web("#050f0a")),
-                new Stop(1, javafx.scene.paint.Color.web("#000000"))));
 
             Parent newRoot = newScene.getRoot();
             newRoot.setOpacity(0);

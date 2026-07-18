@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.bmitracker.component.TitleBar?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.bmitracker.controller.HealthSetupController"
-           style="-fx-background-color: transparent;">
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.HealthSetupController"
+      style="-fx-background-color: #0a0a0f; -fx-background-radius: 12;">
+    <clip>
+        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
+    </clip>
+
+    <TitleBar/>
+
+    <StackPane VBox.vgrow="ALWAYS"
+      style="-fx-background-color: #0a0a0f; -fx-background-radius: 12;">
 
     <StackPane fx:id="particlePane" style="-fx-background-color: transparent;"/>
 
@@ -106,4 +116,6 @@
 
     </VBox>
 
-</StackPane>
+    </StackPane>
+
+</VBox>

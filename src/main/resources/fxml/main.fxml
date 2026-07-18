@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.bmitracker.component.TitleBar?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml"
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.bmitracker.controller.MainController"
-           styleClass="root">
+           styleClass="root"
+           style="-fx-background-radius: 12;">
+    <clip>
+        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
+    </clip>
 
     <Region fx:id="backdrop" style="-fx-background-color: #ffffff;"/>
 
-    <BorderPane>
+    <VBox>
+        <TitleBar fx:id="titleBar"/>
+
+        <BorderPane VBox.vgrow="ALWAYS">
         <!-- ====== 顶部导航栏 ====== -->
         <top>
             <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
@@ -143,5 +152,6 @@
             </StackPane>
         </center>
     </BorderPane>
+    </VBox>
 
 </StackPane>
