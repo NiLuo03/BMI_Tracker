@@ -57,13 +57,7 @@ public class MainController {
     private Pane rootPane;
 
     private static final String[] BACKDROP_COLORS = {
-        "#B478A2","#AF709E","#A86696","#703868","#62325E","#582E56","#726E74","#3C3C40","#302C32","#34303E",
-        "#488890","#3094B8","#2888A8","#486890","#406078","#206070","#0068A0","#405080","#203860","#102038",
-        "#88A058","#90A848","#788840","#808060","#606040","#807838","#486010","#484828","#505030","#403818",
-        "#C89888","#C07870","#B85858","#A04848","#B06058","#B86090","#A85080","#B05050","#884860","#984840",
-        "#C8A068","#D0A838","#C8A840","#B09038","#987850","#C07838","#986038","#906848","#787040","#505040",
-        "#90C0C8","#7898A8","#709088","#00A098","#40B090","#009880","#587088","#608080","#007888","#005848",
-        "#807C78","#686868","#907868","#A08878","#987058","#906850","#806050","#685048","#484038","#403830",
+        "#050f0a", "#0a0a1a", "#100a1a", "#000000", "#111111", "#ffffff"
     };
 
     @FXML
@@ -81,7 +75,7 @@ public class MainController {
         anim.play();
 
         for (int i = 0; i < btns.length; i++) {
-            btns[i].setText(navExpanded ? "  " + texts[i] : icons[i]);
+            btns[i].setText(navExpanded ? icons[i] + "  " + texts[i] : icons[i]);
             btns[i].setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
             btns[i].setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
         }

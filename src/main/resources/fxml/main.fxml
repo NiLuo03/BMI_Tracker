@@ -23,7 +23,7 @@
         <!-- ====== 顶部导航栏 ====== -->
         <top>
             <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
-                <Label fx:id="pageTitle" text="首页" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <Label fx:id="pageTitle" text="首页" styleClass="top-bar-label"/>
                 <HBox HBox.hgrow="ALWAYS"/>
                 <Label fx:id="dateLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
                 <Region style="-fx-background-color: rgba(255,255,255,0.06); -fx-min-width: 1px; -fx-min-height: 20px;"/>
@@ -52,7 +52,7 @@
                     </graphic>
                 </Button>
 
-                <Separator style="-fx-background-color: rgba(16,185,129,0.08);">
+                <Separator styleClass="separator-dark">
                     <VBox.margin><Insets top="4" bottom="6"/></VBox.margin>
                 </Separator>
 
@@ -109,14 +109,9 @@
 
                                     <HBox spacing="14">
                                         <VBox HBox.hgrow="ALWAYS" spacing="14">
-                                            <VBox spacing="10"
-                                                  style="-fx-background-color: rgba(16,185,129,0.06);
-                                                         -fx-background-radius: 16px;
-                                                         -fx-border-color: rgba(16,185,129,0.15);
-                                                         -fx-border-width: 1px;
-                                                         -fx-border-radius: 16px;
-                                                         -fx-padding: 18px 20px;">
-                                                <Label text="📊 BMI 计算" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                                            <VBox spacing="10" styleClass="card"
+                                                  style="-fx-padding: 18px 20px;">
+                                                <Label text="📊 BMI 计算" styleClass="label-heading"/>
                                                 <HBox spacing="8" alignment="CENTER_LEFT">
                                                     <TextField promptText="身高(cm)" prefWidth="110" styleClass="text-field-dark"/>
                                                     <TextField promptText="体重(kg)" prefWidth="110" styleClass="text-field-dark"/>
