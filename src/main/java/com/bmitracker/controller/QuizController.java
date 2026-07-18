@@ -315,8 +315,8 @@ public class QuizController {
 
         btnPrevAll.setOnAction(e -> { if (currentIndex > 0) showWrongReview(currentIndex - 1); });
         btnNextAll.setOnAction(e -> { if (currentIndex < questions.size() - 1) showWrongReview(currentIndex + 1); });
-        btnPrevW.setOnAction(e -> { if (wrongCursor > 0) showWrongReview(wrongIdxList.get(wrongCursor - 1)); });
-        btnNextW.setOnAction(e -> { if (wrongCursor < wrongIdxList.size() - 1) showWrongReview(wrongIdxList.get(wrongCursor + 1)); });
+        btnPrevW.setOnAction(e -> { int p = findPrevWrong(currentIndex); if (p >= 0) showWrongReview(p); });
+        btnNextW.setOnAction(e -> { int n = findNextWrong(currentIndex); if (n >= 0) showWrongReview(n); });
 
         wrongCursor = 0;
         showWrongReview(wrongIdxList.isEmpty() ? 0 : wrongIdxList.get(0));
@@ -395,12 +395,26 @@ public class QuizController {
         }
 
         // Update result nav button states
-        btnPrevAll.setVisible(currentIndex > 0);
-        btnPrevAll.setManaged(currentIndex > 0);
-        btnNextAll.setVisible(currentIndex < questions.size() - 1);
-        btnNextAll.setManaged(currentIndex < questions.size() - 1);
-        btnPrevW.setDisable(!isWrong || wrongCursor <= 0);
-        btnNextW.setDisable(!isWrong || wrongCursor >= wrongIdxList.size() - 1);
+        btnPrevAll.setDisable(currentIndex <= 0);
+        btnNextAll.setDisable(currentIndex >= questions.size() - 1);
+        btnPrevW.setDisable(findPrevWrong(currentIndex) < 0);
+        btnNextW.setDisable(findNextWrong(currentIndex) < 0);
+    }
+
+    private int findPrevWrong(int from) {
+        int best = -1;
+        for (int w : wrongIdxList) {
+            if (w < from && w > best) best = w;
+        }
+        return best;
+    }
+
+    private int findNextWrong(int from) {
+        int best = -1;
+        for (int w : wrongIdxList) {
+            if (w > from && (best < 0 || w < best)) best = w;
+        }
+        return best;
     }
 
     @FXML
