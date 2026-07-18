@@ -40,7 +40,7 @@
 
     <HBox spacing="16" alignment="CENTER_LEFT">
         <ComboBox fx:id="foodCombo1" promptText="选择食物 1" prefWidth="220" styleClass="combo-box-dark"/>
-        <Label text="VS" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+        <Label text="VS" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
         <ComboBox fx:id="foodCombo2" promptText="选择食物 2" prefWidth="220" styleClass="combo-box-dark"/>
     </HBox>
 

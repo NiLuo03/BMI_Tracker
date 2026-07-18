@@ -14,7 +14,7 @@ public class BMIApplication extends Application {
     public static int currentUserId = -1;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
         Scene scene = new Scene(loader.load(), 1200, 800);
         scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());

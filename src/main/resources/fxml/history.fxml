@@ -16,17 +16,11 @@
     <!-- 两张预览卡片 -->
     <HBox spacing="14" VBox.vgrow="ALWAYS">
         <!-- 卡片1：折线图预览 -->
-        <VBox fx:id="chartCard" HBox.hgrow="ALWAYS" spacing="6"
-              style="-fx-background-color: rgba(16,185,129,0.05);
-                     -fx-background-radius: 14px;
-                     -fx-border-color: rgba(16,185,129,0.12);
-                     -fx-border-width: 1px;
-                     -fx-border-radius: 14px;
-                     -fx-padding: 14px;
-                     -fx-cursor: hand;"
+        <VBox fx:id="chartCard" HBox.hgrow="ALWAYS" spacing="6" styleClass="card"
+              style="-fx-padding: 14px; -fx-cursor: hand;"
               onMouseClicked="#openChartDetail">
             <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="BMI 变化趋势" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <Label text="BMI 变化趋势" styleClass="label-heading" style="-fx-font-size: 15px;"/>
                 <HBox HBox.hgrow="ALWAYS"/>
                 <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
             </HBox>
@@ -39,17 +33,11 @@
         </VBox>
 
         <!-- 卡片2：历史记录预览 -->
-        <VBox fx:id="tableCard" HBox.hgrow="ALWAYS" spacing="6"
-              style="-fx-background-color: rgba(16,185,129,0.05);
-                     -fx-background-radius: 14px;
-                     -fx-border-color: rgba(16,185,129,0.12);
-                     -fx-border-width: 1px;
-                     -fx-border-radius: 14px;
-                     -fx-padding: 14px;
-                     -fx-cursor: hand;"
+        <VBox fx:id="tableCard" HBox.hgrow="ALWAYS" spacing="6" styleClass="card"
+              style="-fx-padding: 14px; -fx-cursor: hand;"
               onMouseClicked="#openTableDetail">
             <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="历史记录" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <Label text="历史记录" styleClass="label-heading" style="-fx-font-size: 15px;"/>
                 <HBox HBox.hgrow="ALWAYS"/>
                 <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
             </HBox>
