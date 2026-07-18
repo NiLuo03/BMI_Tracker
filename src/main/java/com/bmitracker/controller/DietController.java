@@ -38,10 +38,12 @@ public class DietController {
         double height = user.getHeight();
         double weight = user.getWeight();
         String preferences = user.getPreferences();
+        String allergens = user.getAllergens();
+        String chronicDiseases = user.getChronicDiseases();
 
         new Thread(() -> {
             try {
-                String json = CozeClient.getDietRecommendation(age, sex, height, weight, bmi, status, preferences);
+                String json = CozeClient.getDietRecommendation(age, sex, height, weight, bmi, status, preferences, allergens, chronicDiseases);
                 Platform.runLater(() -> {
                     if (json == null || json.isEmpty()) {
                         showAlert("AI 服务繁忙，请稍后再试");

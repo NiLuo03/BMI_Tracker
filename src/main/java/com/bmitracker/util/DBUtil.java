@@ -94,6 +94,26 @@ public class DBUtil {
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY (userId) REFERENCES users(userId))");
 
+            stmt.execute("CREATE TABLE IF NOT EXISTS meal_records (" +
+                    "recordId INT AUTO_INCREMENT PRIMARY KEY," +
+                    "userId INT NOT NULL," +
+                    "foodId INT NOT NULL," +
+                    "mealType VARCHAR(10) NOT NULL," +
+                    "grams DECIMAL(7,1) NOT NULL," +
+                    "recordDate DATE NOT NULL," +
+                    "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                    "FOREIGN KEY (userId) REFERENCES users(userId)," +
+                    "FOREIGN KEY (foodId) REFERENCES foods(foodId))");
+
+            stmt.execute("CREATE TABLE IF NOT EXISTS quiz_results (" +
+                    "resultId INT AUTO_INCREMENT PRIMARY KEY," +
+                    "userId INT NOT NULL," +
+                    "score INT NOT NULL," +
+                    "total INT NOT NULL," +
+                    "answers VARCHAR(200)," +
+                    "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                    "FOREIGN KEY (userId) REFERENCES users(userId))");
+
             // 检查是否需要初始化食物数据（空表或旧表缺标签）
             boolean needsSeed;
             try {

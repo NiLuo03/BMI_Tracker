@@ -26,12 +26,11 @@ public class BmiController {
             showAlert("请输入有效的身高和体重");
             return;
         }
-
         String error = bmiService.saveRecord(BMIApplication.currentUserId, height, weight);
         if (error == null) {
             double bmi = bmiService.calculateBMI(height, weight);
             String status = bmiService.getHealthStatus(bmi);
-            showInfo(String.format("您的BMI为 %.1f，状态：%s", bmi, status));
+            showInfo(String.format("您的 BMI 为 %.1f，状态：%s", bmi, status));
             heightField.clear();
             weightField.clear();
         } else {

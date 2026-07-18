@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.bmitracker.component.TitleBar?>
+<?import com.bmitracker.component.WheelPicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.bmitracker.controller.RegisterController"
-            style="-fx-background-color: #0a0a0f;">
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.RegisterController"
+      style="-fx-background-color: #0a0a0f; -fx-background-radius: 12;">
+    <clip>
+        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
+    </clip>
+
+    <TitleBar/>
+
+    <BorderPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a0f;">
 
     <left>
         <StackPane style="-fx-background-color: #0a0a0f;" prefWidth="660">
@@ -38,12 +48,26 @@
                     <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
                     <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
                     <PasswordField fx:id="confirmField" promptText="确认密码" styleClass="text-field-login"/>
-                    <TextField fx:id="ageField" promptText="年龄" styleClass="text-field-login"/>
 
+                    <VBox alignment="CENTER" spacing="4">
+                        <Label text="年龄" style="-fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 12px;"/>
+                        <HBox fx:id="ageDisplayBox" alignment="CENTER_LEFT" styleClass="text-field-login" maxWidth="140"
+                              style="-fx-cursor: hand; -fx-padding: 0 14;">
+                            <Label fx:id="ageDisplayText" text="25" HBox.hgrow="ALWAYS"
+                                   style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 14px;"/>
+                            <Label text="▼" style="-fx-text-fill: rgba(255,255,255,0.25); -fx-font-size: 9px; -fx-padding: 0 0 0 4;"/>
+                        </HBox>
+                        <WheelPicker fx:id="agePicker" prefWidth="140" prefHeight="180" visible="false" managed="false"
+                                     style="-fx-background-color: rgba(255,255,255,0.04); -fx-background-radius: 10px; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1px; -fx-border-radius: 10px;"/>
+                    </VBox>
+
+                    <fx:define>
+                        <ToggleGroup fx:id="genderGroup"/>
+                    </fx:define>
                     <HBox spacing="20" alignment="CENTER">
-                        <RadioButton fx:id="maleRadio" text="男" selected="true"
+                        <RadioButton fx:id="maleRadio" text="男" selected="true" toggleGroup="$genderGroup"
                                      style="-fx-text-fill: rgba(255,255,255,0.7);"/>
-                        <RadioButton fx:id="femaleRadio" text="女"
+                        <RadioButton fx:id="femaleRadio" text="女" toggleGroup="$genderGroup"
                                      style="-fx-text-fill: rgba(255,255,255,0.7);"/>
                     </HBox>
 
@@ -58,3 +82,5 @@
     </center>
 
 </BorderPane>
+
+</VBox>

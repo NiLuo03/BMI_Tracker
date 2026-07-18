@@ -3,6 +3,7 @@ package com.bmitracker.controller;
 import com.bmitracker.BMIApplication;
 import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,17 +26,19 @@ public class ProfileController {
 
     @FXML
     void initialize() {
-        User user = userService.getUserById(BMIApplication.currentUserId);
-        if (user != null) {
-            userIdLabel.setText(String.valueOf(user.getUserId()));
-            userNameLabel.setText(user.getUserName());
-            ageField.setText(String.valueOf(user.getUserAge()));
-            if (user.getSex() == 0) maleRadio.setSelected(true);
-            else femaleRadio.setSelected(true);
-            if (user.getHeight() > 0) heightField.setText(String.valueOf(user.getHeight()));
-            if (user.getWeight() > 0) weightField.setText(String.valueOf(user.getWeight()));
-            preferencesField.setText(user.getPreferences());
-        }
+        Platform.runLater(() -> {
+            User user = userService.getUserById(BMIApplication.currentUserId);
+            if (user != null) {
+                userIdLabel.setText(String.valueOf(user.getUserId()));
+                userNameLabel.setText(user.getUserName());
+                ageField.setText(String.valueOf(user.getUserAge()));
+                if (user.getSex() == 0) maleRadio.setSelected(true);
+                else femaleRadio.setSelected(true);
+                if (user.getHeight() > 0) heightField.setText(String.valueOf(user.getHeight()));
+                if (user.getWeight() > 0) weightField.setText(String.valueOf(user.getWeight()));
+                preferencesField.setText(user.getPreferences());
+            }
+        });
     }
 
     @FXML

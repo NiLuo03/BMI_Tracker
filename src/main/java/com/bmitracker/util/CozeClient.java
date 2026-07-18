@@ -16,13 +16,20 @@ public class CozeClient {
     private static final int MAX_RETRIES = 2;
 
     public static String getDietRecommendation(int age, int sex, double height, double weight,
-                                                double bmi, String status, String preferences) {
+                                                double bmi, String status, String preferences,
+                                                String allergens, String chronicDiseases) {
         String genderStr = sex == 0 ? "男" : "女";
         String message = String.format(
                 "请为以下用户推荐一日三餐营养膳食：年龄%d岁，性别%s，身高%.1fcm，体重%.1fkg，BMI%.1f(%s)",
                 age, genderStr, height, weight, bmi, status);
         if (preferences != null && !preferences.isEmpty()) {
             message += "，偏好：" + preferences;
+        }
+        if (allergens != null && !allergens.isEmpty()) {
+            message += "。用户过敏原：" + allergens + "，请确保推荐的食物不含这些过敏原";
+        }
+        if (chronicDiseases != null && !chronicDiseases.isEmpty()) {
+            message += "。用户慢性病史：" + chronicDiseases + "，请避免推荐对这些慢性病不利的食物";
         }
         message += "。请按照格式返回：{\"breakfast\":\"...\",\"lunch\":\"...\",\"dinner\":\"...\",\"totalCal\":\"...\"}";
 

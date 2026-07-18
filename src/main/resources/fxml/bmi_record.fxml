@@ -3,15 +3,14 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
-<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.BmiController"
       style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="BMI 计算与记录" styleClass="label-heading"/>
-    <Label text="输入身高体重，计算并保存您的 BMI 数据" styleClass="label-subheading"/>
+    <Label text="输入身高体重，系统自动计算并保存 BMI 数据" styleClass="label-subheading"/>
     <Separator styleClass="separator-dark"/>
 
     <VBox spacing="12" maxWidth="380">
@@ -23,7 +22,7 @@
             <Label text="体重(kg)" prefWidth="80" styleClass="field-label"/>
             <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200" styleClass="text-field-dark"/>
         </HBox>
-        <Button text="📊 记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
+        <Button text="记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
             <VBox.margin><Insets top="8.0"/></VBox.margin>
         </Button>
     </VBox>

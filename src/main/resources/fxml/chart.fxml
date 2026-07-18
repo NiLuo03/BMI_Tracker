@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.bmitracker.controller.ChartController"
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.HistoryController"
       style="-fx-background-color: transparent;">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <!-- 返回按钮 -->
+    <HBox>
+        <Button text="← 返回" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-cursor: hand;"/>
+    </HBox>
 
     <Label text="BMI 折线图" styleClass="label-heading"/>
-    <Label fx:id="infoLabel" styleClass="label-subheading"/>
+    <Label text="查看您所有 BMI 记录的变化趋势" styleClass="label-subheading"/>
 
-    <LineChart fx:id="chart" prefHeight="400" prefWidth="600" VBox.vgrow="ALWAYS" styleClass="chart-dark">
-        <xAxis><NumberAxis label="天数序号"/></xAxis>
+    <!-- 折线图详情 -->
+    <LineChart fx:id="chart" prefHeight="380" VBox.vgrow="ALWAYS" styleClass="chart-dark">
+        <xAxis><NumberAxis label="记录序号"/></xAxis>
         <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
     </LineChart>
+
+    <Label fx:id="chartNote" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;" wrapText="true"/>
 </VBox>
