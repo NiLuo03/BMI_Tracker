@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.bmitracker.controller.QuizController"
+           style="-fx-padding: 0;">
+
+    <VBox spacing="0">
+        <!-- Prepare Area -->
+        <HBox fx:id="prepareArea" spacing="0" alignment="CENTER">
+            <VBox spacing="16" alignment="CENTER" HBox.hgrow="ALWAYS">
+                <Label text="健康问答" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <Label text="共二十道题目" style="-fx-font-size: 13px; -fx-text-fill: -text-secondary;"/>
+                <Button text="开始问答" onAction="#onStart" styleClass="btn-primary" prefWidth="200" prefHeight="44"
+                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 12px;">
+                    <VBox.margin><Insets top="8"/></VBox.margin>
+                </Button>
+            </VBox>
+            <VBox fx:id="leaderboardPanel" spacing="6" alignment="TOP_CENTER"
+                  style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 12px;"
+                  prefWidth="240" maxWidth="240">
+                <Label text="🏆 排行榜" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <HBox spacing="4" alignment="CENTER">
+                    <ToggleButton fx:id="btnWeekly" text="周榜" selected="true"
+                                  style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
+                    <ToggleButton fx:id="btnAlltime" text="总榜"
+                                  style="-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
+                </HBox>
+                <VBox fx:id="leaderboardList" spacing="4" alignment="TOP_CENTER"/>
+            </VBox>
+        </HBox>
+
+        <!-- Quiz Area (with nav at bottom) -->
+        <VBox fx:id="quizArea" spacing="14" visible="false" managed="false">
+            <Label fx:id="questionNum" text="问题 1 / 20"
+                   style="-fx-font-size: 14px; -fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+
+            <Label fx:id="questionText" wrapText="true"
+                   style="-fx-font-size: 15px; -fx-text-fill: -text-primary; -fx-line-spacing: 4;"/>
+
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <RadioButton fx:id="optA" text="A." styleClass="quiz-option" maxWidth="Infinity"/>
+                <RadioButton fx:id="optB" text="B." styleClass="quiz-option" maxWidth="Infinity"/>
+                <RadioButton fx:id="optC" text="C." styleClass="quiz-option" maxWidth="Infinity"/>
+                <RadioButton fx:id="optD" text="D." styleClass="quiz-option" maxWidth="Infinity"/>
+            </VBox>
+
+            <HBox fx:id="quizNav" spacing="6" alignment="CENTER" maxWidth="Infinity"
+                  style="-fx-padding: 4 0 0 0;">
+                <Button fx:id="btnPrevQ" text="◀ 上一题" styleClass="btn-secondary"/>
+                <Button fx:id="btnNextQ" text="下一题 ▶" styleClass="btn-secondary"/>
+                <Button fx:id="btnSubmitQ" text="提交答卷" styleClass="btn-primary"/>
+            </HBox>
+        </VBox>
+
+        <!-- Result Area (with nav at bottom) -->
+        <VBox fx:id="resultArea" spacing="10" visible="false" managed="false">
+            <VBox fx:id="resultContent" spacing="10" VBox.vgrow="ALWAYS"/>
+
+            <HBox fx:id="resultNav" spacing="6" alignment="CENTER" maxWidth="Infinity"
+                  style="-fx-padding: 4 0 0 0;">
+                <Button fx:id="btnPrevAll" text="◀ 上一题" styleClass="btn-secondary"/>
+                <Button fx:id="btnPrevW" text="◀ 上一错题" styleClass="btn-secondary"/>
+                <Button fx:id="btnNextW" text="下一错题 ▶" styleClass="btn-secondary"/>
+                <Button fx:id="btnNextAll" text="下一题 ▶" styleClass="btn-secondary"/>
+            </HBox>
+        </VBox>
+
+        <!-- spacer fills remaining space, keeping nav close to content -->
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+    <Label fx:id="resultScore" visible="false" managed="false"/>
+    <Label fx:id="resultCorrect" visible="false" managed="false"/>
+    <Label fx:id="resultWrong" visible="false" managed="false"/>
+    <Button fx:id="btnClose" text="返回首页" onAction="#onClose" styleClass="btn-secondary" maxWidth="200"
+            visible="false" managed="false"/>
+</StackPane>

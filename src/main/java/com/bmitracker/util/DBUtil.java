@@ -50,11 +50,6 @@ public class DBUtil {
                     "preferences VARCHAR(200)," +
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
-            // 兼容旧表：添加健康档案字段
-            for (String col : new String[]{"allergens VARCHAR(200)", "chronic_diseases VARCHAR(200)"}) {
-                try { stmt.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS " + col); } catch (SQLException ignored) {}
-            }
-
             stmt.execute("CREATE TABLE IF NOT EXISTS bmi_records (" +
                     "recordId INT AUTO_INCREMENT PRIMARY KEY," +
                     "userId INT NOT NULL," +
@@ -93,17 +88,6 @@ public class DBUtil {
                     "totalCal VARCHAR(20)," +
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY (userId) REFERENCES users(userId))");
-
-            stmt.execute("CREATE TABLE IF NOT EXISTS meal_records (" +
-                    "recordId INT AUTO_INCREMENT PRIMARY KEY," +
-                    "userId INT NOT NULL," +
-                    "foodId INT NOT NULL," +
-                    "mealType VARCHAR(10) NOT NULL," +
-                    "grams DECIMAL(7,1) NOT NULL," +
-                    "recordDate DATE NOT NULL," +
-                    "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
-                    "FOREIGN KEY (userId) REFERENCES users(userId)," +
-                    "FOREIGN KEY (foodId) REFERENCES foods(foodId))");
 
             // 检查是否需要初始化食物数据（空表或旧表缺标签）
             boolean needsSeed;
