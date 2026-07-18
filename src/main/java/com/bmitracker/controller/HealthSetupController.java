@@ -1,17 +1,16 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
-import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.ParticleTextCanvas;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -47,6 +46,11 @@ public class HealthSetupController {
     @FXML private TextField allergenSearchField, diseaseSearchField;
     @FXML private FlowPane allergenOptionsPane, allergenSelectedPane;
     @FXML private FlowPane diseaseOptionsPane, diseaseSelectedPane;
+    @FXML private Label stepTitle, stepDesc;
+    @FXML private Label dot1, dot2, dot3, dot4;
+    @FXML private VBox step1Panel, step2Panel, step3Panel, step4Panel;
+    @FXML private Button step1Btn, step2Btn, step3Btn;
+    @FXML private Label allergenNoneLabel, diseaseNoneLabel;
 
     private final UserService userService = new UserService();
     private final Set<String> selectedAllergens = new HashSet<>();
@@ -63,19 +67,16 @@ public class HealthSetupController {
         diseaseSearchField.setOnAction(e -> searchDiseases());
 
         showAllOptions(allergenOptionsPane, ALL_ALLERGENS, selectedAllergens, true);
-        showAllOptions(diseaseOptionsPane, ALL_DISEASES, selectedDiseases, false);
     }
 
-    @FXML
-    void searchAllergens() {
+    @FXML void searchAllergens() {
         String kw = allergenSearchField.getText().trim().toLowerCase();
         String[] filtered = kw.isEmpty() ? ALL_ALLERGENS :
             Arrays.stream(ALL_ALLERGENS).filter(s -> s.contains(kw) || s.toLowerCase().contains(kw)).toArray(String[]::new);
         showAllOptions(allergenOptionsPane, filtered, selectedAllergens, true);
     }
 
-    @FXML
-    void searchDiseases() {
+    @FXML void searchDiseases() {
         String kw = diseaseSearchField.getText().trim().toLowerCase();
         String[] filtered = kw.isEmpty() ? ALL_DISEASES :
             Arrays.stream(ALL_DISEASES).filter(s -> s.contains(kw) || s.toLowerCase().contains(kw)).toArray(String[]::new);
@@ -88,42 +89,91 @@ public class HealthSetupController {
             Button btn = new Button(item);
             boolean isSel = selected.contains(item);
             btn.setStyle(isSel
-                ? "-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-background-radius: 12; -fx-font-size: 12; -fx-cursor: hand;"
-                : "-fx-background-color: rgba(255,255,255,0.08); -fx-text-fill: rgba(255,255,255,0.8); -fx-background-radius: 12; -fx-font-size: 12; -fx-cursor: hand;"
+                ? "-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-background-radius: 12; -fx-font-size: 14; -fx-padding: 6 14; -fx-cursor: hand;"
+                : "-fx-background-color: rgba(255,255,255,0.08); -fx-text-fill: rgba(255,255,255,0.8); -fx-background-radius: 12; -fx-font-size: 14; -fx-padding: 6 14; -fx-cursor: hand;"
             );
-            btn.setOnAction(e -> toggleItem(item, isAllergen));
+            btn.setOnAction(e -> {
+                String item2 = ((Button) e.getSource()).getText();
+                if (selected.contains(item2)) selected.remove(item2);
+                else selected.add(item2);
+                showAllOptions(pane, items, selected, isAllergen);
+            });
             pane.getChildren().add(btn);
         }
     }
 
-    private void toggleItem(String item, boolean isAllergen) {
-        Set<String> selected = isAllergen ? selectedAllergens : selectedDiseases;
-        if (selected.contains(item)) {
-            selected.remove(item);
-        } else {
-            selected.add(item);
-        }
-        refreshPanes();
-    }
-
-    private void refreshPanes() {
-        searchAllergens();
-        searchDiseases();
-        refreshSelectedPane(allergenSelectedPane, selectedAllergens, true);
-        refreshSelectedPane(diseaseSelectedPane, selectedDiseases, false);
-    }
-
-    private void refreshSelectedPane(FlowPane pane, Set<String> selected, boolean isAllergen) {
+    private void refreshSelectedPane(FlowPane pane, Set<String> selected, Label noneLabel) {
         pane.getChildren().clear();
+        if (selected.isEmpty()) {
+            noneLabel.setVisible(true);
+            return;
+        }
+        noneLabel.setVisible(false);
         for (String item : selected) {
             Button tag = new Button("✕ " + item);
-            tag.setStyle("-fx-background-color: #2a6b4c; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-size: 11; -fx-cursor: hand;");
+            tag.setStyle("-fx-background-color: #2a6b4c; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-size: 14; -fx-padding: 6 14; -fx-cursor: hand;");
             tag.setOnAction(e -> {
-                (isAllergen ? selectedAllergens : selectedDiseases).remove(item);
-                refreshPanes();
+                selected.remove(item);
+                refreshSelectedPane(pane, selected, noneLabel);
             });
             pane.getChildren().add(tag);
         }
+    }
+
+    // ====== 步骤切换 ======
+
+    private void showStep(int step) {
+        step1Panel.setVisible(step == 1); step1Panel.setManaged(step == 1);
+        step2Panel.setVisible(step == 2); step2Panel.setManaged(step == 2);
+        step3Panel.setVisible(step == 3); step3Panel.setManaged(step == 3);
+        step4Panel.setVisible(step == 4); step4Panel.setManaged(step == 4);
+
+        dot1.setStyle("-fx-text-fill: " + (step >= 1 ? "#10b981" : "#4b5563") + "; -fx-font-size: 10;");
+        dot2.setStyle("-fx-text-fill: " + (step >= 2 ? "#10b981" : "#4b5563") + "; -fx-font-size: 10;");
+        dot3.setStyle("-fx-text-fill: " + (step >= 3 ? "#10b981" : "#4b5563") + "; -fx-font-size: 10;");
+        dot4.setStyle("-fx-text-fill: " + (step >= 4 ? "#10b981" : "#4b5563") + "; -fx-font-size: 10;");
+
+        dot1.setText(step == 1 ? "●" : step > 1 ? "◉" : "○");
+        dot2.setText(step == 2 ? "●" : step > 2 ? "◉" : "○");
+        dot3.setText(step == 3 ? "●" : step > 3 ? "◉" : "○");
+        dot4.setText(step == 4 ? "●" : "○");
+    }
+
+    @FXML void onStep1Next() {
+        refreshSelectedPane(allergenSelectedPane, selectedAllergens, allergenNoneLabel);
+        if (selectedAllergens.isEmpty()) stepTitle.setText("第二步：确认过敏原（无）");
+        else stepTitle.setText("第二步：确认过敏原");
+        stepDesc.setText("确认已选的过敏原，或点击标签移除");
+        showStep(2);
+    }
+
+    @FXML void onStep2Back() {
+        stepTitle.setText("第一步：选择过敏原");
+        stepDesc.setText("点击下方标签选择您的过敏原（可多选）");
+        showAllOptions(allergenOptionsPane, ALL_ALLERGENS, selectedAllergens, true);
+        showStep(1);
+    }
+
+    @FXML void onStep2Next() {
+        stepTitle.setText("第三步：选择慢性病史");
+        stepDesc.setText("点击下方标签选择您的慢性病史（可多选）");
+        showAllOptions(diseaseOptionsPane, ALL_DISEASES, selectedDiseases, false);
+        showStep(3);
+    }
+
+    @FXML void onStep3Next() {
+        refreshSelectedPane(diseaseSelectedPane, selectedDiseases, diseaseNoneLabel);
+        if (selectedDiseases.isEmpty()) stepTitle.setText("第四步：确认慢性病史（无）");
+        else stepTitle.setText("第四步：确认慢性病史");
+        stepDesc.setText("确认已选的慢性病史，或点击标签移除");
+        showStep(4);
+    }
+
+    @FXML void onStep4Back() {
+        stepTitle.setText("第三步：选择慢性病史");
+        stepDesc.setText("点击下方标签选择您的慢性病史（可多选）");
+        showAllOptions(diseaseOptionsPane, ALL_DISEASES, selectedDiseases, false);
+        showStep(3);
     }
 
     @FXML
@@ -137,9 +187,7 @@ public class HealthSetupController {
         String err = userService.updateHealthProfile(userId, allergens, diseases);
         if (err != null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("提示");
-            alert.setHeaderText(null);
-            alert.setContentText(err);
+            alert.setTitle("提示"); alert.setHeaderText(null); alert.setContentText(err);
             alert.showAndWait();
             return;
         }
@@ -149,6 +197,10 @@ public class HealthSetupController {
 
     @FXML
     void handleSkip() {
+        int userId = BMIApplication.currentUserId;
+        if (userId > 0) {
+            userService.updateHealthProfile(userId, "", "");
+        }
         navigateToMain();
     }
 
@@ -174,8 +226,7 @@ public class HealthSetupController {
             fadeIn.play();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText(null);
+            alert.setTitle("错误"); alert.setHeaderText(null);
             alert.setContentText("页面加载失败：" + e.getMessage());
             alert.showAndWait();
         }

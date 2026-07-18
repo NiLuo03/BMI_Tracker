@@ -55,7 +55,7 @@ public class User {
     public void setChronicDiseases(String chronicDiseases) { this.chronicDiseases = chronicDiseases; }
 
     public boolean needsHealthProfile() {
-        return (allergens == null || allergens.isEmpty()) && (chronicDiseases == null || chronicDiseases.isEmpty());
+        return allergens == null && chronicDiseases == null;
     }
 
     public LocalDateTime getCreateTime() { return createTime; }
