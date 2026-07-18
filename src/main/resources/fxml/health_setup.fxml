@@ -10,58 +10,100 @@
 
     <StackPane fx:id="particlePane" style="-fx-background-color: transparent;"/>
 
-    <ScrollPane maxWidth="520" maxHeight="620" StackPane.alignment="CENTER"
-                style="-fx-background-color: rgba(10,10,15,0.70);
-                    -fx-background-radius: 16px;
-                    -fx-border-color: rgba(255,255,255,0.10);
-                    -fx-border-width: 1px;
-                    -fx-border-radius: 16px;
-                    -fx-background: transparent;">
+    <VBox maxWidth="480" maxHeight="480" StackPane.alignment="CENTER" translateY="80"
+          style="-fx-background-color: rgba(10,10,15,0.70);
+                 -fx-background-radius: 16px;
+                 -fx-border-color: rgba(255,255,255,0.10);
+                 -fx-border-width: 1px;
+                 -fx-border-radius: 16px;
+                 -fx-padding: 24 32 16 32;">
         <StackPane.margin><Insets bottom="40"/></StackPane.margin>
 
-        <VBox spacing="12" alignment="CENTER" style="-fx-background: transparent;">
-            <padding><Insets top="32" right="40" bottom="32" left="40"/></padding>
-
-            <Label text="完善健康档案" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.92);"/>
-            <Label text="选择您的过敏原和慢性病史，以便提供更精准的健康建议"
-                   style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.42);" wrapText="true"/>
+        <Label fx:id="stepTitle" text="第一步：选择过敏原"
+               style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.92);"/>
+        <Label fx:id="stepDesc" text="点击下方标签选择您的过敏原（可多选）"
+               style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.42);" wrapText="true">
             <VBox.margin><Insets bottom="8"/></VBox.margin>
+        </Label>
 
-            <!-- 过敏原 -->
-            <Label text="过敏原（可多选）" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #9ad5d5;"/>
-            <HBox spacing="6" alignment="CENTER">
-                <TextField fx:id="allergenSearchField" promptText="搜索过敏原..." HBox.hgrow="ALWAYS"
-                           styleClass="text-field-login" style="-fx-prompt-text-fill: rgba(255,255,255,0.3);"/>
-                <Button fx:id="allergenSearchBtn" text="搜索" onAction="#searchAllergens"
-                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <!-- ====== 第一步：选过敏原 ====== -->
+        <VBox fx:id="step1Panel" spacing="8" VBox.vgrow="ALWAYS">
+            <TextField fx:id="allergenSearchField" promptText="搜索过敏原..."
+                       styleClass="text-field-login" style="-fx-prompt-text-fill: rgba(255,255,255,0.3);"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+                <FlowPane fx:id="allergenOptionsPane" hgap="6" vgap="6" prefWrapLength="400"
+                          style="-fx-padding: 2 0 0 0; -fx-background-color: transparent;"/>
+            </ScrollPane>
+            <HBox alignment="CENTER" spacing="12">
+                <Button fx:id="step1Btn" text="下一步 →" onAction="#onStep1Next"
+                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13; -fx-padding: 8 24; -fx-background-radius: 8; -fx-cursor: hand;"/>
             </HBox>
-            <FlowPane fx:id="allergenOptionsPane" hgap="6" vgap="6" prefWrapLength="440"
-                      style="-fx-padding: 8 0 0 0;"/>
-            <Label text="已选：" style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.5);"/>
-            <FlowPane fx:id="allergenSelectedPane" hgap="6" vgap="6" prefWrapLength="440"/>
-
-            <Separator style="-fx-background: rgba(255,255,255,0.1); -fx-pref-height: 1;"/>
-            <VBox.margin><Insets top="8" bottom="8"/></VBox.margin>
-
-            <!-- 慢性病 -->
-            <Label text="慢性病史（可多选）" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #9ad5d5;"/>
-            <HBox spacing="6" alignment="CENTER">
-                <TextField fx:id="diseaseSearchField" promptText="搜索慢性病..." HBox.hgrow="ALWAYS"
-                           styleClass="text-field-login" style="-fx-prompt-text-fill: rgba(255,255,255,0.3);"/>
-                <Button fx:id="diseaseSearchBtn" text="搜索" onAction="#searchDiseases"
-                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"/>
-            </HBox>
-            <FlowPane fx:id="diseaseOptionsPane" hgap="6" vgap="6" prefWrapLength="440"
-                      style="-fx-padding: 8 0 0 0;"/>
-            <Label text="已选：" style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.5);"/>
-            <FlowPane fx:id="diseaseSelectedPane" hgap="6" vgap="6" prefWrapLength="440"/>
-
-            <Button text="保存并进入系统" onAction="#handleSave" styleClass="btn-login" maxWidth="Infinity">
-                <VBox.margin><Insets top="12"/></VBox.margin>
-            </Button>
-
-            <Hyperlink text="跳过，稍后设置" onAction="#handleSkip" styleClass="hyperlink-login"/>
         </VBox>
-    </ScrollPane>
+
+        <!-- ====== 第二步：确认过敏原 ====== -->
+        <VBox fx:id="step2Panel" spacing="8" visible="false" managed="false" VBox.vgrow="ALWAYS">
+            <Label fx:id="allergenNoneLabel" text="未选择任何过敏原" visible="false"
+                   style="-fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 13px;"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+                <FlowPane fx:id="allergenSelectedPane" hgap="6" vgap="6" prefWrapLength="400"
+                          style="-fx-padding: 2 0 0 0; -fx-background-color: transparent;"/>
+            </ScrollPane>
+            <HBox alignment="CENTER" spacing="12">
+                <Button text="← 上一步" onAction="#onStep2Back"
+                        style="-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 12; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.15); -fx-border-radius: 6; -fx-padding: 6 16; -fx-border-width: 1;"/>
+                <Button fx:id="step2Btn" text="确定" onAction="#onStep2Next"
+                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13; -fx-padding: 8 24; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+
+        <!-- ====== 第三步：选慢性病 ====== -->
+        <VBox fx:id="step3Panel" spacing="8" visible="false" managed="false" VBox.vgrow="ALWAYS">
+            <TextField fx:id="diseaseSearchField" promptText="搜索慢性病..."
+                       styleClass="text-field-login" style="-fx-prompt-text-fill: rgba(255,255,255,0.3);"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+                <FlowPane fx:id="diseaseOptionsPane" hgap="6" vgap="6" prefWrapLength="400"
+                          style="-fx-padding: 2 0 0 0; -fx-background-color: transparent;"/>
+            </ScrollPane>
+            <HBox alignment="CENTER" spacing="12">
+                <Button fx:id="step3Btn" text="下一步 →" onAction="#onStep3Next"
+                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13; -fx-padding: 8 24; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+
+        <!-- ====== 第四步：确认慢性病 + 保存 ====== -->
+        <VBox fx:id="step4Panel" spacing="8" visible="false" managed="false" VBox.vgrow="ALWAYS">
+            <Label fx:id="diseaseNoneLabel" text="未选择任何慢性病" visible="false"
+                   style="-fx-text-fill: rgba(255,255,255,0.4); -fx-font-size: 13px;"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+                <FlowPane fx:id="diseaseSelectedPane" hgap="6" vgap="6" prefWrapLength="400"
+                          style="-fx-padding: 2 0 0 0; -fx-background-color: transparent;"/>
+            </ScrollPane>
+            <HBox alignment="CENTER" spacing="12">
+                <Button text="← 上一步" onAction="#onStep4Back"
+                        style="-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 12; -fx-cursor: hand; -fx-border-color: rgba(255,255,255,0.15); -fx-border-radius: 6; -fx-padding: 6 16; -fx-border-width: 1;"/>
+                <Button text="保存并进入系统" onAction="#handleSave"
+                        style="-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13; -fx-padding: 8 24; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+
+        <!-- 步骤指示器（按钮下方居中） -->
+        <HBox spacing="6" alignment="CENTER">
+            <VBox.margin><Insets top="6" bottom="2"/></VBox.margin>
+            <Label fx:id="dot1" text="●" style="-fx-text-fill: #10b981; -fx-font-size: 10;"/>
+            <Label fx:id="dot2" text="○" style="-fx-text-fill: #4b5563; -fx-font-size: 10;"/>
+            <Label fx:id="dot3" text="○" style="-fx-text-fill: #4b5563; -fx-font-size: 10;"/>
+            <Label fx:id="dot4" text="○" style="-fx-text-fill: #4b5563; -fx-font-size: 10;"/>
+        </HBox>
+
+        <!-- 跳过链接（右下角） -->
+        <HBox alignment="CENTER_RIGHT">
+            <Hyperlink text="跳过稍后设置" onAction="#handleSkip" styleClass="hyperlink-login"/>
+        </HBox>
+
+    </VBox>
 
 </StackPane>
