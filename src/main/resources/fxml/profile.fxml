@@ -15,14 +15,14 @@
 
     <HBox spacing="15"><Label text="用户ID" prefWidth="80" styleClass="field-label"/><Label fx:id="userIdLabel" styleClass="field-value"/></HBox>
     <HBox spacing="15"><Label text="账号" prefWidth="80" styleClass="field-label"/><Label fx:id="userNameLabel" styleClass="field-value"/></HBox>
-    <HBox spacing="15"><Label text="年龄" prefWidth="80" styleClass="field-label"/><TextField fx:id="ageField" prefWidth="120" styleClass="text-field-dark"/></HBox>
+    <HBox spacing="15"><Label text="年龄" prefWidth="80" styleClass="field-label"/><TextField fx:id="ageField" prefWidth="160" styleClass="text-field-dark"/></HBox>
     <HBox spacing="15">
         <Label text="性别" prefWidth="80" styleClass="field-label"/>
         <RadioButton fx:id="maleRadio" text="男" styleClass="radio-button-dark"/>
         <RadioButton fx:id="femaleRadio" text="女" styleClass="radio-button-dark"/>
     </HBox>
-    <HBox spacing="15"><Label text="身高(cm)" prefWidth="80" styleClass="field-label"/><TextField fx:id="heightField" prefWidth="120" styleClass="text-field-dark"/></HBox>
-    <HBox spacing="15"><Label text="体重(kg)" prefWidth="80" styleClass="field-label"/><TextField fx:id="weightField" prefWidth="120" styleClass="text-field-dark"/></HBox>
+    <HBox spacing="15"><Label text="身高(cm)" prefWidth="80" styleClass="field-label"/><TextField fx:id="heightField" prefWidth="160" styleClass="text-field-dark"/></HBox>
+    <HBox spacing="15"><Label text="体重(kg)" prefWidth="80" styleClass="field-label"/><TextField fx:id="weightField" prefWidth="160" styleClass="text-field-dark"/></HBox>
 
     <Separator styleClass="separator-dark"/>
 

@@ -34,30 +34,47 @@
         </HBox>
 
         <!-- Quiz Area (with nav at bottom) -->
-        <VBox fx:id="quizArea" spacing="14" visible="false" managed="false">
-            <Label fx:id="questionNum" text="问题 1 / 20"
-                   style="-fx-font-size: 14px; -fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+        <HBox fx:id="quizArea" spacing="0" visible="false" managed="false">
+            <VBox spacing="14" HBox.hgrow="ALWAYS">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Button fx:id="btnQuitQuiz" text="← 退出" styleClass="btn-secondary"
+                            style="-fx-font-size: 12px; -fx-padding: 3 10;"/>
+                    <Label fx:id="questionNum" text="问题 1 / 20"
+                           style="-fx-font-size: 14px; -fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+                </HBox>
 
-            <Label fx:id="questionText" wrapText="true"
-                   style="-fx-font-size: 15px; -fx-text-fill: -text-primary; -fx-line-spacing: 4;"/>
+                <Label fx:id="questionText" wrapText="true"
+                       style="-fx-font-size: 15px; -fx-text-fill: -text-primary; -fx-line-spacing: 4;"/>
 
-            <VBox spacing="8" VBox.vgrow="ALWAYS">
-                <RadioButton fx:id="optA" text="A." styleClass="quiz-option" maxWidth="Infinity"/>
-                <RadioButton fx:id="optB" text="B." styleClass="quiz-option" maxWidth="Infinity"/>
-                <RadioButton fx:id="optC" text="C." styleClass="quiz-option" maxWidth="Infinity"/>
-                <RadioButton fx:id="optD" text="D." styleClass="quiz-option" maxWidth="Infinity"/>
+                <VBox spacing="8" VBox.vgrow="ALWAYS">
+                    <RadioButton fx:id="optA" text="A." styleClass="quiz-option" maxWidth="Infinity"/>
+                    <RadioButton fx:id="optB" text="B." styleClass="quiz-option" maxWidth="Infinity"/>
+                    <RadioButton fx:id="optC" text="C." styleClass="quiz-option" maxWidth="Infinity"/>
+                    <RadioButton fx:id="optD" text="D." styleClass="quiz-option" maxWidth="Infinity"/>
+                </VBox>
+
+                <HBox fx:id="quizNav" spacing="6" alignment="CENTER" maxWidth="Infinity"
+                      style="-fx-padding: 4 0 0 0;">
+                    <Button fx:id="btnPrevQ" text="◀ 上一题" styleClass="btn-secondary"/>
+                    <Button fx:id="btnNextQ" text="下一题 ▶" styleClass="btn-secondary"/>
+                    <Button fx:id="btnSubmitQ" text="提交答卷" styleClass="btn-primary"/>
+                </HBox>
             </VBox>
 
-            <HBox fx:id="quizNav" spacing="6" alignment="CENTER" maxWidth="Infinity"
-                  style="-fx-padding: 4 0 0 0;">
-                <Button fx:id="btnPrevQ" text="◀ 上一题" styleClass="btn-secondary"/>
-                <Button fx:id="btnNextQ" text="下一题 ▶" styleClass="btn-secondary"/>
-                <Button fx:id="btnSubmitQ" text="提交答卷" styleClass="btn-primary"/>
-            </HBox>
-        </VBox>
+            <!-- Quiz Answer Sheet -->
+            <VBox fx:id="quizSheetPanel" spacing="6" alignment="TOP_CENTER" visible="false" managed="false"
+                  style="-fx-padding: 0 0 0 8;">
+                <ToggleButton fx:id="quizSheetToggle" text="答题卡 ▶"
+                              style="-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #10b981; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand; -fx-padding: 6 14;"/>
+                <VBox fx:id="quizSheetContent" spacing="6" alignment="TOP_CENTER" visible="false" managed="false"/>
+            </VBox>
+        </HBox>
 
         <!-- Result Area (with nav at bottom) -->
         <VBox fx:id="resultArea" spacing="10" visible="false" managed="false">
+            <Button fx:id="btnBackToPrepare" text="← 返回" styleClass="btn-secondary"
+                    style="-fx-font-size: 12px; -fx-padding: 3 10;"/>
+
             <VBox fx:id="resultContent" spacing="10" VBox.vgrow="ALWAYS"/>
 
             <HBox fx:id="resultNav" spacing="6" alignment="CENTER" maxWidth="Infinity"
