@@ -115,9 +115,9 @@
                                                       style="-fx-padding: 18px 20px;">
                                                     <Label text="📊 BMI 计算" styleClass="label-heading"/>
                                                     <HBox spacing="8" alignment="CENTER_LEFT">
-                                                        <TextField promptText="身高(cm)" prefWidth="110" styleClass="text-field-dark"/>
-                                                        <TextField promptText="体重(kg)" prefWidth="110" styleClass="text-field-dark"/>
-                                                        <Button text="记录" onAction="#showBmiRecord" styleClass="btn-primary"/>
+                                                        <TextField fx:id="homeHeightField" promptText="身高(cm)" prefWidth="110" styleClass="text-field-dark"/>
+                                                        <TextField fx:id="homeWeightField" promptText="体重(kg)" prefWidth="110" styleClass="text-field-dark"/>
+                                                        <Button text="记录" onAction="#handleHomeRecord" styleClass="btn-primary"/>
                                                     </HBox>
                                                 </VBox>
                                             </StackPane>

@@ -1,16 +1,31 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.component.WheelPicker;
+import com.bmitracker.model.BmiRecord;
 import com.bmitracker.model.User;
+import com.bmitracker.service.BmiService;
 import com.bmitracker.service.UserService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class ProfileController {
 
@@ -24,9 +39,39 @@ public class ProfileController {
     @FXML private TextField preferencesField;
 
     private final UserService userService = new UserService();
+    private final BmiService bmiService = new BmiService();
+    private Popup agePopup;
+    private Popup heightPopup;
+    private Popup weightPopup;
+    private static final double POPUP_HEIGHT = 180;
 
     @FXML
     void initialize() {
+        ageField.setEditable(false);
+        ageField.setFocusTraversable(false);
+        heightField.setEditable(false);
+        heightField.setFocusTraversable(false);
+        weightField.setEditable(false);
+        weightField.setFocusTraversable(false);
+
+        setupDismissHandler();
+
+        Platform.runLater(() -> {
+            javafx.stage.Window win = ageField.getScene().getWindow();
+            if (win != null) {
+                win.focusedProperty().addListener((o, ov, focused) -> {
+                    if (focused) return;
+                    if (agePopup != null) agePopup.hide();
+                    if (heightPopup != null) heightPopup.hide();
+                    if (weightPopup != null) weightPopup.hide();
+                });
+            }
+        });
+
+        setupFieldClick(ageField, 1, 100, "年龄", p -> agePopup = p, 1);
+        setupFieldClick(heightField, 100, 220, "身高", p -> heightPopup = p, 100);
+        setupFieldClick(weightField, 25, 250, "体重", p -> weightPopup = p, 25);
+
         Platform.runLater(() -> {
             User user = userService.getUserById(BMIApplication.currentUserId);
             if (user != null) {
@@ -35,11 +80,134 @@ public class ProfileController {
                 ageField.setText(String.valueOf(user.getUserAge()));
                 if (user.getSex() == 0) maleRadio.setSelected(true);
                 else femaleRadio.setSelected(true);
-                if (user.getHeight() > 0) heightField.setText(String.valueOf(user.getHeight()));
-                if (user.getWeight() > 0) weightField.setText(String.valueOf(user.getWeight()));
                 preferencesField.setText(user.getPreferences());
+                try {
+                    List<BmiRecord> records = bmiService.getRecordsDesc(BMIApplication.currentUserId);
+                    if (records != null && !records.isEmpty()) {
+                        BmiRecord latest = records.get(0);
+                        heightField.setText(String.valueOf((int) latest.getHeight()));
+                        weightField.setText(String.valueOf((int) latest.getWeight()));
+                    } else {
+                        if (user.getHeight() > 0) heightField.setText(String.valueOf((int) user.getHeight()));
+                        if (user.getWeight() > 0) weightField.setText(String.valueOf((int) user.getWeight()));
+                    }
+                } catch (Exception e) {
+                    if (user.getHeight() > 0) heightField.setText(String.valueOf((int) user.getHeight()));
+                    if (user.getWeight() > 0) weightField.setText(String.valueOf((int) user.getWeight()));
+                }
             }
         });
+    }
+
+    private void setupDismissHandler() {
+        ageField.sceneProperty().addListener((obs, old, scene) -> {
+            if (scene == null) return;
+            scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+                dismiss(e, agePopup, ageField);
+                dismiss(e, heightPopup, heightField);
+                dismiss(e, weightPopup, weightField);
+            });
+        });
+    }
+
+    private void dismiss(MouseEvent event, Popup popup, TextField field) {
+        if (popup == null || !popup.isShowing()) return;
+        EventTarget target = event.getTarget();
+        if (target instanceof Node) {
+            Node node = (Node) target;
+            if (node == field) return;
+            for (Node n : popup.getContent()) {
+                if (isParent(node, n)) return;
+            }
+        }
+        popup.hide();
+    }
+
+    private void setupFieldClick(TextField field, int min, int max, String label, Consumer<Popup> setter, int defaultValue) {
+        field.setOnMouseClicked(e -> {
+            Popup existing = popupForField(field);
+            if (existing != null && existing.isShowing()) {
+                existing.hide();
+                return;
+            }
+            showPicker(field, min, max, label, setter, defaultValue);
+        });
+    }
+
+    private Popup popupForField(TextField field) {
+        if (field == ageField) return agePopup;
+        if (field == heightField) return heightPopup;
+        if (field == weightField) return weightPopup;
+        return null;
+    }
+
+    private void showPicker(TextField field, int min, int max, String label, Consumer<Popup> setter, int defaultVal) {
+        Popup existing = popupForField(field);
+        if (existing != null) existing.hide();
+
+        double pw = Math.max(field.getWidth(), 100);
+
+        WheelPicker<Integer> wheel = new WheelPicker<>();
+        wheel.setVisibleItems(5);
+        wheel.setItemHeight(36);
+        wheel.setPrefWidth(pw);
+        wheel.setPrefHeight(POPUP_HEIGHT);
+
+        List<Integer> items = new ArrayList<>();
+        for (int i = min; i <= max; i++) items.add(i);
+        wheel.setItems(items);
+
+        int current = defaultVal;
+        try {
+            current = Integer.parseInt(field.getText().trim());
+            if (current < min || current > max) current = defaultVal;
+        } catch (NumberFormatException ignored) {}
+        final int def = current;
+
+        wheel.valueProperty().addListener((obs, old, val) -> {
+            if (val != null) field.setText(String.valueOf(val));
+        });
+
+        wheel.setLightTheme(isLightTheme());
+
+        StackPane container = new StackPane(wheel);
+        container.setPadding(new Insets(12, 0, 12, 0));
+        container.setMinWidth(pw);
+        container.getStyleClass().add("wheel-popup");
+        if (isLightTheme()) container.getStyleClass().add("light-theme");
+        container.setVisible(false);
+
+        Popup popup = new Popup();
+        popup.setAutoHide(false);
+        popup.setHideOnEscape(true);
+        popup.getContent().add(container);
+        setter.accept(popup);
+
+        Bounds bounds = field.localToScreen(field.getBoundsInLocal());
+        popup.show(field, bounds.getMaxX() + 4, bounds.getMinY());
+
+        Platform.runLater(() -> {
+            wheel.resize(pw, POPUP_HEIGHT);
+            wheel.setSelectedIndex(def - min);
+            container.setVisible(true);
+        });
+    }
+
+    private boolean isLightTheme() {
+        Scene scene = ageField.getScene();
+        if (scene != null && scene.getRoot() instanceof Parent) {
+            return ((Parent) scene.getRoot()).getStyleClass().contains("light-theme");
+        }
+        return false;
+    }
+
+    private static boolean isParent(Node target, Node root) {
+        Node n = target;
+        while (n != null) {
+            if (n == root) return true;
+            n = n.getParent();
+        }
+        return false;
     }
 
     @FXML

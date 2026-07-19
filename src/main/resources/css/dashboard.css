@@ -692,3 +692,16 @@
     -fx-background-insets: 0, 4, 6, 8;
     -fx-background-radius: 20px;
 }
+
+/* --- WheelPicker popup container --- */
+.wheel-popup {
+    -fx-background-color: rgba(20,20,25,0.96);
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(16,185,129,0.15);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+}
+.wheel-popup.light-theme {
+    -fx-background-color: rgba(245,245,250,0.98);
+    -fx-border-color: rgba(0,0,0,0.12);
+}
