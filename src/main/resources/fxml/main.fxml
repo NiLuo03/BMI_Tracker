@@ -20,28 +20,18 @@
         <TitleBar fx:id="titleBar"/>
 
         <BorderPane VBox.vgrow="ALWAYS">
-        <!-- ====== 顶部导航栏 ====== -->
-        <top>
-            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
-                <Label fx:id="pageTitle" text="首页" styleClass="top-bar-label"/>
-                <HBox HBox.hgrow="ALWAYS"/>
-                <Label fx:id="dateLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
-                <Region style="-fx-background-color: rgba(255,255,255,0.06); -fx-min-width: 1px; -fx-min-height: 20px;"/>
-                <Button text="退出登录" onAction="#showLogout" styleClass="btn-secondary"/>
-            </HBox>
-        </top>
 
         <!-- ====== 左侧侧边栏 ====== -->
         <left>
-            <VBox fx:id="sidebar" spacing="4" style="-fx-background-color: transparent; -fx-padding: 12px 6px;" prefWidth="150" minWidth="50">
+            <VBox fx:id="sidebar" style="-fx-background-color: transparent; -fx-padding: 12px 6px;" prefWidth="150" minWidth="50">
 
                 <Button style="-fx-background-color: transparent; -fx-padding: 0;" onAction="#showProfile">
                     <graphic>
-                        <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4px 8px 6px 8px;">
+                        <HBox fx:id="avatarHBox" spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4px 8px 6px 8px;">
                             <StackPane styleClass="user-avatar">
                         <Label fx:id="avatarLabel" text="U"/>
                     </StackPane>
-                    <VBox spacing="1">
+                    <VBox fx:id="avatarStatusBox" spacing="1">
                         <Label fx:id="sidebarUserName" text="用户" style="-fx-text-fill: -text-primary; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                         <HBox spacing="4" alignment="CENTER_LEFT">
                             <Region styleClass="online-dot"/>
@@ -52,32 +42,38 @@
                     </graphic>
                 </Button>
 
-                <Separator styleClass="separator-dark">
-                    <VBox.margin><Insets top="4" bottom="6"/></VBox.margin>
-                </Separator>
-
-                <Label text="主菜单" styleClass="sidebar-category"/>
-                <Button fx:id="btnHome" text="🏠 首页" onAction="#showHome" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnBmi" text="📊 BMI 记录" onAction="#showBmiRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnHistory" text="📊 数据分析" onAction="#showHistory" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnPredict" text="🔮 趋势预测" onAction="#showPrediction" styleClass="sidebar-btn" maxWidth="Infinity"/>
-
-                <Label text="生活服务" styleClass="sidebar-category"/>
-                <Button fx:id="btnDiet" text="🥗 膳食推荐" onAction="#showDiet" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnCompare" text="🍎 食物对比" onAction="#showFood" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnRank" text="🏆 食物榜单" onAction="#showFoodRank" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                <Button fx:id="btnMealRecord" text="📝 膳食记录" onAction="#showMealRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                <VBox spacing="4">
+                    <Label fx:id="categoryMainLabel" text="主菜单" styleClass="sidebar-category"/>
+                    <Button fx:id="btnHome" text=" 首页" onAction="#showHome" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnBmi" text=" BMI 记录" onAction="#showBmiRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnHistory" text=" 数据分析" onAction="#showHistory" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnPredict" text=" 趋势预测" onAction="#showPrediction" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                </VBox>
 
                 <VBox VBox.vgrow="ALWAYS"/>
-                <Button fx:id="toggleNavBtn" text="« 收起" onAction="#toggleNav" styleClass="sidebar-btn" maxWidth="Infinity">
-                    <VBox.margin><Insets top="8"/></VBox.margin>
-                </Button>
-                <MenuButton text="⚙" style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 14px; -fx-padding: 6px 12px; -fx-cursor: hand; -fx-background-radius: 8px;" maxWidth="Infinity">
-                    <items>
-                        <MenuItem text="个性设置" onAction="#showPersonalize"/>
-                        <MenuItem text="退出登录" onAction="#showLogout"/>
-                    </items>
-                </MenuButton>
+
+                <VBox spacing="4">
+                    <Label fx:id="categoryServiceLabel" text="生活服务" styleClass="sidebar-category"/>
+                    <Button fx:id="btnDiet" text=" 膳食推荐" onAction="#showDiet" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnCompare" text=" 食物对比" onAction="#showFood" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnRank" text=" 食物榜单" onAction="#showFoodRank" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnMealRecord" text=" 膳食记录" onAction="#showMealRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                    <Button fx:id="btnQuiz" text=" 健康问答" onAction="#showQuiz" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox VBox.vgrow="ALWAYS"/>
+
+                <HBox spacing="0" alignment="CENTER_LEFT">
+                    <Button fx:id="toggleNavBtn" text="" onAction="#toggleNav" styleClass="sidebar-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                        <VBox.margin><Insets top="8"/></VBox.margin>
+                    </Button>
+                    <MenuButton fx:id="menuSettings" text="" style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 14px; -fx-padding: 6px 12px; -fx-cursor: hand; -fx-background-radius: 8px;">
+                        <items>
+                            <MenuItem text="个性设置" onAction="#showPersonalize"/>
+                            <MenuItem text="退出登录" onAction="#showLogout"/>
+                        </items>
+                    </MenuButton>
+                </HBox>
             </VBox>
         </left>
 

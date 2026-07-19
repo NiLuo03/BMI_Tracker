@@ -8,15 +8,20 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -37,15 +42,18 @@ public class MainController {
 
     @FXML private StackPane contentPane;
     @FXML private StackPane glassPanel;
-    @FXML private Label pageTitle;
     @FXML private TitleBar titleBar;
     @FXML private StackPane root;
     @FXML private Rectangle rootClip;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
-    @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord;
+    @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz;
+    @FXML private MenuButton menuSettings;
     @FXML private VBox sidebar;
-    @FXML private Label avatarLabel, sidebarUserName, dateLabel;
+    @FXML private HBox avatarHBox;
+    @FXML private VBox avatarStatusBox;
+    @FXML private Label categoryMainLabel, categoryServiceLabel;
+    @FXML private Label avatarLabel, sidebarUserName;
     @FXML private Label welcomeLabel, bmiStatusLabel, trendLabel;
     @FXML private Label dashBmi, dashStatus, dashIdealWeight, dashRecords, dashTrend;
     @FXML private Label historySummary;
@@ -64,9 +72,7 @@ public class MainController {
     void toggleNav() {
         navExpanded = !navExpanded;
         double target = navExpanded ? 150 : 48;
-        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord};
-        String[] icons = {"🏠", "📊", "📊", "🔮", "🥗", "🍎", "🏆", "📝"};
-        String[] texts = {"首页", "BMI 记录", "数据分析", "趋势预测", "膳食推荐", "食物对比", "食物榜单", "膳食记录"};
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz};
 
         Timeline anim = new Timeline(
             new KeyFrame(Duration.millis(200),
@@ -75,11 +81,70 @@ public class MainController {
         anim.play();
 
         for (int i = 0; i < btns.length; i++) {
-            btns[i].setText(navExpanded ? icons[i] + "  " + texts[i] : icons[i]);
-            btns[i].setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-            btns[i].setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            if (btns[i] == btnHome) {
+                btnHome.setText(navExpanded ? " 首页" : "");
+                btnHome.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnHome.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnBmi) {
+                btnBmi.setText(navExpanded ? " BMI 记录" : "");
+                btnBmi.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnBmi.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnHistory) {
+                btnHistory.setText(navExpanded ? " 数据分析" : "");
+                btnHistory.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnHistory.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnPredict) {
+                btnPredict.setText(navExpanded ? " 趋势预测" : "");
+                btnPredict.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnPredict.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnDiet) {
+                btnDiet.setText(navExpanded ? " 膳食推荐" : "");
+                btnDiet.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnDiet.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnCompare) {
+                btnCompare.setText(navExpanded ? " 食物对比" : "");
+                btnCompare.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnCompare.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnRank) {
+                btnRank.setText(navExpanded ? " 食物榜单" : "");
+                btnRank.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnRank.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnMealRecord) {
+                btnMealRecord.setText(navExpanded ? " 膳食记录" : "");
+                btnMealRecord.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnMealRecord.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            } else if (btns[i] == btnQuiz) {
+                btnQuiz.setText(navExpanded ? " 健康问答" : "");
+                btnQuiz.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+                btnQuiz.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+            }
         }
-        toggleNavBtn.setText(navExpanded ? "« 收起" : "»");
+        toggleNavBtn.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
+        toggleNavBtn.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+        StackPane toggleBox = (StackPane) toggleNavBtn.getGraphic();
+        if (toggleBox != null && !toggleBox.getChildren().isEmpty()) {
+            SVGPath toggleSvg = (SVGPath) toggleBox.getChildren().get(0);
+            toggleSvg.setScaleX(navExpanded ? 0.018 : -0.018);
+        }
+        menuSettings.setVisible(navExpanded);
+        menuSettings.setManaged(navExpanded);
+        sidebar.setAlignment(javafx.geometry.Pos.TOP_LEFT);
+        if (avatarHBox != null) avatarHBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        if (avatarStatusBox != null) {
+            avatarStatusBox.setVisible(navExpanded);
+            avatarStatusBox.setManaged(navExpanded);
+        }
+        if (categoryMainLabel != null) {
+            categoryMainLabel.setVisible(navExpanded);
+            categoryMainLabel.setManaged(navExpanded);
+        }
+        if (categoryServiceLabel != null) {
+            categoryServiceLabel.setVisible(navExpanded);
+            categoryServiceLabel.setManaged(navExpanded);
+        }
+        Insets margin = navExpanded ? Insets.EMPTY : new Insets(0, 0, 0, 7);
+        for (Button b : btns) VBox.setMargin(b, margin);
+        VBox.setMargin(toggleNavBtn, margin);
     }
 
     public void changeBackdrop(String hexColor) {
@@ -105,9 +170,140 @@ public class MainController {
         instance = this;
         loadSidebarUser();
         loadDashboardData();
-        if (dateLabel != null) dateLabel.setText(LocalDate.now().format(DATE_FMT));
         if (root != null) rootPane = root;
         changeBackdrop("#ffffff");
+
+        SVGPath homeIcon = new SVGPath();
+        homeIcon.setContent("M861.866667 401.749333a13.960533 13.960533 0 0 0-6.485334-11.400533l-332.8-225.041067a19.285333 19.285333 0 0 0-21.162666 0l-332.8 225.041067a13.960533 13.960533 0 0 0-6.485334 11.434667v421.205333c0 19.8656 17.476267 38.912 42.666667 38.912h614.4c25.1904 0 42.666667-19.0464 42.666667-38.912V401.749333z m-288.017067 158.242134a61.883733 61.883733 0 1 0-123.733333 0 61.883733 61.883733 0 0 0 123.767466 0z m68.266667 0a130.116267 130.116267 0 1 1-260.232534 0 130.116267 130.116267 0 0 1 260.232534 0z m288.017066 262.9632c0 60.791467-51.3024 107.178667-110.933333 107.178666H204.8c-59.630933 0-110.933333-46.3872-110.933333-107.178666V401.749333c0-27.5456 14.0288-52.736 36.522667-67.925333l332.8-225.0752c29.354667-19.831467 68.266667-19.831467 97.621334 0l332.8 225.041067a82.158933 82.158933 0 0 1 36.522666 67.9936v421.205333z");
+        homeIcon.setStyle("-fx-fill: -text-primary;");
+        homeIcon.setScaleX(0.018);
+        homeIcon.setScaleY(0.018);
+        StackPane homeBox = new StackPane(homeIcon);
+        homeBox.setPrefSize(18, 18);
+        homeBox.setMinSize(18, 18);
+        homeBox.setMaxSize(18, 18);
+        btnHome.setGraphic(homeBox);
+        btnHome.setText(" 首页");
+
+        SVGPath gearIcon = new SVGPath();
+        gearIcon.setContent("M407.313067 176.059733c26.692267-109.568 182.6816-109.568 209.373866 0l0.341334 1.467734a39.424 39.424 0 0 0 22.869333 25.770666 39.389867 39.389867 0 0 0 35.601067-2.7648c96.426667-58.743467 206.7456 51.541333 148.002133 147.968h-0.034133a39.424 39.424 0 0 0 24.3712 58.88c106.359467 25.736533 109.568 172.987733 9.966933 206.370134l-9.9328 2.8672a39.458133 39.458133 0 0 0-24.3712 58.88l4.983467 9.079466c46.865067 94.071467-59.5968 195.822933-152.9856 138.922667a39.458133 39.458133 0 0 0-58.88 24.3712c-26.589867 109.738667-182.613333 109.636267-209.237334 0v-0.034133a39.389867 39.389867 0 0 0-58.845866-24.3712l-0.034134 0.034133c-96.426667 58.709333-206.7456-51.575467-148.002133-148.002133h0.034133a39.458133 39.458133 0 0 0-24.3712-58.845867c-109.7728-26.555733-109.6704-182.647467 0-209.271467a39.458133 39.458133 0 0 0 24.337067-58.845866v-0.034134c-58.709333-96.392533 51.541333-206.711467 147.968-148.002133a39.424 39.424 0 0 0 58.845867-24.3712v-0.068267z m142.677333 14.882134c-10.717867-38.8096-66.628267-38.4-76.356267 1.2288a107.690667 107.690667 0 0 1-112.913066 82.0224 107.690667 107.690667 0 0 1-47.7184-15.394134c-35.293867-21.504-75.707733 18.909867-54.203734 54.203734 37.956267 62.2592 4.3008 143.496533-66.56 160.699733-40.174933 9.762133-40.106667 66.901333 0 76.5952l6.144 1.672533a107.758933 107.758933 0 0 1 63.556267 153.565867l-3.140267 5.495467c-21.504 35.293867 18.875733 75.639467 54.1696 54.1696l5.495467-3.140267a107.690667 107.690667 0 0 1 155.2384 69.666133l1.024 3.6864c12.253867 36.522667 66.184533 35.157333 75.5712-3.652266a107.758933 107.758933 0 0 1 160.699733-66.56c35.293867 21.504 75.707733-18.875733 54.203734-54.1696a107.690667 107.690667 0 0 1 66.56-160.733867c38.912-9.454933 40.0384-63.351467 3.652266-75.537067l-3.652266-1.058133a107.656533 107.656533 0 0 1-66.56-160.768c21.504-35.259733-18.909867-75.6736-54.203734-54.1696l0.034134 0.034133a107.656533 107.656533 0 0 1-160.733867-66.56l-0.341333-1.297066zM563.2 512a51.2 51.2 0 1 0-102.4 0 51.2 51.2 0 0 0 102.4 0z m68.266667 0a119.466667 119.466667 0 1 1-238.933334 0 119.466667 119.466667 0 0 1 238.933334 0z");
+        gearIcon.setStyle("-fx-fill: -text-secondary;");
+        gearIcon.setScaleX(0.018);
+        gearIcon.setScaleY(0.018);
+        StackPane gearBox = new StackPane(gearIcon);
+        gearBox.setPrefSize(18, 18);
+        gearBox.setMinSize(18, 18);
+        gearBox.setMaxSize(18, 18);
+        menuSettings.setGraphic(gearBox);
+
+        SVGPath chartIcon = new SVGPath();
+        chartIcon.setContent("M344.951467 677.888v187.733333H162.133333v-187.733333h182.818134zM603.477333 158.378667v291.157333l-0.068266 1.365333 0.068266 414.72h-190.2592V158.378667h190.2592z m258.389334 707.242666h-190.122667V450.901333h190.122667v414.72z m-516.9152-256H162.133333a68.266667 68.266667 0 0 0-68.266666 68.266667v187.733333a68.266667 68.266667 0 0 0 68.266666 68.266667h699.733334a68.266667 68.266667 0 0 0 68.266666-68.266667V450.901333a68.266667 68.266667 0 0 0-68.266666-68.266666h-190.122667V158.378667a68.266667 68.266667 0 0 0-68.266667-68.266667h-190.2592a68.266667 68.266667 0 0 0-68.266666 68.266667v451.242666z");
+        chartIcon.setStyle("-fx-fill: -text-primary;");
+        chartIcon.setScaleX(0.018);
+        chartIcon.setScaleY(0.018);
+        StackPane chartBox = new StackPane(chartIcon);
+        chartBox.setPrefSize(18, 18);
+        chartBox.setMinSize(18, 18);
+        chartBox.setMaxSize(18, 18);
+        btnHistory.setGraphic(chartBox);
+        btnHistory.setText(" 数据分析");
+
+        SVGPath bmiIcon = new SVGPath();
+        bmiIcon.setContent("M634.299733 180.667733a85.333333 85.333333 0 0 1 120.661334-0.034133l88.337066 88.234667a85.333333 85.333333 0 0 1 0.034134 120.695466L426.359467 806.8096a85.367467 85.367467 0 0 1-43.52 23.313067l-186.299734 37.546666A34.133333 34.133333 0 0 1 156.330667 827.392l37.614933-186.0608a85.333333 85.333333 0 0 1 23.313067-43.383467L634.299733 180.6336zM265.557333 646.2464a17.066667 17.066667 0 0 0-4.642133 8.635733l-27.4432 135.68 135.918933-27.374933a17.066667 17.066667 0 0 0 8.704-4.642133L682.666667 453.7344l-112.4352-112.4352-304.708267 304.9472zM706.696533 228.932267a17.066667 17.066667 0 0 0-24.132266 0L618.496 293.034667l112.401067 112.401066 64.170666-64.136533a17.066667 17.066667 0 0 0 0-24.132267l-88.337066-88.234666z");
+        bmiIcon.setStyle("-fx-fill: -text-primary;");
+        bmiIcon.setScaleX(0.018);
+        bmiIcon.setScaleY(0.018);
+        StackPane bmiBox = new StackPane(bmiIcon);
+        bmiBox.setPrefSize(18, 18);
+        bmiBox.setMinSize(18, 18);
+        bmiBox.setMaxSize(18, 18);
+        btnBmi.setGraphic(bmiBox);
+        btnBmi.setText(" BMI 记录");
+
+        SVGPath predictIcon = new SVGPath();
+        predictIcon.setContent("M781.038933 102.673067c39.492267-1.979733 77.9264 6.9632 105.642667 34.645333 27.716267 27.716267 36.625067 66.1504 34.645333 105.642667-1.9456 39.492267-14.779733 83.899733-35.362133 130.013866-19.626667 44.032-47.104 91.067733-81.066667 139.025067 33.9968 47.957333 61.44 95.0272 81.066667 139.025067 20.5824 46.08 33.416533 90.5216 35.362133 130.013866 1.979733 39.492267-6.9632 77.9264-34.645333 105.642667-27.716267 27.716267-66.1504 36.625067-105.642667 34.645333-39.492267-1.9456-83.899733-14.779733-130.013866-35.362133-44.032-19.626667-91.067733-47.104-139.025067-81.066667-47.957333 33.9968-95.0272 61.44-139.025067 81.066667-46.08 20.5824-90.5216 33.416533-130.013866 35.362133-39.492267 1.979733-77.9264-6.929067-105.642667-34.645333-27.682133-27.716267-36.625067-66.1504-34.645333-105.642667 1.9456-39.492267 14.779733-83.899733 35.362133-130.013866 19.626667-44.032 47.035733-91.067733 81.032533-139.025067-33.9968-47.957333-61.405867-95.0272-81.032533-139.025067-20.5824-46.08-33.416533-90.5216-35.362133-130.013866-1.979733-39.492267 6.929067-77.9264 34.645333-105.642667 27.716267-27.716267 66.1504-36.625067 105.642667-34.645333 39.492267 1.9456 83.899733 14.779733 130.013866 35.362133 44.032 19.626667 91.067733 47.035733 139.025067 81.032533 47.957333-33.9968 95.0272-61.405867 139.025067-81.032533 46.08-20.5824 90.5216-33.416533 130.013866-35.362133zM262.4512 569.207467c-25.873067 38.331733-46.762667 75.3664-62.0544 109.636266-18.568533 41.642667-28.125867 77.482667-29.525333 105.5744-1.365333 28.125867 5.393067 44.612267 14.7456 53.9648 9.352533 9.386667 25.838933 16.1792 53.930666 14.779734 28.125867-1.365333 64-10.9568 105.608534-29.525334 34.269867-15.291733 71.2704-36.2496 109.602133-62.122666a1295.5648 1295.5648 0 0 1-101.1712-91.136 1294.6432 1294.6432 0 0 1-91.136-101.1712z m499.029333 0a1295.2576 1295.2576 0 0 1-192.273066 192.3072c38.331733 25.9072 75.3664 46.830933 109.636266 62.122666 41.642667 18.568533 77.482667 28.125867 105.5744 29.525334 28.125867 1.365333 44.612267-5.393067 53.9648-14.779734 9.386667-9.352533 16.145067-25.838933 14.7456-53.930666-1.365333-28.125867-10.922667-64-29.525333-105.608534-15.291733-34.269867-36.181333-71.304533-62.122667-109.636266zM512 304.128a1214.5664 1214.5664 0 0 0-110.114133 97.757867A1214.5664 1214.5664 0 0 0 304.128 512a1214.122667 1214.122667 0 0 0 97.757867 110.114133A1213.610667 1213.610667 0 0 0 512 719.837867a1212.689067 1212.689067 0 0 0 110.114133-97.723734A1213.1328 1213.1328 0 0 0 719.837867 512a1213.610667 1213.610667 0 0 0-97.723734-110.114133A1214.0544 1214.0544 0 0 0 512 304.128z m-34.133333 211.421867V512a34.133333 34.133333 0 1 1 68.266666 0v3.549867a34.133333 34.133333 0 0 1-68.266666 0z m-238.2848-344.746667c-28.125867-1.365333-44.612267 5.461333-53.9648 14.813867-9.386667 9.352533-16.1792 25.838933-14.779734 53.930666 1.365333 28.125867 10.9568 64 29.525334 105.608534 15.291733 34.269867 36.181333 71.2704 62.122666 109.602133a1294.813867 1294.813867 0 0 1 91.136-101.137067 1294.267733 1294.267733 0 0 1 101.137067-91.136c-38.331733-25.941333-75.332267-46.830933-109.568-62.122666-41.642667-18.568533-77.482667-28.125867-105.608533-29.525334z m544.8704 0c-28.125867 1.4336-64 10.990933-105.608534 29.559467-34.269867 15.291733-71.304533 36.181333-109.636266 62.122666a1294.677333 1294.677333 0 0 1 101.1712 91.136 1295.5648 1295.5648 0 0 1 91.136 101.137067c25.873067-38.331733 46.830933-75.332267 62.122666-109.568 18.568533-41.642667 28.125867-77.482667 29.525334-105.608533 1.365333-28.125867-5.393067-44.612267-14.779734-53.9648-9.352533-9.386667-25.838933-16.1792-53.930666-14.779734z");
+        predictIcon.setStyle("-fx-fill: -text-primary;");
+        predictIcon.setScaleX(0.018);
+        predictIcon.setScaleY(0.018);
+        StackPane predictBox = new StackPane(predictIcon);
+        predictBox.setPrefSize(18, 18);
+        predictBox.setMinSize(18, 18);
+        predictBox.setMaxSize(18, 18);
+        btnPredict.setGraphic(predictBox);
+        btnPredict.setText(" 趋势预测");
+
+        SVGPath dietIcon = new SVGPath();
+        dietIcon.setContent("M539.584 191.936c152.768-141.888 399.104-32.128 399.104 177.92 0 64-25.088 125.312-69.76 170.624l-346.56 351.168a14.528 14.528 0 0 1-20.736 0L155.072 540.48a243.008 243.008 0 0 1-69.76-170.688c0-209.92 246.4-319.744 399.104-177.92L512 217.6l27.584-25.6z m58.112 62.464l-27.648 25.664L512 334.08l-58.048-53.952-27.648-25.6c-97.792-90.88-255.616-20.544-255.616 115.328 0 41.6 16.256 81.472 45.12 110.72L512 780.672l296.256-300.16a157.44 157.44 0 0 0 44.8-101.12l0.32-9.6c0-135.872-157.824-206.208-255.616-115.392z");
+        dietIcon.setStyle("-fx-fill: -text-primary;");
+        dietIcon.setScaleX(0.018);
+        dietIcon.setScaleY(0.018);
+        StackPane dietBox = new StackPane(dietIcon);
+        dietBox.setPrefSize(18, 18);
+        dietBox.setMinSize(18, 18);
+        dietBox.setMaxSize(18, 18);
+        btnDiet.setGraphic(dietBox);
+        btnDiet.setText(" 膳食推荐");
+
+        SVGPath compareIcon = new SVGPath();
+        compareIcon.setContent("M426.666667 768h341.333333v-341.333333h-42.666667v298.666666h-298.666666v42.666667z m0 85.333333H341.333333v-128H213.333333V213.333333h512v128h128v512H426.666667z m213.333333-426.666666h-213.333333v213.333333h213.333333v-213.333333z m0-85.333334V298.666667H298.666667v341.333333h42.666666V341.333333h298.666667z");
+        compareIcon.setStyle("-fx-fill: -text-primary;");
+        compareIcon.setScaleX(0.018);
+        compareIcon.setScaleY(0.018);
+        StackPane compareBox = new StackPane(compareIcon);
+        compareBox.setPrefSize(18, 18);
+        compareBox.setMinSize(18, 18);
+        compareBox.setMaxSize(18, 18);
+        btnCompare.setGraphic(compareBox);
+        btnCompare.setText(" 食物对比");
+
+        SVGPath rankIcon = new SVGPath();
+        rankIcon.setContent("M512 266.709333a160 160 0 0 1 160 160l-0.213333 8.277334a160.042667 160.042667 0 0 1-151.509334 151.552l-8.277333 0.213333a160 160 0 0 1 0-320z m0 64a96 96 0 0 0-96 96l0.512 9.813334A96 96 0 0 0 512 522.709333l9.813333-0.469333a96.042667 96.042667 0 0 0 0-191.018667L512 330.709333zM464.64 40.106667a74.709333 74.709333 0 0 1 94.72 0l58.538667 48.085333c2.090667 1.706667 4.736 2.56 7.424 2.432l75.562666-4.48a74.666667 74.666667 0 0 1 76.629334 55.722667l19.072 73.216a10.794667 10.794667 0 0 0 4.608 6.314666l63.786666 40.789334 5.418667 3.84c24.277333 18.773333 34.56 50.602667 25.941333 80.042666l-2.133333 6.229334-27.562667 70.485333a10.709333 10.709333 0 0 0 0 7.765333l27.562667 70.528a74.666667 74.666667 0 0 1-23.808 86.272l-5.418667 3.84-63.786666 40.789334a10.752 10.752 0 0 0-4.608 6.314666l-15.274667 58.538667 103.04 137.429333a53.333333 53.333333 0 0 1-20.608 80.554667l-187.690667 85.290667a53.333333 53.333333 0 0 1-73.514666-34.517334l-41.856-153.472-1.28 1.066667a74.666667 74.666667 0 0 1-94.762667 0l-2.645333-2.133333-41.514667 152.448a53.333333 53.333333 0 0 1-73.514667 34.474666l-187.733333-85.290666a53.333333 53.333333 0 0 1-20.565333-80.554667l103.338666-137.813333-14.592-56.021334a10.752 10.752 0 0 0-2.986666-5.12l-1.578667-1.194666-63.786667-40.789334a74.666667 74.666667 0 0 1-29.269333-90.112l27.605333-70.528 0.512-1.92a10.752 10.752 0 0 0 0-3.925333l-0.512-1.92-27.605333-70.485333a74.666667 74.666667 0 0 1 29.269333-90.112l63.786667-40.789334 1.536-1.194666a10.88 10.88 0 0 0 3.029333-5.12l19.114667-73.216a74.666667 74.666667 0 0 1 76.629333-55.722667l75.562667 4.48a10.752 10.752 0 0 0 7.424-2.432L464.64 40.106667z m280.746667 715.52a74.410667 74.410667 0 0 1-44.501334 11.605333l-75.605333-4.48a10.709333 10.709333 0 0 0-7.381333 2.389333l-3.029334 2.474667 46.08 169.045333 164.181334-74.666666-79.786667-106.410667zM197.845333 859.818667l164.181334 74.666666 45.781333-168.021333-1.706667-1.365333a10.752 10.752 0 0 0-7.424-2.389334l-75.52 4.48a74.538667 74.538667 0 0 1-46.293333-12.8l-79.018667 105.386667zM518.784 89.6a10.752 10.752 0 0 0-13.568 0l-58.453333 48.042667a74.666667 74.666667 0 0 1-51.797334 16.853333l-75.562666-4.48a10.666667 10.666667 0 0 0-10.965334 7.978667l-19.072 73.173333a74.794667 74.794667 0 0 1-26.282666 40.021333l-5.717334 4.096-63.829333 40.789334a10.666667 10.666667 0 0 0-4.138667 12.842666l27.562667 70.485334 2.261333 6.613333c3.84 13.482667 3.84 27.733333 0 41.216l-2.261333 6.613333-27.562667 70.485334a10.666667 10.666667 0 0 0 4.138667 12.885333l63.829333 40.789333 5.674667 4.053334c12.842667 10.026667 22.186667 24.064 26.325333 40.021333l19.072 73.216a10.666667 10.666667 0 0 0 10.922667 7.936l75.562667-4.48c18.773333-1.066667 37.290667 4.949333 51.797333 16.853333l58.496 48.042667a10.709333 10.709333 0 0 0 13.610667 0l58.453333-48.042667c14.506667-11.904 33.024-17.92 51.754667-16.853333l75.605333 4.48a10.666667 10.666667 0 0 0 10.965333-7.936l19.072-73.216c4.736-18.218667 16.213333-33.962667 32-44.074667l63.786667-40.789333 1.450667-1.109333a10.666667 10.666667 0 0 0 2.730666-11.776l-27.605333-70.485334a74.666667 74.666667 0 0 1 0-54.442666l27.605333-70.485334 0.512-1.792a10.709333 10.709333 0 0 0-3.242666-9.941333l-1.450667-1.109333-63.786667-40.789334a74.709333 74.709333 0 0 1-32-44.117333l-19.072-73.173333a10.666667 10.666667 0 0 0-10.965333-7.978667l-75.605333 4.48a74.666667 74.666667 0 0 1-51.712-16.853333l-58.538667-48.042667z");
+        rankIcon.setStyle("-fx-fill: -text-primary;");
+        rankIcon.setScaleX(0.018);
+        rankIcon.setScaleY(0.018);
+        StackPane rankBox = new StackPane(rankIcon);
+        rankBox.setPrefSize(18, 18);
+        rankBox.setMinSize(18, 18);
+        rankBox.setMaxSize(18, 18);
+        btnRank.setGraphic(rankBox);
+        btnRank.setText(" 食物榜单");
+
+        SVGPath mealIcon = new SVGPath();
+        mealIcon.setContent("M778.24 61.44a122.88 122.88 0 0 1 122.88 122.88v655.36a122.88 122.88 0 0 1-122.88 122.88H245.76a122.88 122.88 0 0 1-122.88-122.88V184.32a122.88 122.88 0 0 1 122.88-122.88h532.48z m0 61.44H245.76a61.44 61.44 0 0 0-61.3376 57.83552L184.32 184.32v655.36a61.44 61.44 0 0 0 57.83552 61.3376L245.76 901.12h532.48a61.44 61.44 0 0 0 61.3376-57.83552L839.68 839.68V184.32a61.44 61.44 0 0 0-57.83552-61.3376L778.24 122.88zM563.2 532.48a30.72 30.72 0 0 1 0 61.44h-266.24a30.72 30.72 0 0 1 0-61.44h266.24z m163.84-225.28a30.72 30.72 0 0 1 0 61.44h-430.08a30.72 30.72 0 0 1 0-61.44h430.08z");
+        mealIcon.setStyle("-fx-fill: -text-primary;");
+        mealIcon.setScaleX(0.018);
+        mealIcon.setScaleY(0.018);
+        StackPane mealBox = new StackPane(mealIcon);
+        mealBox.setPrefSize(18, 18);
+        mealBox.setMinSize(18, 18);
+        mealBox.setMaxSize(18, 18);
+        btnMealRecord.setGraphic(mealBox);
+        btnMealRecord.setText(" 膳食记录");
+
+        SVGPath quizIcon = new SVGPath();
+        quizIcon.setContent("M853.333333 768H651.946667l-109.504 117.482667a42.752 42.752 0 0 1-60.586667-0.042667L371.84 768H170.666667C135.36 768 106.666667 747.306667 106.666667 712.021333V170.581333A63.872 63.872 0 0 1 170.666667 106.666667h682.666666c35.328 0 64 28.629333 64 63.914666v541.44C917.333333 747.349333 888.746667 768 853.333333 768z m-225.28-28.501333l15.082667-14.165334H853.333333c11.861333 0 21.333333-1.557333 21.333334-13.312V170.581333A21.312 21.312 0 0 0 853.333333 149.333333H170.666667c-11.861333 0-21.333333 9.472-21.333334 21.248v541.44c0 11.690667 9.557333 13.312 21.333334 13.312h210.496l15.082666 14.165334s115.904 115.904 116.010667 115.797333l115.797333-115.797333zM490.666667 618.666667A21.269333 21.269333 0 0 1 512 597.333333c11.776 0 21.333333 9.450667 21.333333 21.312v21.376A21.269333 21.269333 0 0 1 512 661.333333c-11.776 0-21.333333-9.450667-21.333333-21.312v-21.376z m66.944-115.754667a145.92 145.92 0 0 0-12.501334 5.418667 20.693333 20.693333 0 0 0-12.16 19.029333c-0.106667 3.648 0.042667 7.424-0.768 10.944-2.325333 10.304-12.16 17.344-22.144 16.277333a21.248 21.248 0 0 1-19.562666-20.8c-1.152-30.037333 11.349333-51.925333 38.613333-65.002666a121.813333 121.813333 0 0 1 11.264-4.864c36.970667-13.333333 60.096-49.92 56-88.64-4.117333-38.912-34.773333-70.570667-73.216-75.605334a85.354667 85.354667 0 0 0-96.576 82.154667c-0.085333 2.773333-0.213333 5.653333-0.96 8.32a21.12 21.12 0 0 1-22.954667 15.168 21.248 21.248 0 0 1-18.645333-21.696c0.384-31.36 10.197333-59.541333 31.146667-82.88 34.410667-38.357333 77.653333-52.906667 127.530666-40.277333 50.346667 12.757333 81.557333 46.4 93.717334 97.109333 2.069333 8.661333 2.453333 17.728 3.605333 26.624-1.130667 53.248-32.981333 99.477333-82.389333 118.72z");
+        quizIcon.setStyle("-fx-fill: -text-primary;");
+        quizIcon.setScaleX(0.018);
+        quizIcon.setScaleY(0.018);
+        StackPane quizBox = new StackPane(quizIcon);
+        quizBox.setPrefSize(18, 18);
+        quizBox.setMinSize(18, 18);
+        quizBox.setMaxSize(18, 18);
+        btnQuiz.setGraphic(quizBox);
+        btnQuiz.setText(" 健康问答");
+
+        SVGPath toggleIcon = new SVGPath();
+        toggleIcon.setContent("M128 757.312v85.376h768v-85.376H128z m0-192v85.376h469.312V565.312H128zM896 384l-213.312 128L896 640V384zM128 373.312v85.376h469.312V373.312H128z m0-192v85.376h768V181.312H128z");
+        toggleIcon.setStyle("-fx-fill: -text-primary;");
+        toggleIcon.setScaleX(0.018);
+        toggleIcon.setScaleY(0.018);
+        StackPane toggleBox = new StackPane(toggleIcon);
+        toggleBox.setPrefSize(18, 18);
+        toggleBox.setMinSize(18, 18);
+        toggleBox.setMaxSize(18, 18);
+        toggleNavBtn.setGraphic(toggleBox);
+        toggleNavBtn.setText("");
+
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
             ai.setMainStage((Stage) contentPane.getScene().getWindow());
@@ -166,32 +362,33 @@ public class MainController {
             glassPanel.getChildren().setAll(homeContent);
             loadDashboardData();
         }
-        setTitle("首页");
     }
 
     @FXML
-    void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); setTitle("BMI 记录"); }
+    void showBmiRecord(ActionEvent event) { loadView("bmi_record.fxml"); }
     @FXML
-    void showHistory(ActionEvent event) { loadView("history.fxml"); setTitle("历史记录"); }
+    void showHistory(ActionEvent event) { loadView("history.fxml"); }
     @FXML
-    void showChart(ActionEvent event) { loadView("chart.fxml"); setTitle("BMI 折线图"); }
+    void showChart(ActionEvent event) { loadView("chart.fxml"); }
     @FXML
-    void showPrediction(ActionEvent event) { loadView("prediction.fxml"); setTitle("趋势预测"); }
+    void showPrediction(ActionEvent event) { loadView("prediction.fxml"); }
     @FXML
-    void showPersonalize(ActionEvent event) { loadView("personalize.fxml"); setTitle("个性设置"); }
+    void showPersonalize(ActionEvent event) { loadView("personalize.fxml"); }
     @FXML
-    void showDiet(ActionEvent event) { loadView("diet.fxml"); setTitle("AI 膳食推荐"); }
+    void showDiet(ActionEvent event) { loadView("diet.fxml"); }
 
     public static MainController getInstance() { return instance; }
     public Region getBackdrop() { return backdrop; }
     @FXML
-    void showFood(ActionEvent event) { loadView("food_compare.fxml"); setTitle("食物对比"); }
+    void showFood(ActionEvent event) { loadView("food_compare.fxml"); }
     @FXML
-    void showFoodRank(ActionEvent event) { loadView("food_rank.fxml"); setTitle("食物榜单"); }
+    void showFoodRank(ActionEvent event) { loadView("food_rank.fxml"); }
     @FXML
-    void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); setTitle("膳食记录"); }
+    void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); }
     @FXML
-    void showProfile(ActionEvent event) { loadView("profile.fxml"); setTitle("个人信息"); }
+    void showQuiz(ActionEvent event) { loadView("quiz.fxml"); }
+    @FXML
+    void showProfile(ActionEvent event) { loadView("profile.fxml"); }
 
     @FXML
     void showLogout(ActionEvent event) {
@@ -245,9 +442,5 @@ public class MainController {
         l.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 14px;");
         StackPane.setAlignment(l, javafx.geometry.Pos.CENTER);
         return l;
-    }
-
-    private void setTitle(String title) {
-        if (pageTitle != null) pageTitle.setText(title);
     }
 }
