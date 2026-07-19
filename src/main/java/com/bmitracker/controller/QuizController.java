@@ -20,7 +20,8 @@ public class QuizController {
     @FXML private RadioButton optA, optB, optC, optD;
     @FXML private Label resultScore, resultCorrect, resultWrong;
     @FXML private Button btnClose;
-    @FXML private VBox quizArea, resultArea, resultContent;
+    @FXML private HBox quizArea;
+    @FXML private VBox resultArea, resultContent;
     @FXML private HBox prepareArea;
     @FXML private VBox leaderboardPanel, leaderboardList;
     @FXML private ToggleButton btnWeekly, btnAlltime;
@@ -28,6 +29,8 @@ public class QuizController {
     @FXML private HBox quizNav, resultNav;
     @FXML private Button btnPrevQ, btnNextQ, btnSubmitQ;
     @FXML private Button btnPrevAll, btnNextAll, btnPrevW, btnNextW;
+    @FXML private VBox quizSheetPanel, quizSheetContent;
+    @FXML private ToggleButton quizSheetToggle;
 
     private final QuizService quizService = new QuizService();
     private List<QuizQuestion> questions;
@@ -47,12 +50,16 @@ public class QuizController {
         optC.setToggleGroup(optionGroup);
         optD.setToggleGroup(optionGroup);
         root.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == javafx.scene.input.KeyCode.ENTER && quizArea.isVisible()) {
-                RadioButton s = (RadioButton) optionGroup.getSelectedToggle();
-                if (s != null) {
+            if (e.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                if (quizArea.isVisible()) {
+                    RadioButton s = (RadioButton) optionGroup.getSelectedToggle();
+                    if (s != null) {
+                        e.consume();
+                        if (currentIndex == questions.size() - 1) onSubmit();
+                        else onNext();
+                    }
+                } else if (resultArea.isVisible()) {
                     e.consume();
-                    if (currentIndex == questions.size() - 1) onSubmit();
-                    else onNext();
                 }
             }
         });
@@ -127,6 +134,58 @@ public class QuizController {
         btnPrevQ.setOnAction(e -> onPrev());
         btnNextQ.setOnAction(e -> onNext());
         btnSubmitQ.setOnAction(e -> onSubmit());
+        buildQuizSheet();
+        refresh();
+    }
+
+    private void buildQuizSheet() {
+        quizSheetContent.getChildren().clear();
+        quizSheetPanel.setVisible(true);
+        quizSheetPanel.setManaged(true);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(6); grid.setVgap(6);
+        grid.setAlignment(Pos.CENTER);
+        int cols = 4;
+        for (int i = 0; i < questions.size(); i++) {
+            int idx = i;
+            Label cell = new Label(String.valueOf(i + 1));
+            cell.setPrefSize(36, 36);
+            cell.setMinSize(36, 36);
+            cell.setAlignment(Pos.CENTER);
+            cell.setStyle("-fx-background-color: #374151; -fx-text-fill: #9ca3af; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;");
+            int fi = i;
+            cell.setOnMouseClicked(e -> jumpToQuestion(fi));
+            grid.add(cell, i % cols, i / cols);
+        }
+        quizSheetContent.getChildren().add(grid);
+
+        quizSheetToggle.setSelected(true);
+        quizSheetContent.setVisible(true);
+        quizSheetContent.setManaged(true);
+        quizSheetPanel.setPrefWidth(180);
+        quizSheetPanel.setMinWidth(180);
+        quizSheetPanel.setMaxWidth(180);
+        quizSheetToggle.setText("答题卡 ▶");
+        quizSheetToggle.setOnAction(e -> {
+            boolean expanded = quizSheetToggle.isSelected();
+            double target = expanded ? 180 : 40;
+            javafx.animation.Timeline anim = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.millis(200),
+                    new javafx.animation.KeyValue(quizSheetPanel.prefWidthProperty(), target))
+            );
+            anim.play();
+            quizSheetContent.setVisible(expanded);
+            quizSheetContent.setManaged(expanded);
+            quizSheetToggle.setText(expanded ? "答题卡 ▶" : "◀");
+            quizSheetPanel.setMinWidth(expanded ? 180 : 40);
+            quizSheetPanel.setMaxWidth(expanded ? 180 : 40);
+        });
+    }
+
+    private void jumpToQuestion(int idx) {
+        saveCurrentAnswer();
+        currentIndex = idx;
         refresh();
     }
 
@@ -154,6 +213,25 @@ public class QuizController {
         btnNextQ.setManaged(currentIndex < questions.size() - 1);
         btnSubmitQ.setVisible(currentIndex == questions.size() - 1);
         btnSubmitQ.setManaged(currentIndex == questions.size() - 1);
+        refreshQuizSheet();
+    }
+
+    private void refreshQuizSheet() {
+        GridPane grid = quizSheetContent.getChildren().isEmpty() ? null : (GridPane) quizSheetContent.getChildren().get(0);
+        if (grid == null) return;
+        for (int i = 0; i < questions.size(); i++) {
+            Label cell = (Label) grid.getChildren().get(i);
+            String ua = userAnswers[i];
+            String style;
+            if (i == currentIndex) {
+                style = "-fx-background-color: rgba(96,165,250,0.3); -fx-text-fill: #93c5fd; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-border-color: #60a5fa; -fx-border-width: 1.5px; -fx-border-radius: 6px;";
+            } else if (ua != null) {
+                style = "-fx-background-color: rgba(96,165,250,0.15); -fx-text-fill: #60a5fa; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
+            } else {
+                style = "-fx-background-color: #374151; -fx-text-fill: #9ca3af; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
+            }
+            cell.setStyle(style);
+        }
     }
 
     @FXML

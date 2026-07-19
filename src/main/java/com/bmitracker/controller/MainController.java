@@ -43,7 +43,7 @@ public class MainController {
     @FXML private Rectangle rootClip;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
-    @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord;
+    @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz;
     @FXML private VBox sidebar;
     @FXML private Label avatarLabel, sidebarUserName, dateLabel;
     @FXML private Label welcomeLabel, bmiStatusLabel, trendLabel;
@@ -64,7 +64,7 @@ public class MainController {
     void toggleNav() {
         navExpanded = !navExpanded;
         double target = navExpanded ? 150 : 48;
-        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord};
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz};
         String[] icons = {"🏠", "📊", "📊", "🔮", "🥗", "🍎", "🏆", "📝"};
         String[] texts = {"首页", "BMI 记录", "数据分析", "趋势预测", "膳食推荐", "食物对比", "食物榜单", "膳食记录"};
 
@@ -190,6 +190,8 @@ public class MainController {
     void showFoodRank(ActionEvent event) { loadView("food_rank.fxml"); setTitle("食物榜单"); }
     @FXML
     void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); setTitle("膳食记录"); }
+    @FXML
+    void showQuiz(ActionEvent event) { loadView("quiz.fxml"); setTitle("健康问答"); }
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); setTitle("个人信息"); }
 
