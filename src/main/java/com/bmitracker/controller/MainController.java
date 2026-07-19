@@ -53,6 +53,7 @@ public class MainController {
     @FXML private Rectangle rootClip;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
+    private Node quizView;
     @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz;
     @FXML private VBox sidebar;
     @FXML private Label avatarLabel, sidebarUserName, dateLabel;
@@ -333,7 +334,24 @@ public class MainController {
     @FXML
     void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); setTitle("膳食记录"); }
     @FXML
-    void showQuiz(ActionEvent event) { loadView("quiz.fxml"); setTitle("健康问答"); }
+    void showQuiz(ActionEvent event) {
+        glassPanel.getChildren().setAll(loadingLabel());
+        Platform.runLater(() -> {
+            try {
+                if (quizView == null) {
+                    quizView = FXMLLoader.load(getClass().getResource("/fxml/quiz.fxml"));
+                }
+                glassPanel.getChildren().setAll(quizView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Label err = new Label("加载失败: " + e.getMessage());
+                err.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px;");
+                StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
+                glassPanel.getChildren().setAll(err);
+            }
+        });
+        setTitle("健康问答");
+    }
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); setTitle("个人信息"); }
 

@@ -36,8 +36,12 @@
         <!-- Quiz Area (with nav at bottom) -->
         <HBox fx:id="quizArea" spacing="0" visible="false" managed="false">
             <VBox spacing="14" HBox.hgrow="ALWAYS">
-                <Label fx:id="questionNum" text="问题 1 / 20"
-                       style="-fx-font-size: 14px; -fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Button fx:id="btnQuitQuiz" text="← 退出" styleClass="btn-secondary"
+                            style="-fx-font-size: 12px; -fx-padding: 3 10;"/>
+                    <Label fx:id="questionNum" text="问题 1 / 20"
+                           style="-fx-font-size: 14px; -fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+                </HBox>
 
                 <Label fx:id="questionText" wrapText="true"
                        style="-fx-font-size: 15px; -fx-text-fill: -text-primary; -fx-line-spacing: 4;"/>
@@ -68,6 +72,9 @@
 
         <!-- Result Area (with nav at bottom) -->
         <VBox fx:id="resultArea" spacing="10" visible="false" managed="false">
+            <Button fx:id="btnBackToPrepare" text="← 返回" styleClass="btn-secondary"
+                    style="-fx-font-size: 12px; -fx-padding: 3 10;"/>
+
             <VBox fx:id="resultContent" spacing="10" VBox.vgrow="ALWAYS"/>
 
             <HBox fx:id="resultNav" spacing="6" alignment="CENTER" maxWidth="Infinity"

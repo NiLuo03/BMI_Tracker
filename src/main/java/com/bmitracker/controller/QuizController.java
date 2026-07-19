@@ -27,8 +27,8 @@ public class QuizController {
     @FXML private ToggleButton btnWeekly, btnAlltime;
     @FXML private StackPane root;
     @FXML private HBox quizNav, resultNav;
-    @FXML private Button btnPrevQ, btnNextQ, btnSubmitQ;
-    @FXML private Button btnPrevAll, btnNextAll, btnPrevW, btnNextW;
+    @FXML private Button btnPrevQ, btnNextQ, btnSubmitQ, btnQuitQuiz;
+    @FXML private Button btnPrevAll, btnNextAll, btnPrevW, btnNextW, btnBackToPrepare;
     @FXML private VBox quizSheetPanel, quizSheetContent;
     @FXML private ToggleButton quizSheetToggle;
 
@@ -134,6 +134,7 @@ public class QuizController {
         btnPrevQ.setOnAction(e -> onPrev());
         btnNextQ.setOnAction(e -> onNext());
         btnSubmitQ.setOnAction(e -> onSubmit());
+        btnQuitQuiz.setOnAction(e -> onQuitQuiz());
         buildQuizSheet();
         refresh();
     }
@@ -395,6 +396,7 @@ public class QuizController {
         btnNextAll.setOnAction(e -> { if (currentIndex < questions.size() - 1) showWrongReview(currentIndex + 1); });
         btnPrevW.setOnAction(e -> { int p = findPrevWrong(currentIndex); if (p >= 0) showWrongReview(p); });
         btnNextW.setOnAction(e -> { int n = findNextWrong(currentIndex); if (n >= 0) showWrongReview(n); });
+        btnBackToPrepare.setOnAction(e -> onBackToPrepare());
 
         wrongCursor = 0;
         showWrongReview(wrongIdxList.isEmpty() ? 0 : wrongIdxList.get(0));
@@ -493,6 +495,34 @@ public class QuizController {
             if (w > from && (best < 0 || w < best)) best = w;
         }
         return best;
+    }
+
+    @FXML
+    void onQuitQuiz() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("退出答题");
+        alert.setHeaderText(null);
+        alert.setContentText("退出将不记录此次成绩，确定要退出吗？");
+        alert.initOwner(optA.getScene().getWindow());
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            quizArea.setVisible(false);
+            quizArea.setManaged(false);
+            prepareArea.setVisible(true);
+            prepareArea.setManaged(true);
+            loadLeaderboard(btnWeekly.isSelected());
+        }
+    }
+
+    @FXML
+    void onBackToPrepare() {
+        resultArea.setVisible(false);
+        resultArea.setManaged(false);
+        prepareArea.setVisible(true);
+        prepareArea.setManaged(true);
+        leaderboardPanel.setVisible(true);
+        leaderboardPanel.setManaged(true);
+        loadLeaderboard(btnWeekly.isSelected());
     }
 
     @FXML
