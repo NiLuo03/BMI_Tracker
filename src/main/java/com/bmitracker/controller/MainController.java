@@ -2,19 +2,25 @@ package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
 import com.bmitracker.component.TitleBar;
+import com.bmitracker.component.WheelPicker;
 import com.bmitracker.model.BmiRecord;
 import com.bmitracker.service.BmiService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -26,6 +32,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Color;
@@ -34,7 +41,9 @@ import javafx.scene.paint.Stop;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MainController {
 
@@ -58,6 +67,11 @@ public class MainController {
     @FXML private Label dashBmi, dashStatus, dashIdealWeight, dashRecords, dashTrend;
     @FXML private Label historySummary;
     @FXML private VBox homeContent;
+    @FXML private TextField homeHeightField;
+    @FXML private TextField homeWeightField;
+    private Popup homeHeightPopup;
+    private Popup homeWeightPopup;
+    private Node quizView;
 
     private boolean navExpanded = true;
     private final BmiService bmiService = new BmiService();
@@ -172,6 +186,8 @@ public class MainController {
         loadDashboardData();
         if (root != null) rootPane = root;
         changeBackdrop("#ffffff");
+
+        setupHomePickers();
 
         SVGPath homeIcon = new SVGPath();
         homeIcon.setContent("M861.866667 401.749333a13.960533 13.960533 0 0 0-6.485334-11.400533l-332.8-225.041067a19.285333 19.285333 0 0 0-21.162666 0l-332.8 225.041067a13.960533 13.960533 0 0 0-6.485334 11.434667v421.205333c0 19.8656 17.476267 38.912 42.666667 38.912h614.4c25.1904 0 42.666667-19.0464 42.666667-38.912V401.749333z m-288.017067 158.242134a61.883733 61.883733 0 1 0-123.733333 0 61.883733 61.883733 0 0 0 123.767466 0z m68.266667 0a130.116267 130.116267 0 1 1-260.232534 0 130.116267 130.116267 0 0 1 260.232534 0z m288.017066 262.9632c0 60.791467-51.3024 107.178667-110.933333 107.178666H204.8c-59.630933 0-110.933333-46.3872-110.933333-107.178666V401.749333c0-27.5456 14.0288-52.736 36.522667-67.925333l332.8-225.0752c29.354667-19.831467 68.266667-19.831467 97.621334 0l332.8 225.041067a82.158933 82.158933 0 0 1 36.522666 67.9936v421.205333z");
@@ -306,9 +322,133 @@ public class MainController {
 
         Platform.runLater(() -> {
             AIChatController ai = AIChatController.getInstance();
-            ai.setMainStage((Stage) contentPane.getScene().getWindow());
+            Stage stage = (Stage) contentPane.getScene().getWindow();
+            ai.setMainStage(stage);
             ai.show();
+            stage.focusedProperty().addListener((o, ov, focused) -> {
+                if (focused) return;
+                if (homeHeightPopup != null) homeHeightPopup.hide();
+                if (homeWeightPopup != null) homeWeightPopup.hide();
+            });
         });
+    }
+
+    private void setupHomePickers() {
+        homeHeightField.setEditable(false);
+        homeHeightField.setFocusTraversable(false);
+        homeWeightField.setEditable(false);
+        homeWeightField.setFocusTraversable(false);
+
+        homeHeightField.sceneProperty().addListener((obs, old, sc) -> {
+            if (sc == null) return;
+            sc.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> dismissHomePopup(e, homeHeightPopup, homeHeightField));
+            sc.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> dismissHomePopup(e, homeWeightPopup, homeWeightField));
+        });
+
+        homeHeightField.setOnMouseClicked(e -> {
+            if (homeHeightPopup != null && homeHeightPopup.isShowing()) { homeHeightPopup.hide(); return; }
+            if (homeHeightField.getText() == null || homeHeightField.getText().trim().isEmpty())
+                homeHeightField.setText("165");
+            showHomePicker(homeHeightField, homeHeightPopup, 100, 220, 165, p -> homeHeightPopup = p);
+        });
+
+        homeWeightField.setOnMouseClicked(e -> {
+            if (homeWeightPopup != null && homeWeightPopup.isShowing()) { homeWeightPopup.hide(); return; }
+            if (homeWeightField.getText() == null || homeWeightField.getText().trim().isEmpty())
+                homeWeightField.setText("60");
+            showHomePicker(homeWeightField, homeWeightPopup, 25, 250, 60, p -> homeWeightPopup = p);
+        });
+    }
+
+    private void dismissHomePopup(MouseEvent event, Popup popup, TextField field) {
+        if (popup == null || !popup.isShowing()) return;
+        EventTarget target = event.getTarget();
+        if (target instanceof Node) {
+            Node node = (Node) target;
+            if (node == field) return;
+            for (Node n : popup.getContent()) {
+                if (isNodeChild(node, n)) return;
+            }
+        }
+        popup.hide();
+    }
+
+    private void showHomePicker(TextField field, Popup existingPopup, int min, int max, int defaultVal,
+                                Consumer<Popup> setter) {
+        if (existingPopup != null) existingPopup.hide();
+        double pw = Math.max(field.getWidth(), 100);
+        WheelPicker<Integer> wheel = new WheelPicker<>();
+        wheel.setVisibleItems(3);
+        wheel.setItemHeight(32);
+        wheel.setPrefWidth(pw);
+        wheel.setPrefHeight(110);
+        List<Integer> items = new ArrayList<>();
+        for (int i = min; i <= max; i++) items.add(i);
+        wheel.setItems(items);
+        int current = defaultVal;
+        try {
+            current = Integer.parseInt(field.getText().trim());
+            if (current < min || current > max) current = defaultVal;
+        } catch (NumberFormatException ignored) {}
+        final int def = current;
+        wheel.valueProperty().addListener((obs, old, val) -> {
+            if (val != null) field.setText(String.valueOf(val));
+        });
+        wheel.setLightTheme(isLightTheme());
+        StackPane container = new StackPane(wheel);
+        container.setPadding(new Insets(12, 0, 12, 0));
+        container.setMinWidth(pw);
+        container.getStyleClass().add("wheel-popup");
+        if (isLightTheme()) container.getStyleClass().add("light-theme");
+        container.setVisible(false);
+        Popup popup = new Popup();
+        popup.setAutoHide(false);
+        popup.setHideOnEscape(true);
+        popup.getContent().add(container);
+        setter.accept(popup);
+        Bounds bounds = field.localToScreen(field.getBoundsInLocal());
+        popup.show(field, bounds.getMinX(), bounds.getMaxY());
+        Platform.runLater(() -> {
+            wheel.resize(pw, 180);
+            wheel.setSelectedIndex(def - min);
+            container.setVisible(true);
+        });
+    }
+
+    private boolean isLightTheme() {
+        if (rootPane != null) return rootPane.getStyleClass().contains("light-theme");
+        return false;
+    }
+
+    private static boolean isNodeChild(Node target, Node root) {
+        Node n = target;
+        while (n != null) {
+            if (n == root) return true;
+            n = n.getParent();
+        }
+        return false;
+    }
+
+    @FXML
+    void handleHomeRecord(ActionEvent event) {
+        String heightText = homeHeightField.getText();
+        String weightText = homeWeightField.getText();
+        if (heightText == null || heightText.trim().isEmpty()) { homeHeightField.setText("165"); heightText = "165"; }
+        if (weightText == null || weightText.trim().isEmpty()) { homeWeightField.setText("60"); weightText = "60"; }
+        try {
+            double height = Double.parseDouble(heightText);
+            double weight = Double.parseDouble(weightText);
+            String error = bmiService.saveRecord(BMIApplication.currentUserId, height, weight);
+            if (error == null) {
+                double bmi = bmiService.calculateBMI(height, weight);
+                String status = bmiService.getHealthStatus(bmi);
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("BMI结果"); a.setHeaderText(null);
+                a.setContentText(String.format("您的 BMI 为 %.1f，状态：%s", bmi, status));
+                a.showAndWait();
+                loadDashboardData();
+            }
+        } catch (NumberFormatException ignored) {}
     }
 
     private void loadSidebarUser() {
@@ -386,7 +526,23 @@ public class MainController {
     @FXML
     void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); }
     @FXML
-    void showQuiz(ActionEvent event) { loadView("quiz.fxml"); }
+    void showQuiz(ActionEvent event) {
+        glassPanel.getChildren().setAll(loadingLabel());
+        Platform.runLater(() -> {
+            try {
+                if (quizView == null) {
+                    quizView = FXMLLoader.load(getClass().getResource("/fxml/quiz.fxml"));
+                }
+                glassPanel.getChildren().setAll(quizView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Label err = new Label("加载失败: " + e.getMessage());
+                err.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px;");
+                StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
+                glassPanel.getChildren().setAll(err);
+            }
+        });
+    }
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); }
 
