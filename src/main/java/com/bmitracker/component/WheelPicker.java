@@ -141,7 +141,7 @@ public class WheelPicker<T> extends Pane {
         }
     }
 
-    public double getItemHeight() { return itemHeight; }
+    public double getItemHeight() {return itemHeight; }
     public void setItemHeight(double h) { itemHeight = h; draw(); }
 
     public int getVisibleItems() { return visibleItems; }
@@ -269,8 +269,12 @@ public class WheelPicker<T> extends Pane {
     }
 
     @Override
-    protected double computePrefWidth(double height) { return 140; }
+    protected double computePrefWidth(double height) {
+        return 140;
+    }
 
     @Override
-    protected double computePrefHeight(double width) { return visibleItems * itemHeight; }
+    protected double computePrefHeight(double width) {
+        return visibleItems * itemHeight;
+    }
 }
