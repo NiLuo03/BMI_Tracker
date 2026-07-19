@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
 
 public class ProfileController {
 
@@ -43,19 +44,23 @@ public class ProfileController {
 
     @FXML
     void handleSave(ActionEvent event) {
+        clearFieldError(ageField);
+        clearFieldError(heightField);
+        clearFieldError(weightField);
         User user = userService.getUserById(BMIApplication.currentUserId);
         if (user == null) return;
         try {
             user.setUserAge(Integer.parseInt(ageField.getText()));
         } catch (NumberFormatException e) {
-            showAlert("请输入有效年龄"); return;
+            showFieldError(ageField, "请输入有效年龄"); return;
         }
         user.setSex(maleRadio.isSelected() ? 0 : 1);
         try {
             user.setHeight(Double.parseDouble(heightField.getText()));
             user.setWeight(Double.parseDouble(weightField.getText()));
         } catch (NumberFormatException e) {
-            showAlert("请输入有效的身高和体重"); return;
+            showFieldError(heightField, "请输入有效身高");
+            showFieldError(weightField, "请输入有效体重"); return;
         }
         user.setPreferences(preferencesField.getText());
 
@@ -63,7 +68,7 @@ public class ProfileController {
         if (error == null) {
             showInfo("保存成功");
         } else {
-            showAlert(error);
+            showFieldError(ageField, error);
         }
     }
 
@@ -86,8 +91,46 @@ public class ProfileController {
         a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
     }
 
+
+
     private void showInfo(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+    }
+    private Label ageError;
+    private Label heightError;
+    private Label weightError;
+
+    private void showFieldError(TextField field, String msg) {
+        field.getStyleClass().add("text-field-error");
+        Label errorLabel = null;
+        if (field == ageField) errorLabel = ageError;
+        else if (field == heightField) errorLabel = heightError;
+        else if (field == weightField) errorLabel = weightError;
+        if (errorLabel == null) {
+            errorLabel = new Label(msg);
+            errorLabel.getStyleClass().add("error-label");
+            VBox parent = (VBox) field.getParent();
+            int idx = parent.getChildren().indexOf(field);
+            parent.getChildren().add(idx + 1, errorLabel);
+            if (field == ageField) ageError = errorLabel;
+            else if (field == heightField) heightError = errorLabel;
+            else if (field == weightField) weightError = errorLabel;
+        } else {
+            errorLabel.setText(msg);
+            errorLabel.setVisible(true);
+        }
+    }
+
+    private void clearFieldError(TextField field) {
+        field.getStyleClass().removeAll("text-field-error");
+        Label errorLabel = null;
+        if (field == ageField) errorLabel = ageError;
+        else if (field == heightField) errorLabel = heightError;
+        else if (field == weightField) errorLabel = weightError;
+        if (errorLabel != null) {
+            errorLabel.setVisible(false);
+            errorLabel.setText("");
+        }
     }
 }

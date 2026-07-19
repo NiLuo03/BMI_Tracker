@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -123,22 +124,17 @@ public class FoodRankController {
             int cardHeight = isTop3 ? 140 : 64;
             int imgSize = isTop3 ? 100 : 52;
 
-            HBox card = new HBox(16);
-            card.setAlignment(Pos.CENTER_LEFT);
-            card.setPadding(new Insets(isTop3 ? 18 : 6, 20, isTop3 ? 18 : 6, 20));
-            card.setPrefHeight(cardHeight);
-            card.setMinHeight(cardHeight);
-            card.setMaxHeight(cardHeight);
+            HBox inner = new HBox(16);
+            inner.setAlignment(Pos.CENTER_LEFT);
+            inner.setPadding(new Insets(isTop3 ? 18 : 6, 20, isTop3 ? 18 : 6, 20));
+            inner.setPrefHeight(cardHeight);
+            inner.setMinHeight(cardHeight);
+            inner.setMaxHeight(cardHeight);
+            inner.getStyleClass().add("gradient-card-inner");
 
-            if (rank == 1) {
-                card.setStyle("-fx-background-color: linear-gradient(to right, rgba(255,215,0,0.15), rgba(255,215,0,0.05)); -fx-background-radius: 12; -fx-border-color: rgba(255,215,0,0.30); -fx-border-width: 1; -fx-border-radius: 12;");
-            } else if (rank == 2) {
-                card.setStyle("-fx-background-color: linear-gradient(to right, rgba(192,192,192,0.12), rgba(192,192,192,0.04)); -fx-background-radius: 12; -fx-border-color: rgba(192,192,192,0.25); -fx-border-width: 1; -fx-border-radius: 12;");
-            } else if (rank == 3) {
-                card.setStyle("-fx-background-color: linear-gradient(to right, rgba(205,127,50,0.12), rgba(205,127,50,0.04)); -fx-background-radius: 12; -fx-border-color: rgba(205,127,50,0.25); -fx-border-width: 1; -fx-border-radius: 12;");
-            } else {
-                card.setStyle("-fx-background-color: rgba(255,255,255,0.03); -fx-background-radius: 10; -fx-border-color: rgba(255,255,255,0.06); -fx-border-width: 1; -fx-border-radius: 10;");
-            }
+            StackPane outer = new StackPane(inner);
+            outer.getStyleClass().add("gradient-card");
+            outer.setMaxHeight(cardHeight + 4);
 
             Label rankLabel = new Label(isTop3 ? medal(rank) : "#" + rank);
             rankLabel.setFont(Font.font("System", isTop3 ? FontWeight.BOLD : FontWeight.NORMAL, isTop3 ? 26 : 14));
@@ -177,8 +173,8 @@ public class FoodRankController {
             valueLabel.setFont(Font.font("System", FontWeight.BOLD, isTop3 ? 24 : 16));
             valueLabel.setStyle("-fx-text-fill: " + (isTop3 ? "#34d399" : "#6b7280") + ";");
 
-            card.getChildren().addAll(rankLabel, imgView, info, valueLabel);
-            rankList.getChildren().add(card);
+            inner.getChildren().addAll(rankLabel, imgView, info, valueLabel);
+            rankList.getChildren().add(outer);
         }
     }
 

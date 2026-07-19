@@ -8,6 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ChangePasswordController {
@@ -20,6 +23,9 @@ public class ChangePasswordController {
 
     @FXML
     void handleChange(ActionEvent event) {
+        clearFieldError(oldPwdField);
+        clearFieldError(newPwdField);
+        clearFieldError(confirmPwdField);
         String oldPwd = oldPwdField.getText();
         String newPwd = newPwdField.getText();
         String confirmPwd = confirmPwdField.getText();
@@ -39,7 +45,7 @@ public class ChangePasswordController {
                 showAlert("页面加载失败");
             }
         } else {
-            showAlert(error);
+            showFieldError(oldPwdField, error);
         }
     }
 
@@ -56,14 +62,51 @@ public class ChangePasswordController {
             showAlert("页面加载失败");
         }
     }
-
     private void showAlert(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
         a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
     }
 
+
+
     private void showInfo(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+    }
+    private Label oldPwdError;
+    private Label newPwdError;
+    private Label confirmPwdError;
+
+    private void showFieldError(TextField field, String msg) {
+        field.getStyleClass().add("text-field-error");
+        Label errorLabel = null;
+        if (field == oldPwdField) errorLabel = oldPwdError;
+        else if (field == newPwdField) errorLabel = newPwdError;
+        else if (field == confirmPwdField) errorLabel = confirmPwdError;
+        if (errorLabel == null) {
+            errorLabel = new Label(msg);
+            errorLabel.getStyleClass().add("error-label");
+            VBox parent = (VBox) field.getParent();
+            int idx = parent.getChildren().indexOf(field);
+            parent.getChildren().add(idx + 1, errorLabel);
+            if (field == oldPwdField) oldPwdError = errorLabel;
+            else if (field == newPwdField) newPwdError = errorLabel;
+            else if (field == confirmPwdField) confirmPwdError = errorLabel;
+        } else {
+            errorLabel.setText(msg);
+            errorLabel.setVisible(true);
+        }
+    }
+
+    private void clearFieldError(TextField field) {
+        field.getStyleClass().removeAll("text-field-error");
+        Label errorLabel = null;
+        if (field == oldPwdField) errorLabel = oldPwdError;
+        else if (field == newPwdField) errorLabel = newPwdError;
+        else if (field == confirmPwdField) errorLabel = confirmPwdError;
+        if (errorLabel != null) {
+            errorLabel.setVisible(false);
+            errorLabel.setText("");
+        }
     }
 }

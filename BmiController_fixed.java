@@ -1,4 +1,4 @@
-package com.bmitracker.controller;
+﻿package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
 import com.bmitracker.service.BmiService;
@@ -6,9 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.Node;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class BmiController {
 
@@ -16,6 +15,8 @@ public class BmiController {
     @FXML private TextField weightField;
 
     private final BmiService bmiService = new BmiService();
+    private Label heightError;
+    private Label weightError;
 
     @FXML
     void handleCalculate(ActionEvent event) {
@@ -44,13 +45,10 @@ public class BmiController {
         }
     }
 
-
     private void showInfo(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setTitle("BMI结果"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
     }
-    private Label heightError;
-    private Label weightError;
 
     private void showFieldError(TextField field, String msg) {
         field.getStyleClass().add("text-field-error");
@@ -78,3 +76,4 @@ public class BmiController {
         }
     }
 }
+

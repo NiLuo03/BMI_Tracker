@@ -16,40 +16,44 @@
     <!-- 两张预览卡片 -->
     <HBox spacing="14" VBox.vgrow="ALWAYS">
         <!-- 卡片1：折线图预览 -->
-        <VBox fx:id="chartCard" HBox.hgrow="ALWAYS" spacing="6" styleClass="card"
-              style="-fx-padding: 14px; -fx-cursor: hand;"
-              onMouseClicked="#openChartDetail">
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="BMI 变化趋势" styleClass="label-heading" style="-fx-font-size: 15px;"/>
-                <HBox HBox.hgrow="ALWAYS"/>
-                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
-            </HBox>
-            <LineChart fx:id="previewChart" prefHeight="200" styleClass="chart-dark"
-                       mouseTransparent="true">
-                <xAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></xAxis>
-                <yAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></yAxis>
-            </LineChart>
-            <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
-        </VBox>
+        <StackPane HBox.hgrow="ALWAYS" styleClass="gradient-card">
+            <VBox fx:id="chartCard" spacing="6" styleClass="gradient-card-inner"
+                  style="-fx-padding: 14px; -fx-cursor: hand;"
+                  onMouseClicked="#openChartDetail">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="BMI 变化趋势" styleClass="label-heading" style="-fx-font-size: 15px;"/>
+                    <HBox HBox.hgrow="ALWAYS"/>
+                    <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                </HBox>
+                <LineChart fx:id="previewChart" prefHeight="200" styleClass="chart-dark"
+                           mouseTransparent="true">
+                    <xAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></xAxis>
+                    <yAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></yAxis>
+                </LineChart>
+                <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+            </VBox>
+        </StackPane>
 
         <!-- 卡片2：历史记录预览 -->
-        <VBox fx:id="tableCard" HBox.hgrow="ALWAYS" spacing="6" styleClass="card"
-              style="-fx-padding: 14px; -fx-cursor: hand;"
-              onMouseClicked="#openTableDetail">
-            <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="历史记录" styleClass="label-heading" style="-fx-font-size: 15px;"/>
-                <HBox HBox.hgrow="ALWAYS"/>
-                <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
-            </HBox>
-            <TableView fx:id="previewTable" prefHeight="200" styleClass="table-view-dark" mouseTransparent="true">
-                <columns>
-                    <TableColumn fx:id="preColId" text="#" prefWidth="40"/>
-                    <TableColumn fx:id="preColBmi" text="BMI" prefWidth="55"/>
-                    <TableColumn fx:id="preColDate" text="日期" prefWidth="100"/>
-                </columns>
-            </TableView>
-            <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
-        </VBox>
+        <StackPane HBox.hgrow="ALWAYS" styleClass="gradient-card">
+            <VBox fx:id="tableCard" spacing="6" styleClass="gradient-card-inner"
+                  style="-fx-padding: 14px; -fx-cursor: hand;"
+                  onMouseClicked="#openTableDetail">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="历史记录" styleClass="label-heading" style="-fx-font-size: 15px;"/>
+                    <HBox HBox.hgrow="ALWAYS"/>
+                    <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                </HBox>
+                <TableView fx:id="previewTable" prefHeight="200" styleClass="table-view-dark" mouseTransparent="true">
+                    <columns>
+                        <TableColumn fx:id="preColId" text="#" prefWidth="40"/>
+                        <TableColumn fx:id="preColBmi" text="BMI" prefWidth="55"/>
+                        <TableColumn fx:id="preColDate" text="日期" prefWidth="100"/>
+                    </columns>
+                </TableView>
+                <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+            </VBox>
+        </StackPane>
     </HBox>
 
     <!-- 折线图详情面板（默认隐藏） -->

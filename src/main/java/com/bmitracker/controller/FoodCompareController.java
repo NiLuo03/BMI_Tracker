@@ -135,22 +135,25 @@ public class FoodCompareController implements Initializable {
         compareContent.getChildren().add(new Region() {{ setMinHeight(40); }});
     }
 
-    private VBox foodCard(Food f) {
-        VBox card = new VBox(8);
-        card.setAlignment(Pos.TOP_CENTER);
-        card.setPrefWidth(260);
-        card.setStyle("-fx-background-color: rgba(255,255,255,0.04); -fx-background-radius: 14; -fx-padding: 20; -fx-border-color: rgba(16,185,129,0.08); -fx-border-width: 1; -fx-border-radius: 14;");
+    private StackPane foodCard(Food f) {
+        VBox inner = new VBox(8);
+        inner.setAlignment(Pos.TOP_CENTER);
+        inner.setPrefWidth(260);
+        inner.getStyleClass().add("gradient-card-inner");
+        inner.setStyle("-fx-padding: 20;");
 
         if (f == null) {
             Label placeholder = new Label("未选择");
             placeholder.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 14;");
-            card.getChildren().add(placeholder);
-            return card;
+            inner.getChildren().add(placeholder);
+            StackPane outer = new StackPane(inner);
+            outer.getStyleClass().add("gradient-card");
+            return outer;
         }
         Label nameLabel = new Label(f.getFoodName());
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
         nameLabel.setStyle("-fx-text-fill: #d0d0d0;");
-        card.getChildren().add(nameLabel);
+        inner.getChildren().add(nameLabel);
 
         // 食物图片
         try {
@@ -162,14 +165,17 @@ public class FoodCompareController implements Initializable {
                 imgView.setPreserveRatio(true);
                 Image img = new Image(getClass().getResource("/images/foods/" + imgPath).toExternalForm(), 180, 180, true, true, true);
                 imgView.setImage(img);
-                card.getChildren().add(imgView);
+                inner.getChildren().add(imgView);
             }
         } catch (Exception ignored) {}
 
         Label catLabel = new Label(f.getCategory());
         catLabel.setStyle("-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #10b981; -fx-background-radius: 4; -fx-padding: 2 8; -fx-font-size: 12;");
-        card.getChildren().add(catLabel);
-        return card;
+        inner.getChildren().add(catLabel);
+
+        StackPane outer = new StackPane(inner);
+        outer.getStyleClass().add("gradient-card");
+        return outer;
     }
 
     private void buildSpecRow(String label, Food f1, Food f2, java.util.function.Function<Food, String> extractor) {

@@ -15,20 +15,28 @@
 
     <Button text="🥗 生成推荐" onAction="#handleGenerate" styleClass="btn-primary" maxWidth="200"/>
 
-    <TitledPane text="🌅  早餐" expanded="true" styleClass="meal-panel">
-        <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"
-               wrapText="true" styleClass="meal-content" maxWidth="500"/>
-    </TitledPane>
-    <TitledPane text="☀️  午餐" expanded="true" styleClass="meal-panel">
-        <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"
-               wrapText="true" styleClass="meal-content" maxWidth="500"/>
-    </TitledPane>
-    <TitledPane text="🌙  晚餐" expanded="true" styleClass="meal-panel">
-        <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"
-               wrapText="true" styleClass="meal-content" maxWidth="500"/>
-    </TitledPane>
-    <TitledPane text="📊  总热量" expanded="true" styleClass="meal-panel">
-        <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"
-               styleClass="calorie-highlight"/>
-    </TitledPane>
+    <StackPane styleClass="gradient-card">
+        <TitledPane text="🌅  早餐" expanded="true" styleClass="meal-panel">
+            <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"
+                   wrapText="true" styleClass="meal-content" maxWidth="500"/>
+        </TitledPane>
+    </StackPane>
+    <StackPane styleClass="gradient-card">
+        <TitledPane text="☀️  午餐" expanded="true" styleClass="meal-panel">
+            <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"
+                   wrapText="true" styleClass="meal-content" maxWidth="500"/>
+        </TitledPane>
+    </StackPane>
+    <StackPane styleClass="gradient-card">
+        <TitledPane text="🌙  晚餐" expanded="true" styleClass="meal-panel">
+            <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"
+                   wrapText="true" styleClass="meal-content" maxWidth="500"/>
+        </TitledPane>
+    </StackPane>
+    <StackPane styleClass="gradient-card">
+        <TitledPane text="📊  总热量" expanded="true" styleClass="meal-panel">
+            <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"
+                   styleClass="calorie-highlight"/>
+        </TitledPane>
+    </StackPane>
 </VBox>

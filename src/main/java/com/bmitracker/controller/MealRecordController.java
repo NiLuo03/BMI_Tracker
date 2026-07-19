@@ -309,7 +309,7 @@ public class MealRecordController {
             final int idx = i;
 
             HBox card = new HBox(4);
-            card.setStyle("-fx-padding: 4 6; -fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 6;");
+            card.setStyle("-fx-padding: 4 6; -fx-background-color: #1a1a1a; -fx-background-radius: 6; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1px; -fx-border-radius: 6;");
             card.setAlignment(Pos.CENTER_LEFT);
 
             Label name = new Label(entry.food.getFoodName());

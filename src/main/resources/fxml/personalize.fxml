@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
 
 <VBox spacing="16" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.PersonalizeController"
@@ -15,9 +16,18 @@
 
     <Label text="背景颜色" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
 
-    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
-        <VBox fx:id="colorGrid" spacing="10" padding="0 0 20 0"/>
-    </ScrollPane>
+    <FlowPane hgap="20" vgap="14">
+        <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectBlack">
+            <Rectangle width="80" height="80" fill="#000000" arcWidth="14" arcHeight="14"
+                       stroke="rgba(255,255,255,0.20)" strokeWidth="1.5"/>
+            <Label text="纯黑" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
+        </VBox>
+        <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectWhite">
+            <Rectangle width="80" height="80" fill="#ffffff" arcWidth="14" arcHeight="14"
+                       stroke="rgba(255,255,255,0.20)" strokeWidth="1.5"/>
+            <Label text="纯白" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
+        </VBox>
+    </FlowPane>
 
     <Label fx:id="hintLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
 </VBox>
