@@ -13,6 +13,9 @@ public class MealRecord {
 
     private String foodName;
     private double foodCalories;
+    private double foodProtein;
+    private double foodFat;
+    private double foodCarb;
 
     public MealRecord() {}
 
@@ -46,5 +49,17 @@ public class MealRecord {
     public double getFoodCalories() { return foodCalories; }
     public void setFoodCalories(double v) { foodCalories = v; }
 
+    public double getFoodProtein() { return foodProtein; }
+    public void setFoodProtein(double v) { foodProtein = v; }
+
+    public double getFoodFat() { return foodFat; }
+    public void setFoodFat(double v) { foodFat = v; }
+
+    public double getFoodCarb() { return foodCarb; }
+    public void setFoodCarb(double v) { foodCarb = v; }
+
     public double getCalories() { return foodCalories * getGrams() / 100.0; }
+    public double getProtein() { return foodProtein * getGrams() / 100.0; }
+    public double getFat() { return foodFat * getGrams() / 100.0; }
+    public double getCarb() { return foodCarb * getGrams() / 100.0; }
 }

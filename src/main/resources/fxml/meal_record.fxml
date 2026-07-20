@@ -1,84 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.MealRecordController"
-      style="-fx-background-color: transparent;">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+      style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
-    <Label text="膳食记录" styleClass="label-heading"/>
-    <Label text="选择食物和克数，查看营养摄入汇总" styleClass="label-subheading"/>
-
-    <!-- 日期导航 -->
-    <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
-        <Button text="◀" onAction="#prevDay"
-                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: -text-secondary; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
-        <Label fx:id="dateLabel" text="" style="-fx-font-size: 14px; -fx-text-fill: -text-primary; -fx-font-weight: bold;"/>
-        <Button fx:id="nextDayBtn" text="▶" onAction="#nextDay"
-                style="-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: -text-secondary; -fx-font-size: 13px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+    <HBox alignment="CENTER_LEFT">
+        <Label text="膳食记录" styleClass="label-heading"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="💾 保存记录" onAction="#handleSave"
-                styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 4 12;"/>
-        <Button text="📅 近7天" onAction="#showWeekSummary"
-                style="-fx-background-color: rgba(255,255,255,0.04); -fx-text-fill: -text-secondary; -fx-font-size: 11px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand;"/>
+        <Button text="记一餐" styleClass="btn-primary" onAction="#handleAddMeal"/>
     </HBox>
 
-    <!-- 餐次选择标签 -->
-    <HBox spacing="6" style="-fx-padding: 4 0 0 0;">
-        <Button fx:id="mealBreakfastBtn" text="🌅 早餐" onAction="#selectBreakfast"
-                styleClass="meal-tab-active" prefWidth="90"/>
-        <Button fx:id="mealLunchBtn" text="☀️ 午餐" onAction="#selectLunch"
-                styleClass="meal-tab" prefWidth="90"/>
-        <Button fx:id="mealDinnerBtn" text="🌙 晚餐" onAction="#selectDinner"
-                styleClass="meal-tab" prefWidth="90"/>
-        <Button fx:id="mealSnackBtn" text="🍪 加餐" onAction="#selectSnack"
-                styleClass="meal-tab" prefWidth="90"/>
+    <HBox fx:id="contentArea" VBox.vgrow="ALWAYS" spacing="14">
+        <VBox fx:id="leftArea" spacing="8" VBox.vgrow="ALWAYS">
+            <VBox fx:id="chartBox" styleClass="gradient-card">
+                <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                <Canvas fx:id="chartCanvas" height="180"/>
+            </VBox>
+
+            <ScrollPane fx:id="listScroll" VBox.vgrow="ALWAYS" fitToWidth="true"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox fx:id="mealListBox" spacing="8" style="-fx-background-color: transparent;"/>
+            </ScrollPane>
+        </VBox>
+
+        <VBox fx:id="rightArea" spacing="8" alignment="TOP_CENTER">
+            <HBox fx:id="monthNav" alignment="CENTER_LEFT">
+                <Button fx:id="prevMonthBtn" text="◀" styleClass="top-nav-btn"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="monthLabel" text="2026.07"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="nextMonthBtn" text="▶" styleClass="top-nav-btn"/>
+            </HBox>
+
+            <VBox fx:id="calendarBox"
+                  style="-fx-background-color: rgba(0,0,0,0.02);
+                         -fx-background-radius: 10px;
+                         -fx-border-color: rgba(0,0,0,0.06);
+                         -fx-border-width: 1px;
+                         -fx-border-radius: 10px;
+                         -fx-padding: 10 6 6 6;">
+                <GridPane fx:id="calendarGrid" hgap="0" vgap="0"
+                          style="-fx-background-color: transparent;"/>
+            </VBox>
+        </VBox>
     </HBox>
-
-    <!-- 食物选择区（仅当天显示） -->
-    <VBox fx:id="foodSection" spacing="10">
-        <TextField fx:id="searchField" promptText="输入关键字筛选食物..."
-                   styleClass="text-field-dark" HBox.hgrow="ALWAYS"/>
-        <Label fx:id="foodCountLabel" text=""
-               style="-fx-font-size: 11px; -fx-text-fill: -text-secondary; -fx-padding: 0 0 0 2;"/>
-        <ScrollPane fitToWidth="true" prefHeight="180" styleClass="glass-panel">
-            <FlowPane fx:id="foodGrid" hgap="5" vgap="5" prefWrapLength="600"
-                      style="-fx-padding: 12; -fx-background-color: transparent;"/>
-        </ScrollPane>
-    </VBox>
-
-    <!-- 已选 -->
-    <HBox spacing="6" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
-        <Label text="已选食物：" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="clearMealBtn" text="🗑 清空该餐" onAction="#handleClearMeal"
-                style="-fx-background-color: rgba(239,68,68,0.08); -fx-text-fill: #ef4444; -fx-font-size: 11px; -fx-padding: 2 8; -fx-background-radius: 4; -fx-cursor: hand;"/>
-    </HBox>
-    <ScrollPane fx:id="selectedScrollPane" fitToWidth="true" prefHeight="115"
-                style="-fx-background: transparent; -fx-background-color: transparent;">
-        <FlowPane fx:id="selectedFlow" hgap="6" vgap="6" prefWrapLength="600"
-                  style="-fx-padding: 6; -fx-background-color: transparent;"/>
-    </ScrollPane>
-    <Label fx:id="mealCalLabel" text="当前餐小计：0 kcal" styleClass="data-value"/>
-
-    <!-- 汇总 -->
-    <Separator style="-fx-background: rgba(255,255,255,0.1);"/>
-    <HBox spacing="20" alignment="CENTER_LEFT">
-        <Label text="总热量：" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
-        <Label fx:id="totalCalLabel" text="0 kcal" styleClass="calorie-highlight"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="savedLabel" text=""
-               style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
-        <Button text="🤖 AI 建议" onAction="#handleAiAdvice" styleClass="btn-primary" prefWidth="120"/>
-    </HBox>
-
-    <!-- 近7天汇总（默认隐藏） -->
-    <VBox fx:id="weekPanel" visible="false" managed="false" spacing="6"
-          styleClass="gradient-card-inner" style="-fx-padding: 12;">
-        <Label text="近7天膳食汇总" styleClass="label-heading" style="-fx-font-size: 13px;"/>
-        <VBox fx:id="weekSummaryList" spacing="4"/>
-    </VBox>
 </VBox>

@@ -1,398 +1,372 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
-import com.bmitracker.model.Food;
 import com.bmitracker.model.MealRecord;
-import com.bmitracker.service.FoodService;
-import com.bmitracker.service.FoodServiceImpl;
+import com.bmitracker.model.User;
 import com.bmitracker.service.MealRecordService;
+import com.bmitracker.service.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MealRecordController {
 
-    @FXML private Label dateLabel, foodCountLabel, mealCalLabel, totalCalLabel, savedLabel;
-    @FXML private Button mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn, clearMealBtn, nextDayBtn;
-    @FXML private TextField searchField;
-    @FXML private FlowPane foodGrid, selectedFlow;
-    @FXML private ScrollPane selectedScrollPane;
-    @FXML private VBox foodSection, weekPanel, weekSummaryList;
+    @FXML private HBox contentArea, monthNav;
+    @FXML private VBox leftArea, rightArea, chartBox, mealListBox, calendarBox;
+    @FXML private ScrollPane listScroll;
+    @FXML private Canvas chartCanvas;
+    @FXML private GridPane calendarGrid;
+    @FXML private Label monthLabel;
+    @FXML private Button prevMonthBtn, nextMonthBtn;
 
-    private final FoodService foodService = new FoodServiceImpl();
     private final MealRecordService recordService = new MealRecordService();
+    private final UserService userService = new UserService();
 
-    private List<Food> allFoods = Collections.emptyList();
+    enum Param { CALORIE, PROTEIN, FAT, CARB }
+    private Param currentParam = Param.CALORIE;
+    private LocalDate selectedDate = LocalDate.now();
+    private LocalDate calendarMonth;
+    private int userSex = 0;
 
-    static class FoodEntry {
-        Food food; double grams;
-        FoodEntry(Food f, double g) { food = f; grams = g; }
-        double getCalories() { return food.getCalories() * grams / 100.0; }
-    }
+    private Map<LocalDate, List<MealRecord>> recordsByDate = new LinkedHashMap<>();
 
-    private final Map<String, List<FoodEntry>> entries = new HashMap<>();
-
-    private enum Meal { BREAKFAST, LUNCH, DINNER, SNACK }
-    private Meal currentMeal = Meal.BREAKFAST;
-
-    private LocalDate currentDate = LocalDate.now();
-    private boolean loaded = false;
-
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter DATE_FMT_CN = DateTimeFormatter.ofPattern("M月d日");
+    private static final DateTimeFormatter DATE_MMDD = DateTimeFormatter.ofPattern("MM.dd");
+    private static final DateTimeFormatter MONTH_FMT = DateTimeFormatter.ofPattern("yyyy.MM");
+    private static final String[] WEEKDAYS = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
 
     @FXML
     void initialize() {
-        entries.put("BREAKFAST", new ArrayList<>());
-        entries.put("LUNCH", new ArrayList<>());
-        entries.put("DINNER", new ArrayList<>());
-        entries.put("SNACK", new ArrayList<>());
+        calendarMonth = LocalDate.now().withDayOfMonth(1);
 
-        updateDateLabel();
-        updateLayoutForDate();
+        contentArea.widthProperty().addListener((obs, ov, nv) -> {
+            double total = nv.doubleValue() - 14;
+            double leftW = total * 1.616 / 2.616;
+            double rightW = total / 2.616;
+            leftArea.setPrefWidth(leftW);
+            rightArea.setPrefWidth(rightW);
+            buildCalendar();
+        });
+        contentArea.heightProperty().addListener((obs, ov, nv) -> {
+            if (nv.doubleValue() > 0) buildCalendar();
+        });
 
-        new Thread(() -> {
-            allFoods = foodService.getAllFoods();
-            Platform.runLater(() -> {
-                if (allFoods.isEmpty()) {
-                    showAlert("食物库为空，请确认数据库已正确初始化");
-                }
-                loadRecordsForDate();
-                searchField.textProperty().addListener((o, ov, nv) -> updateFoodGrid(nv));
-            });
-        }).start();
+        chartBox.widthProperty().addListener((obs, ov, nv) -> {
+            chartCanvas.setWidth(Math.max(1, nv.doubleValue() - 32));
+        });
+        chartBox.heightProperty().addListener((obs, ov, nv) -> {
+            chartCanvas.setHeight(Math.max(1, nv.doubleValue() - 24));
+        });
+        chartCanvas.widthProperty().addListener(o -> drawChart());
+        chartCanvas.heightProperty().addListener(o -> drawChart());
+
+        prevMonthBtn.setOnAction(e -> {
+            calendarMonth = calendarMonth.minusMonths(1);
+            loadMonthRecords();
+        });
+        nextMonthBtn.setOnAction(e -> {
+            calendarMonth = calendarMonth.plusMonths(1);
+            loadMonthRecords();
+        });
+
+        loadMonthRecords();
     }
 
-    @FXML void selectBreakfast() { setMeal(Meal.BREAKFAST); }
-    @FXML void selectLunch() { setMeal(Meal.LUNCH); }
-    @FXML void selectDinner() { setMeal(Meal.DINNER); }
-    @FXML void selectSnack() { setMeal(Meal.SNACK); }
-
-    @FXML void prevDay() {
-        currentDate = currentDate.minusDays(1);
-        updateDateLabel();
-        updateLayoutForDate();
-        loadRecordsForDate();
-    }
-
-    @FXML void nextDay() {
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        if (currentDate.isBefore(LocalDate.now())) {
-            currentDate = currentDate.plusDays(1);
-            updateDateLabel();
-            updateLayoutForDate();
-            loadRecordsForDate();
-        }
-    }
-
-    private void updateLayoutForDate() {
-        boolean isToday = currentDate.equals(LocalDate.now());
-        foodSection.setVisible(isToday);
-        foodSection.setManaged(isToday);
-        clearMealBtn.setVisible(isToday);
-        clearMealBtn.setManaged(isToday);
-        nextDayBtn.setVisible(!isToday);
-        nextDayBtn.setManaged(!isToday);
-        selectedScrollPane.setPrefHeight(isToday ? 115 : 200);
-    }
-
-    @FXML void handleSave() {
-        int uid = BMIApplication.currentUserId;
-        if (uid < 0) { showAlert("请先登录"); return; }
-
-        savedLabel.setText("保存中...");
-        new Thread(() -> {
-            try {
-                List<MealRecord> all = new ArrayList<>();
-                for (Map.Entry<String, List<FoodEntry>> e : entries.entrySet()) {
-                    for (FoodEntry fe : e.getValue()) {
-                        MealRecord mr = new MealRecord();
-                        mr.setUserId(uid);
-                        mr.setFoodId(fe.food.getFoodId());
-                        mr.setMealType(e.getKey());
-                        mr.setGrams(fe.grams);
-                        mr.setRecordDate(currentDate);
-                        all.add(mr);
-                    }
-                }
-                recordService.saveRecords(uid, currentDate, all);
-                Platform.runLater(() -> savedLabel.setText("已保存 " + DATE_FMT.format(currentDate)));
-            } catch (Exception ex) {
-                Platform.runLater(() -> savedLabel.setText("保存失败"));
-            }
-        }).start();
-    }
-
-    @FXML void showWeekSummary() {
-        boolean vis = weekPanel.isVisible();
-        weekPanel.setVisible(!vis);
-        weekPanel.setManaged(!vis);
-        if (!vis) loadWeekSummary();
-    }
-
-    private void loadWeekSummary() {
+    private void loadMonthRecords() {
         int uid = BMIApplication.currentUserId;
         if (uid < 0) return;
 
+        monthLabel.setText(MONTH_FMT.format(calendarMonth));
+
         new Thread(() -> {
-            LocalDate today = LocalDate.now();
-            List<MealRecord> records = recordService.getRecordsInRange(uid, today.minusDays(6), today);
+            User user = userService.getUserById(uid);
+            if (user != null) userSex = user.getSex();
+
+            LocalDate start = calendarMonth.withDayOfMonth(1);
+            LocalDate end = calendarMonth.withDayOfMonth(calendarMonth.lengthOfMonth());
+            List<MealRecord> all = recordService.getRecordsInRange(uid, start, end);
+
             Platform.runLater(() -> {
-                weekSummaryList.getChildren().clear();
-                if (records.isEmpty()) {
-                    weekSummaryList.getChildren().add(new Label("近7天暂无记录"));
-                    return;
+                recordsByDate.clear();
+                for (MealRecord r : all) {
+                    recordsByDate.computeIfAbsent(r.getRecordDate(), k -> new ArrayList<>()).add(r);
                 }
-
-                Map<LocalDate, List<MealRecord>> byDate = records.stream()
-                        .collect(Collectors.groupingBy(MealRecord::getRecordDate));
-
-                for (LocalDate d : byDate.keySet().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
-                    List<MealRecord> dayRecs = byDate.get(d);
-                    double total = dayRecs.stream().mapToDouble(MealRecord::getCalories).sum();
-                    HBox row = new HBox(10);
-                    row.setAlignment(Pos.CENTER_LEFT);
-                    Label dateLbl = new Label(DATE_FMT_CN.format(d));
-                    dateLbl.setStyle("-fx-text-fill: #d0d0d0; -fx-font-size: 12px; -fx-font-weight: bold; -fx-min-width: 50;");
-                    Label calLbl = new Label(String.format("%.0f kcal", total));
-                    calLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px;");
-                    Label detailLbl = new Label(formatDaySummary(dayRecs));
-                    detailLbl.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
-                    row.getChildren().addAll(dateLbl, calLbl, detailLbl);
-                    weekSummaryList.getChildren().add(row);
-                }
+                drawChart();
+                buildCalendar();
+                refreshList();
             });
         }).start();
     }
 
-    private String formatDaySummary(List<MealRecord> records) {
-        Map<String, Integer> count = new HashMap<>();
-        for (MealRecord r : records) {
-            count.merge(r.getMealType(), 1, Integer::sum);
+    private void drawChart() {
+        double w = chartCanvas.getWidth();
+        double h = chartCanvas.getHeight();
+        if (w <= 0 || h <= 0) return;
+
+        GraphicsContext gc = chartCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, w, h);
+
+        List<MealRecord> todayRecords = recordsByDate.getOrDefault(selectedDate, Collections.emptyList());
+        double userCal = todayRecords.stream().mapToDouble(MealRecord::getCalories).sum();
+        double userPro = todayRecords.stream().mapToDouble(MealRecord::getProtein).sum();
+        double userFat = todayRecords.stream().mapToDouble(MealRecord::getFat).sum();
+        double userCarb = todayRecords.stream().mapToDouble(MealRecord::getCarb).sum();
+
+        double stdCal = userSex == 0 ? 2150 : 1700;
+        double stdPro = stdCal * 0.1 / 4;
+        double stdFat = stdCal * 0.2 / 9;
+        double stdCarb = stdCal * 0.5 / 4;
+
+        double[][] data = {{userCal, stdCal}, {userPro, stdPro}, {userFat, stdFat}, {userCarb, stdCarb}};
+        String[] labels = {"热量(kcal)", "蛋白质(g)", "脂肪(g)", "碳水(g)"};
+
+        double maxVal = 0;
+        for (double[] d : data) { maxVal = Math.max(maxVal, Math.max(d[0], d[1])); }
+        if (maxVal <= 0) maxVal = 1;
+
+        double marginL = 40, marginR = 16, marginT = 16, marginB = 28;
+        double plotW = w - marginL - marginR;
+        double plotH = h - marginT - marginB;
+        double groupW = plotW / 4;
+        double barW = groupW * 0.28;
+
+        for (int i = 0; i < 4; i++) {
+            double groupX = marginL + i * groupW;
+            double centerX = groupX + groupW / 2;
+
+            double h1 = (data[i][0] / maxVal) * plotH;
+            double h2 = (data[i][1] / maxVal) * plotH;
+
+            double bar1X = centerX - barW - 4;
+            double bar1Y = marginT + plotH - h1;
+            gc.setFill(Color.rgb(16, 185, 129, 0.8));
+            gc.fillRoundRect(bar1X, bar1Y, barW, h1, 3, 3);
+
+            double bar2X = centerX + 4;
+            double bar2Y = marginT + plotH - h2;
+            gc.setFill(Color.rgb(0, 0, 0, 0.12));
+            gc.fillRoundRect(bar2X, bar2Y, barW, h2, 3, 3);
+
+            gc.setFill(Color.rgb(51, 51, 51));
+            gc.setFont(Font.font("Microsoft YaHei", 10));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText(String.format("%.0f", data[i][0]), bar1X + barW / 2, bar1Y - 4);
+            gc.fillText(String.format("%.0f", data[i][1]), bar2X + barW / 2, bar2Y - 4);
+
+            gc.setFill(Color.rgb(85, 85, 85));
+            gc.setFont(Font.font("Microsoft YaHei", 11));
+            gc.fillText(labels[i], centerX, marginT + plotH + 16);
         }
-        return count.entrySet().stream()
-                .map(e -> e.getKey().charAt(0) + e.getKey().substring(1).toLowerCase() + " " + e.getValue() + "种")
-                .collect(Collectors.joining(" · "));
     }
 
-    private void setMeal(Meal meal) {
-        currentMeal = meal;
-        Button[] tabs = {mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn};
-        for (var b : tabs) b.getStyleClass().setAll("meal-tab");
-        getTabBtn(meal).getStyleClass().setAll("meal-tab-active");
-        refreshSelected();
-        updateFoodGrid(searchField.getText());
-    }
-
-    private Button getTabBtn(Meal m) {
-        return switch (m) {
-            case BREAKFAST -> mealBreakfastBtn;
-            case LUNCH -> mealLunchBtn;
-            case DINNER -> mealDinnerBtn;
-            case SNACK -> mealSnackBtn;
-        };
-    }
-
-    private List<FoodEntry> getEntries() {
-        return entries.get(currentMeal.name());
-    }
-
-    private String getMealName() {
-        return switch (currentMeal) {
-            case BREAKFAST -> "早餐";
-            case LUNCH -> "午餐";
-            case DINNER -> "晚餐";
-            case SNACK -> "加餐";
-        };
-    }
-
-    private void updateDateLabel() {
-        dateLabel.setText(DATE_FMT.format(currentDate));
-        savedLabel.setText("");
-    }
-
-    private void loadRecordsForDate() {
-        int uid = BMIApplication.currentUserId;
-        if (uid < 0) return;
-
-        for (var list : entries.values()) list.clear();
-
-        new Thread(() -> {
-            List<MealRecord> records = recordService.getRecords(uid, currentDate);
-            Platform.runLater(() -> {
-                if (!records.isEmpty()) {
-                    savedLabel.setText("已加载 " + DATE_FMT.format(currentDate));
-                }
-                for (MealRecord mr : records) {
-                    List<FoodEntry> list = entries.get(mr.getMealType());
-                    if (list == null) continue;
-                    Food food = allFoods.stream()
-                            .filter(f -> f.getFoodId() == mr.getFoodId())
-                            .findFirst().orElse(null);
-                    if (food == null) continue;
-                    list.add(new FoodEntry(food, mr.getGrams()));
-                }
-                refreshSelected();
-                updateFoodGrid(searchField.getText());
-                loaded = true;
-            });
-        }).start();
-    }
-
-    private void updateFoodGrid(String keyword) {
-        foodGrid.getChildren().clear();
-        if (allFoods.isEmpty()) return;
-
-        List<Food> shown;
-        if (keyword == null || keyword.isEmpty()) {
-            shown = allFoods;
-        } else {
-            shown = allFoods.stream()
-                    .filter(f -> f.getFoodName().contains(keyword))
-                    .collect(Collectors.toList());
-        }
-
-        Set<Integer> selectedIds = getEntries().stream()
-                .map(e -> e.food.getFoodId()).collect(Collectors.toSet());
-
-        for (Food food : shown) {
-            boolean isSelected = selectedIds.contains(food.getFoodId());
-            Button btn = new Button(food.getFoodName());
-            btn.setStyle(isSelected
-                ? "-fx-background-color: rgba(16,185,129,0.20); -fx-text-fill: #34d399; -fx-font-size: 12px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: rgba(16,185,129,0.3); -fx-border-radius: 6;"
-                : "-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 12px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: transparent; -fx-border-width: 1; -fx-border-radius: 6;"
-            );
-            int fid = food.getFoodId();
-            btn.setOnAction(e -> {
-                List<FoodEntry> entryList = getEntries();
-                Optional<FoodEntry> existing = entryList.stream()
-                        .filter(en -> en.food.getFoodId() == fid).findFirst();
-                if (existing.isPresent()) {
-                    entryList.remove(existing.get());
-                } else {
-                    entryList.add(new FoodEntry(food, 100));
-                }
-                refreshSelected();
-                updateFoodGrid(searchField.getText());
-            });
-            foodGrid.getChildren().add(btn);
-        }
-
-        foodCountLabel.setText(String.format("共 %d 种食物", shown.size()));
-    }
-
-    private void refreshSelected() {
-        List<FoodEntry> entryList = getEntries();
-        selectedFlow.getChildren().clear();
-
-        if (entryList.isEmpty()) {
-            Label empty = new Label("暂无选择");
-            empty.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 12px;");
-            selectedFlow.getChildren().add(empty);
-            mealCalLabel.setText("当前餐小计：0 kcal");
-            updateTotal();
-            selectedScrollPane.setVvalue(0);
+    private void refreshList() {
+        mealListBox.getChildren().clear();
+        if (recordsByDate.isEmpty()) {
+            Label empty = new Label("本月暂无膳食记录");
+            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 14px; -fx-padding: 20 0;");
+            empty.setAlignment(Pos.CENTER);
+            empty.setMaxWidth(Double.MAX_VALUE);
+            mealListBox.getChildren().add(empty);
             return;
         }
 
-        double mealCal = 0;
-        for (int i = 0; i < entryList.size(); i++) {
-            FoodEntry entry = entryList.get(i);
-            mealCal += entry.getCalories();
-            final int idx = i;
+        List<Map.Entry<LocalDate, List<MealRecord>>> sorted = new ArrayList<>(recordsByDate.entrySet());
+        sorted.sort((a, b) -> {
+            if (a.getKey().equals(selectedDate)) return -1;
+            if (b.getKey().equals(selectedDate)) return 1;
+            return b.getKey().compareTo(a.getKey());
+        });
 
-            HBox card = new HBox(4);
-            card.setStyle("-fx-padding: 4 6; -fx-background-color: #1a1a1a; -fx-background-radius: 6; -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1px; -fx-border-radius: 6;");
-            card.setAlignment(Pos.CENTER_LEFT);
+        for (Map.Entry<LocalDate, List<MealRecord>> entry : sorted) {
+            LocalDate date = entry.getKey();
+            List<MealRecord> recs = entry.getValue();
+            double sum = getParamSum(recs, currentParam);
 
-            Label name = new Label(entry.food.getFoodName());
-            name.setStyle("-fx-text-fill: #d0d0d0; -fx-font-size: 12px; -fx-font-weight: bold;");
-            name.setPrefWidth(80);
-            name.setMaxWidth(80);
+            VBox card = new VBox(4);
+            card.setStyle("-fx-background-color: rgba(0,0,0,0.02);"
+                    + "-fx-background-radius: 10px;"
+                    + "-fx-border-color: rgba(0,0,0,0.06);"
+                    + "-fx-border-width: 1px;"
+                    + "-fx-border-radius: 10px;"
+                    + "-fx-padding: 12 14;");
 
-            TextField gramField = new TextField(String.valueOf((int) entry.grams));
-            gramField.setPrefWidth(50);
-            gramField.setStyle("-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #d0d0d0; -fx-background-radius: 4; -fx-font-size: 11px;");
-            gramField.textProperty().addListener((obs, ov, nv) -> {
-                try { double g = Double.parseDouble(nv); if (g > 0) { entry.grams = g; refreshSelected(); } }
-                catch (NumberFormatException ignored) {}
-            });
+            if (date.equals(selectedDate)) {
+                card.setStyle(card.getStyle() + "-fx-border-color: rgba(16,185,129,0.35);");
+            }
 
-            Label unit = new Label("g");
-            unit.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
+            HBox header = new HBox(6);
+            header.setAlignment(Pos.CENTER_LEFT);
+            Label dateLbl = new Label(formatDateTitle(date));
+            dateLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: bold;");
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            Label sumLbl = new Label(String.format("%.0f %s", sum, getParamUnit()));
+            sumLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 15px; -fx-font-weight: bold;");
+            header.getChildren().addAll(dateLbl, spacer, sumLbl);
+            header.setPadding(new Insets(0, 0, 4, 0));
+            card.getChildren().add(header);
 
-            Label cal = new Label(String.format("%.0f", entry.getCalories()));
-            cal.setStyle("-fx-text-fill: #10b981; -fx-font-size: 11px; -fx-font-weight: bold;");
-            cal.setPrefWidth(45);
+            for (int i = 0; i < recs.size(); i++) {
+                if (i > 0) {
+                    Separator sep = new Separator();
+                    sep.setStyle("-fx-background: rgba(0,0,0,0.06);");
+                    sep.setPadding(new Insets(4, 0, 4, 0));
+                    card.getChildren().add(sep);
+                }
 
-            Button removeBtn = new Button("✕");
-            removeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 1 4;");
-            removeBtn.setOnAction(e -> { entryList.remove(idx); refreshSelected(); updateFoodGrid(searchField.getText()); });
+                MealRecord r = recs.get(i);
+                double val = getParamValue(r, currentParam);
 
-            card.getChildren().addAll(name, gramField, unit, cal, removeBtn);
-            selectedFlow.getChildren().add(card);
+                HBox row = new HBox(8);
+                row.setAlignment(Pos.CENTER_LEFT);
+                row.setPadding(new Insets(6, 0, 6, 0));
+
+                VBox nameBox = new VBox(2);
+                nameBox.setAlignment(Pos.CENTER_LEFT);
+                Label nameLbl = new Label(r.getFoodName());
+                nameLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 15px;");
+                Label gramLbl = new Label(String.format("%.0f g", r.getGrams()));
+                gramLbl.setStyle("-fx-text-fill: #888888; -fx-font-size: 13px;");
+                nameBox.getChildren().addAll(nameLbl, gramLbl);
+
+                Region rowSpacer = new Region();
+                HBox.setHgrow(rowSpacer, Priority.ALWAYS);
+                Label valLbl = new Label(String.format("%.0f %s", val, getParamUnit()));
+                valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 15px; -fx-font-weight: bold;");
+
+                row.getChildren().addAll(nameBox, rowSpacer, valLbl);
+                card.getChildren().add(row);
+            }
+
+            mealListBox.getChildren().add(card);
         }
-
-        mealCalLabel.setText(String.format("%s小计：%.0f kcal", getMealName(), mealCal));
-        updateTotal();
-        selectedScrollPane.setVvalue(0);
     }
 
-    private void updateTotal() {
-        double total = 0;
-        for (var list : entries.values())
-            for (FoodEntry e : list) total += e.getCalories();
-        totalCalLabel.setText(String.format("%.0f kcal", total));
+    private void buildCalendar() {
+        calendarGrid.getChildren().clear();
+        calendarGrid.getColumnConstraints().clear();
+        calendarGrid.getRowConstraints().clear();
+
+        double available = rightArea.getWidth() - 12;
+        if (available <= 0) return;
+        double cellSize = available / 7;
+        if (cellSize <= 0) return;
+
+        for (int i = 0; i < 7; i++) {
+            calendarGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
+        }
+        calendarGrid.getRowConstraints().add(new RowConstraints(cellSize * 0.55));
+        for (int i = 0; i < 6; i++) {
+            calendarGrid.getRowConstraints().add(new RowConstraints(cellSize));
+        }
+
+        for (int col = 0; col < 7; col++) {
+            Label dayLabel = new Label(WEEKDAYS[col]);
+            dayLabel.setAlignment(Pos.CENTER);
+            dayLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            dayLabel.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px; -fx-font-weight: bold;");
+            calendarGrid.add(dayLabel, col, 0);
+            GridPane.setHalignment(dayLabel, HPos.CENTER);
+        }
+
+        LocalDate firstDay = calendarMonth.withDayOfMonth(1);
+        int startCol = firstDay.getDayOfWeek().getValue() - 1;
+        int daysInMonth = calendarMonth.lengthOfMonth();
+
+        for (int d = 1; d <= daysInMonth; d++) {
+            LocalDate date = calendarMonth.withDayOfMonth(d);
+            int col = (startCol + d - 1) % 7;
+            int row = 1 + (startCol + d - 1) / 7;
+
+            boolean hasData = recordsByDate.containsKey(date);
+            double sum = 0;
+            if (hasData) {
+                sum = getParamSum(recordsByDate.get(date), currentParam);
+            }
+            boolean isSelected = date.equals(selectedDate);
+
+            VBox cell = new VBox(2);
+            cell.setAlignment(Pos.CENTER);
+            cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            cell.setPadding(new Insets(3, 0, 3, 0));
+
+            if (isSelected) {
+                cell.setStyle("-fx-background-color: rgba(16,185,129,0.12);"
+                        + "-fx-border-color: #10b981;"
+                        + "-fx-border-width: 1.5px;"
+                        + "-fx-border-radius: 4px;"
+                        + "-fx-background-radius: 4px;");
+            }
+
+            Label numLbl = new Label(String.valueOf(d));
+            numLbl.setAlignment(Pos.CENTER);
+            numLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 14px; "
+                    + (isSelected ? "-fx-font-weight: bold;" : ""));
+
+            cell.getChildren().add(numLbl);
+
+            if (hasData && sum > 0) {
+                Label valLbl = new Label(String.format("%.0f", sum));
+                valLbl.setAlignment(Pos.CENTER);
+                valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 10px;");
+                cell.getChildren().add(valLbl);
+            }
+
+            if (hasData) {
+                cell.setStyle(cell.getStyle() + "-fx-cursor: hand;");
+            }
+            final LocalDate cellDate = date;
+            cell.setOnMouseClicked(e -> {
+                selectedDate = cellDate;
+                drawChart();
+                buildCalendar();
+                refreshList();
+            });
+
+            calendarGrid.add(cell, col, row);
+            GridPane.setHalignment(cell, HPos.CENTER);
+        }
+    }
+
+    private double getParamSum(List<MealRecord> recs, Param p) {
+        return recs.stream().mapToDouble(r -> getParamValue(r, p)).sum();
+    }
+
+    private double getParamValue(MealRecord r, Param p) {
+        return switch (p) {
+            case CALORIE -> r.getCalories();
+            case PROTEIN -> r.getProtein();
+            case FAT -> r.getFat();
+            case CARB -> r.getCarb();
+        };
+    }
+
+    private String getParamUnit() {
+        return currentParam == Param.CALORIE ? "kcal" : "g";
+    }
+
+    private String formatDateTitle(LocalDate date) {
+        LocalDate today = LocalDate.now();
+        String prefix = DATE_MMDD.format(date);
+        if (date.equals(today)) return prefix + " 今天";
+        if (date.equals(today.minusDays(1))) return prefix + " 昨天";
+        String[] cn = {"", "周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+        return prefix + " " + cn[date.getDayOfWeek().getValue()];
     }
 
     @FXML
-    void handleAiAdvice() {
-        boolean empty = true;
-        for (var list : entries.values()) if (!list.isEmpty()) { empty = false; break; }
-        if (empty) { showAlert("请先添加食物记录"); return; }
-
-        StringBuilder sb = new StringBuilder("请评价我今天的膳食并提供改进建议：\n\n");
-        String[][] mealData = {
-            {"早餐", mealToString(entries.get("BREAKFAST"))},
-            {"午餐", mealToString(entries.get("LUNCH"))},
-            {"晚餐", mealToString(entries.get("DINNER"))},
-            {"加餐", mealToString(entries.get("SNACK"))}
-        };
-        for (var md : mealData) {
-            if (!md[1].isEmpty()) sb.append("【").append(md[0]).append("】\n").append(md[1]);
-        }
-
-        double total = 0;
-        for (var list : entries.values())
-            for (FoodEntry e : list) total += e.getCalories();
-        sb.append(String.format("\n总热量：%.0f kcal\n\n请给出简洁的营养评价和改进建议，用中文回复。", total));
-
-        AIChatController.getInstance().sendUserMessage(sb.toString());
-    }
-
-    private String mealToString(List<FoodEntry> list) {
-        if (list.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder();
-        for (FoodEntry e : list)
-            sb.append(String.format("- %s %.0fg (%.0f kcal)\n", e.food.getFoodName(), e.grams, e.getCalories()));
-        return sb.toString();
-    }
-
-    @FXML void handleClearMeal() {
-        getEntries().clear();
-        refreshSelected();
-        updateFoodGrid(searchField.getText());
-    }
-
-    private void showAlert(String msg) {
-        Alert a = new Alert(Alert.AlertType.WARNING);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+    void handleAddMeal() {
     }
 }

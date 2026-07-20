@@ -11,7 +11,7 @@ import java.util.List;
 public class MealRecordDao {
 
     public List<MealRecord> findByUserAndDate(int userId, LocalDate date) throws SQLException {
-        String sql = "SELECT mr.*, f.foodName, f.calories FROM meal_records mr " +
+        String sql = "SELECT mr.*, f.foodName, f.calories, f.protein, f.fat, f.carb FROM meal_records mr " +
                      "JOIN foods f ON mr.foodId = f.foodId " +
                      "WHERE mr.userId = ? AND mr.recordDate = ? ORDER BY mr.mealType, mr.recordId";
         try (Connection conn = DBUtil.getConnection();
@@ -26,7 +26,7 @@ public class MealRecordDao {
     }
 
     public List<MealRecord> findByUserAndDateRange(int userId, LocalDate start, LocalDate end) throws SQLException {
-        String sql = "SELECT mr.*, f.foodName, f.calories FROM meal_records mr " +
+        String sql = "SELECT mr.*, f.foodName, f.calories, f.protein, f.fat, f.carb FROM meal_records mr " +
                      "JOIN foods f ON mr.foodId = f.foodId " +
                      "WHERE mr.userId = ? AND mr.recordDate BETWEEN ? AND ? ORDER BY mr.recordDate, mr.mealType";
         try (Connection conn = DBUtil.getConnection();
@@ -107,6 +107,9 @@ public class MealRecordDao {
         r.setRecordDate(rs.getDate("recordDate").toLocalDate());
         r.setFoodName(rs.getString("foodName"));
         r.setFoodCalories(rs.getDouble("calories"));
+        r.setFoodProtein(rs.getDouble("protein"));
+        r.setFoodFat(rs.getDouble("fat"));
+        r.setFoodCarb(rs.getDouble("carb"));
         return r;
     }
 }
