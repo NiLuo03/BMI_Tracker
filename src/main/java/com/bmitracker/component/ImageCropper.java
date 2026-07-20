@@ -234,7 +234,7 @@ public class ImageCropper {
                 int cropW = (int)(selection.getWidth() / scale);
                 int cropH = (int)(selection.getHeight() / scale);
                 Image cropped = new WritableImage(originalImage.getPixelReader(), cropX, cropY, cropW, cropH);
-                stage.setUserData(new CropResult(cropped, cropX, cropY, cropW, cropH));
+                stage.getProperties().put("cropResult", new CropResult(cropped, cropX, cropY, cropW, cropH));
             }
             stage.close();
         });
@@ -242,7 +242,7 @@ public class ImageCropper {
         cancelBtn.setOnAction(e -> stage.close());
 
         stage.showAndWait();
-        Object data = stage.getUserData();
+        Object data = stage.getProperties().get("cropResult");
         if (data instanceof CropResult r) return Optional.of(r);
         return Optional.empty();
     }
