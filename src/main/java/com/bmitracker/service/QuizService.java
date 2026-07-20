@@ -99,4 +99,27 @@ public class QuizService {
         try { return dao.getLeaderboard(since); }
         catch (SQLException e) { return Collections.emptyList(); }
     }
+
+    public static class TodayStats {
+        public int totalQuizzes;
+        public int totalCorrect;
+        public int totalQuestions;
+        public int totalScore;
+        public int bestScore;
+    }
+
+    public TodayStats getTodayStats(int userId) {
+        TodayStats stats = new TodayStats();
+        try {
+            List<QuizResult> results = dao.getTodayResults(userId);
+            stats.totalQuizzes = results.size();
+            for (QuizResult r : results) {
+                stats.totalCorrect += r.getScore();
+                stats.totalQuestions += r.getTotal();
+                stats.totalScore += r.getScore() * 5;
+                if (r.getScore() * 5 > stats.bestScore) stats.bestScore = r.getScore() * 5;
+            }
+        } catch (SQLException e) { /* return empty */ }
+        return stats;
+    }
 }

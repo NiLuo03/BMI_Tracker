@@ -10,40 +10,73 @@
 
     <VBox spacing="0">
         <!-- Prepare Area -->
-        <HBox fx:id="prepareArea" spacing="12" alignment="CENTER">
-            <VBox spacing="16" alignment="CENTER" HBox.hgrow="ALWAYS">
+        <VBox fx:id="prepareArea" spacing="20" alignment="TOP_CENTER">
+
+            <!-- Top row: Today Stats | Wrong Book | Leaderboard -->
+            <HBox spacing="12" alignment="CENTER" maxWidth="Infinity">
+                <VBox fx:id="todayPanel" spacing="6" alignment="TOP_CENTER"
+                      style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 16px;"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="📊 今日数据" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                    <Region style="-fx-min-height: 8;"/>
+                    <HBox spacing="24" alignment="CENTER">
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label fx:id="todayCount" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                            <Label text="已答" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                        </VBox>
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label fx:id="todayAccuracy" text="-" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                            <Label text="正确率" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                        </VBox>
+                    </HBox>
+                    <Region style="-fx-min-height: 6;"/>
+                    <HBox spacing="24" alignment="CENTER">
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label fx:id="todayScore" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                            <Label text="得分" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                        </VBox>
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label fx:id="todayBest" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                            <Label text="最高" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Wrong-Question Book -->
+                <VBox fx:id="wrongBookPanel" spacing="6" alignment="TOP_CENTER"
+                      style="-fx-background-color: rgba(239,68,68,0.06); -fx-background-radius: 12px; -fx-padding: 16px;"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="📝 错题本" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <Label fx:id="wrongBookCount" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+                    <Label text="道错题待复习" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <Button fx:id="btnWrongPractice" text="错题重练" onAction="#onWrongPractice"
+                            prefWidth="170" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-text-fill: #ef4444; -fx-background-color: rgba(239,68,68,0.1); -fx-border-color: rgba(239,68,68,0.3); -fx-border-width: 1px; -fx-border-radius: 10px; -fx-cursor: hand; -fx-padding: 8 0;"/>
+                </VBox>
+
+                <VBox fx:id="leaderboardPanel" spacing="6" alignment="TOP_CENTER"
+                      style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 16px;"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="🏆 排行榜" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                    <HBox spacing="4" alignment="CENTER">
+                        <ToggleButton fx:id="btnWeekly" text="周榜" selected="true"
+                                      style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
+                        <ToggleButton fx:id="btnAlltime" text="总榜"
+                                      style="-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
+                    </HBox>
+                    <VBox fx:id="leaderboardList" spacing="4" alignment="TOP_CENTER"/>
+                </VBox>
+            </HBox>
+
+            <!-- Quiz start section -->
+            <VBox spacing="12" alignment="CENTER">
                 <Label text="健康问答" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                 <Label text="共二十道题目" style="-fx-font-size: 13px; -fx-text-fill: -text-secondary;"/>
                 <Button text="开始问答" onAction="#onStart" styleClass="btn-primary" prefWidth="200" prefHeight="44"
-                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 12px;">
-                    <VBox.margin><Insets top="8"/></VBox.margin>
-                </Button>
+                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 12px;"/>
             </VBox>
-
-            <!-- Wrong-Question Book -->
-            <VBox fx:id="wrongBookPanel" spacing="6" alignment="TOP_CENTER"
-                  style="-fx-background-color: rgba(239,68,68,0.06); -fx-background-radius: 12px; -fx-padding: 12px;"
-                  prefWidth="220" maxWidth="220">
-                <Label text="📝 错题本" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
-                <Label fx:id="wrongBookCount" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
-                <Label text="道错题待复习" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
-                <Button fx:id="btnWrongPractice" text="错题重练" onAction="#onWrongPractice"
-                        prefWidth="180" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-text-fill: #ef4444; -fx-background-color: rgba(239,68,68,0.1); -fx-border-color: rgba(239,68,68,0.3); -fx-border-width: 1px; -fx-border-radius: 10px; -fx-cursor: hand; -fx-padding: 8 0;"/>
-            </VBox>
-
-            <VBox fx:id="leaderboardPanel" spacing="6" alignment="TOP_CENTER"
-                  style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 12px;"
-                  prefWidth="240" maxWidth="240">
-                <Label text="🏆 排行榜" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-                <HBox spacing="4" alignment="CENTER">
-                    <ToggleButton fx:id="btnWeekly" text="周榜" selected="true"
-                                  style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
-                    <ToggleButton fx:id="btnAlltime" text="总榜"
-                                  style="-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
-                </HBox>
-                <VBox fx:id="leaderboardList" spacing="4" alignment="TOP_CENTER"/>
-            </VBox>
-        </HBox>
+        </VBox>
 
         <!-- Quiz Area (with nav at bottom) -->
         <HBox fx:id="quizArea" spacing="0" visible="false" managed="false">

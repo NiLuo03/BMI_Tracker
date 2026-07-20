@@ -23,7 +23,7 @@ public class QuizController {
     @FXML private Button btnClose;
     @FXML private HBox quizArea;
     @FXML private VBox resultArea, resultContent;
-    @FXML private HBox prepareArea;
+    @FXML private VBox prepareArea;
     @FXML private VBox leaderboardPanel, leaderboardList;
     @FXML private ToggleButton btnWeekly, btnAlltime;
     @FXML private StackPane root;
@@ -36,6 +36,7 @@ public class QuizController {
     @FXML private Label wrongBookCount;
     @FXML private Button btnWrongPractice;
     @FXML private Label sloganLabel;
+    @FXML private Label todayCount, todayAccuracy, todayScore, todayBest;
 
     private boolean wrongPracticeMode = false;
     private List<String> slogans;
@@ -89,6 +90,7 @@ public class QuizController {
         loadLeaderboard(true);
         loadWrongBook();
         loadSlogans();
+        loadTodayStats();
     }
 
     private void loadSlogans() {
@@ -154,6 +156,18 @@ public class QuizController {
     private void loadWrongBook() {
         int count = WrongQuestionStore.count(BMIApplication.currentUserId);
         wrongBookCount.setText(String.valueOf(count));
+    }
+
+    private void loadTodayStats() {
+        QuizService.TodayStats s = quizService.getTodayStats(BMIApplication.currentUserId);
+        todayCount.setText(String.valueOf(s.totalQuizzes));
+        if (s.totalQuestions > 0) {
+            todayAccuracy.setText((s.totalCorrect * 100 / s.totalQuestions) + "%");
+        } else {
+            todayAccuracy.setText("-");
+        }
+        todayScore.setText(String.valueOf(s.totalScore));
+        todayBest.setText(String.valueOf(s.bestScore));
     }
 
     @FXML
@@ -623,6 +637,7 @@ public class QuizController {
         showRandomSlogan();
         loadLeaderboard(btnWeekly.isSelected());
         loadWrongBook();
+        loadTodayStats();
     }
 
     @FXML

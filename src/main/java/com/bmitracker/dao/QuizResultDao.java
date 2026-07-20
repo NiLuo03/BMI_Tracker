@@ -74,6 +74,18 @@ public class QuizResultDao {
         public int getMaxScore() { return maxScore; }
     }
 
+    public List<QuizResult> getTodayResults(int userId) throws SQLException {
+        List<QuizResult> list = new ArrayList<>();
+        String sql = "SELECT * FROM quiz_results WHERE userId = ? AND createTime >= CURRENT_DATE ORDER BY createTime DESC";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(map(rs));
+        }
+        return list;
+    }
+
     private QuizResult map(ResultSet rs) throws SQLException {
         QuizResult r = new QuizResult();
         r.setResultId(rs.getInt("resultId"));

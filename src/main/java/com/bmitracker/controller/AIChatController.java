@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.effect.DropShadow;
@@ -27,17 +26,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
@@ -436,16 +430,9 @@ public class AIChatController {
         sendBtn.setOnAction(e -> sendMessage());
         inputField.setOnAction(e -> sendMessage());
 
-        Button cameraBtn = new Button("📷");
-        cameraBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4a9e9e; -fx-font-size: 18; -fx-cursor: hand; -fx-padding: 0; -fx-background-radius: 18; -fx-border-radius: 18; -fx-border-color: #9ad5d5; -fx-border-width: 2; -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36; -fx-alignment: center;");
-        cameraBtn.setPrefSize(36, 36);
-        cameraBtn.setOnAction(e -> handleCameraCapture());
-        Tooltip tt = new Tooltip("拍摄食物并识别热量");
-        Tooltip.install(cameraBtn, tt);
-
         sendBtn.setPrefHeight(36);
 
-        HBox inputBox = new HBox(6, cameraBtn, inputField, sendBtn);
+        HBox inputBox = new HBox(6, inputField, sendBtn);
         inputBox.setAlignment(Pos.CENTER_LEFT);
         inputBox.setPadding(new Insets(10));
         inputBox.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;");
@@ -503,116 +490,8 @@ public class AIChatController {
         }).start();
     }
 
-    private void handleCameraCapture() {
-        addMessage("我", "📷 正在通过摄像头拍摄食物...");
-        inputField.setDisable(true);
-        sendBtn.setDisable(true);
-
-        new Thread(() -> {
-            try {
-                Class<?> webcamClass = Class.forName("com.github.sarxos.webcam.Webcam");
-                Object webcam = webcamClass.getMethod("getDefault").invoke(null);
-                if (webcam == null) {
-                    Platform.runLater(() -> {
-                        addMessage("AI", "未检测到摄像头，请检查设备连接");
-                        inputField.setDisable(false);
-                        sendBtn.setDisable(false);
-                    });
-                    return;
-                }
-                webcamClass.getMethod("open").invoke(webcam);
-                BufferedImage img = (BufferedImage) webcamClass.getMethod("getImage").invoke(webcam);
-                webcamClass.getMethod("close").invoke(webcam);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(img, "jpg", baos);
-                byte[] imageBytes = baos.toByteArray();
-                String base64 = Base64.getEncoder().encodeToString(imageBytes);
-
-                Image fxImage = new Image(new ByteArrayInputStream(imageBytes));
-                Platform.runLater(() -> {
-                    messageArea.getChildren().remove(messageArea.getChildren().size() - 1);
-
-                    ImageView iv = new ImageView(fxImage);
-                    iv.setFitWidth(200);
-                    iv.setFitHeight(150);
-                    iv.setPreserveRatio(true);
-                    iv.setStyle("-fx-background-radius: 8;");
-
-                    HBox box = new HBox(iv);
-                    box.setAlignment(Pos.CENTER_RIGHT);
-                    messageArea.getChildren().add(box);
-                    scrollToBottom();
-
-                    addMessage("我", "请识别图中的食物并估算热量");
-                });
-
-                String response = callCozeWithImage("请识别图中的食物，列出每种食物的名称，并估算每100g的热量以及图片中食物的总热量。用中文回答。", base64);
-                Platform.runLater(() -> {
-                    addMessage("AI", response);
-                    inputField.setDisable(false);
-                    sendBtn.setDisable(false);
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    messageArea.getChildren().remove(messageArea.getChildren().size() - 1);
-                    addMessage("AI", "摄像头识别失败：" + e.getMessage() + "，请检查摄像头权限");
-                    inputField.setDisable(false);
-                    sendBtn.setDisable(false);
-                });
-            }
-        }).start();
-    }
-
     private void scrollToBottom() {
         if (scrollPane != null) scrollPane.setVvalue(1.0);
-    }
-
-    private String callCozeWithImage(String text, String base64Image) throws Exception {
-        String userContent = escapeJson(text)
-                + "\\n\\n![photo](data:image/jpeg;base64," + base64Image + ")";
-
-        String messagesJson = "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"}";
-        messagesJson += ",{\"role\":\"user\",\"content\":\"" + userContent + "\"}";
-
-        String json = "{\"model\":\"" + MODEL + "\",\"max_tokens\":200,\"messages\":[" + messagesJson + "]}";
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL))
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + API_KEY)
-                .timeout(java.time.Duration.ofSeconds(60))
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        String respBody = response.body();
-        if (response.statusCode() == 200) {
-            String msg = extractMessage(respBody);
-            if (msg != null && !msg.isEmpty() && !msg.contains("不支持") && !msg.contains("无法识别")) {
-                return msg;
-            }
-        }
-        String altJson = "{\"model\":\"" + MODEL + "\",\"messages\":["
-                + "{\"role\":\"system\",\"content\":\"你是一位专业的营养师，擅长识别食物并估算热量。请用中文回答。\"},"
-                + "{\"role\":\"user\",\"content\":["
-                + "{\"type\":\"text\",\"text\":\"" + escapeJson(text) + "\"},"
-                + "{\"type\":\"image_url\",\"image_url\":{\"url\":\"data:image/jpeg;base64," + base64Image + "\"}}"
-                + "]}]}";
-
-        HttpRequest altRequest = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL))
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + API_KEY)
-                .timeout(java.time.Duration.ofSeconds(60))
-                .POST(HttpRequest.BodyPublishers.ofString(altJson))
-                .build();
-
-        HttpResponse<String> altResponse = httpClient.send(altRequest, HttpResponse.BodyHandlers.ofString());
-        if (altResponse.statusCode() == 200) {
-            return extractMessage(altResponse.body());
-        }
-        throw new RuntimeException("API识别失败: " + altResponse.body());
     }
 
     private void addMessage(String sender, String content) {
