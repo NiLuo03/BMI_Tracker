@@ -200,10 +200,13 @@ public class MainController {
     private void setGlassFrosted(boolean frosted) {
         if (frosted) {
             boolean light = rootPane.getStyleClass().contains("light-theme");
-            Color bg = light ? Color.rgb(170, 170, 185, 0.65) : Color.rgb(110, 110, 125, 0.30);
-            glassPanel.setBackground(new Background(new BackgroundFill(bg, new CornerRadii(20), Insets.EMPTY)));
+            if (light) {
+                glassPanel.setStyle("-fx-background-color: rgba(195,195,210,0.82); -fx-background-radius: 20px; -fx-border-color: rgba(160,160,175,0.30); -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 24px 22px;");
+            } else {
+                glassPanel.setStyle("-fx-background-color: rgba(130,130,145,0.40); -fx-background-radius: 20px; -fx-border-color: rgba(150,150,165,0.22); -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 24px 22px;");
+            }
         } else {
-            glassPanel.setBackground(null);
+            glassPanel.setStyle("-fx-background-color: -glass-bg; -fx-background-radius: 20px; -fx-border-color: -glass-border; -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 24px 22px;");
         }
     }
 
