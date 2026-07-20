@@ -10,7 +10,7 @@
 
     <VBox spacing="0">
         <!-- Prepare Area -->
-        <HBox fx:id="prepareArea" spacing="0" alignment="CENTER">
+        <HBox fx:id="prepareArea" spacing="12" alignment="CENTER">
             <VBox spacing="16" alignment="CENTER" HBox.hgrow="ALWAYS">
                 <Label text="健康问答" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                 <Label text="共二十道题目" style="-fx-font-size: 13px; -fx-text-fill: -text-secondary;"/>
@@ -19,6 +19,18 @@
                     <VBox.margin><Insets top="8"/></VBox.margin>
                 </Button>
             </VBox>
+
+            <!-- Wrong-Question Book -->
+            <VBox fx:id="wrongBookPanel" spacing="6" alignment="TOP_CENTER"
+                  style="-fx-background-color: rgba(239,68,68,0.06); -fx-background-radius: 12px; -fx-padding: 12px;"
+                  prefWidth="220" maxWidth="220">
+                <Label text="📝 错题本" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+                <Label fx:id="wrongBookCount" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #ef4444;"/>
+                <Label text="道错题待复习" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
+                <Button fx:id="btnWrongPractice" text="错题重练" onAction="#onWrongPractice"
+                        prefWidth="180" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-text-fill: #ef4444; -fx-background-color: rgba(239,68,68,0.1); -fx-border-color: rgba(239,68,68,0.3); -fx-border-width: 1px; -fx-border-radius: 10px; -fx-cursor: hand; -fx-padding: 8 0;"/>
+            </VBox>
+
             <VBox fx:id="leaderboardPanel" spacing="6" alignment="TOP_CENTER"
                   style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 12px;"
                   prefWidth="240" maxWidth="240">

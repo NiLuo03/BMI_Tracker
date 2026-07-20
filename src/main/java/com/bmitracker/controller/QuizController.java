@@ -4,6 +4,7 @@ import com.bmitracker.BMIApplication;
 import com.bmitracker.dao.QuizResultDao.LeaderboardEntry;
 import com.bmitracker.service.QuizService;
 import com.bmitracker.service.QuizService.QuizQuestion;
+import com.bmitracker.util.WrongQuestionStore;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -31,6 +32,12 @@ public class QuizController {
     @FXML private Button btnPrevAll, btnNextAll, btnPrevW, btnNextW, btnBackToPrepare;
     @FXML private VBox quizSheetPanel, quizSheetContent;
     @FXML private ToggleButton quizSheetToggle;
+    @FXML private VBox wrongBookPanel;
+    @FXML private Label wrongBookCount;
+    @FXML private Button btnWrongPractice;
+
+    private boolean wrongPracticeMode = false;
+    private List<QuizQuestion> wrongQuestions;
 
     private final QuizService quizService = new QuizService();
     private List<QuizQuestion> questions;
@@ -77,6 +84,7 @@ public class QuizController {
             loadLeaderboard(weekly);
         });
         loadLeaderboard(true);
+        loadWrongBook();
     }
 
     private void loadLeaderboard(boolean weekly) {
@@ -114,8 +122,28 @@ public class QuizController {
         }
     }
 
+    private void loadWrongBook() {
+        int count = WrongQuestionStore.count(BMIApplication.currentUserId);
+        wrongBookCount.setText(String.valueOf(count));
+    }
+
     @FXML
     void onStart() {
+        wrongPracticeMode = false;
+        prepareArea.setVisible(false);
+        prepareArea.setManaged(false);
+        quizArea.setVisible(true);
+        quizArea.setManaged(true);
+        loadQuestions();
+    }
+
+    @FXML
+    void onWrongPractice() {
+        if (WrongQuestionStore.count(BMIApplication.currentUserId) < 1) {
+            showToast("当前没有错题，先去答题吧！");
+            return;
+        }
+        wrongPracticeMode = true;
         prepareArea.setVisible(false);
         prepareArea.setManaged(false);
         quizArea.setVisible(true);
@@ -124,10 +152,27 @@ public class QuizController {
     }
 
     private void loadQuestions() {
-        questions = quizService.pickRandom(20);
+        if (wrongPracticeMode) {
+            List<WrongQuestionStore.Entry> entries = WrongQuestionStore.load(BMIApplication.currentUserId);
+            questions = new ArrayList<>();
+            for (WrongQuestionStore.Entry e : entries) {
+                String[] parts = e.questionLine.split("\\|", 8);
+                if (parts.length < 7) continue;
+                String exp = parts.length >= 8 ? parts[7] : "";
+                questions.add(new QuizQuestion(Integer.parseInt(parts[0]),
+                        parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], exp));
+            }
+        } else {
+            questions = quizService.pickRandom(20);
+        }
         userAnswers = new String[questions.size()];
         if (questions.isEmpty()) {
-            questionText.setText("题库为空");
+            quizArea.setVisible(false);
+            quizArea.setManaged(false);
+            prepareArea.setVisible(true);
+            prepareArea.setManaged(true);
+            loadLeaderboard(btnWeekly.isSelected());
+            loadWrongBook();
             return;
         }
         currentIndex = 0;
@@ -260,6 +305,21 @@ public class QuizController {
             QuizQuestion q = questions.get(i);
             if (ua != null && ua.equals(q.getAnswer())) correct++;
             else wrongIdxList.add(i);
+        }
+
+        int userId = BMIApplication.currentUserId;
+        for (int i = 0; i < questions.size(); i++) {
+            String ua = userAnswers[i];
+            QuizQuestion q = questions.get(i);
+            String fullLine = q.getId() + "|" + q.getQuestion() + "|"
+                    + q.getOption(0) + "|" + q.getOption(1) + "|"
+                    + q.getOption(2) + "|" + q.getOption(3) + "|"
+                    + q.getAnswer() + "|" + q.getExplanation();
+            if (ua == null || !ua.equals(q.getAnswer())) {
+                WrongQuestionStore.add(userId, fullLine, ua == null ? "-" : ua);
+            } else if (wrongPracticeMode) {
+                WrongQuestionStore.remove(userId, fullLine);
+            }
         }
 
         quizService.saveResult(BMIApplication.currentUserId, correct, questions.size(),
@@ -523,6 +583,7 @@ public class QuizController {
         leaderboardPanel.setVisible(true);
         leaderboardPanel.setManaged(true);
         loadLeaderboard(btnWeekly.isSelected());
+        loadWrongBook();
     }
 
     @FXML
@@ -537,5 +598,28 @@ public class QuizController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showToast(String msg) {
+        Label toast = new Label(msg);
+        toast.setStyle("-fx-background-color: rgba(0,0,0,0.85); -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 12 24; -fx-background-radius: 8px;");
+        StackPane.setAlignment(toast, Pos.BOTTOM_CENTER);
+        toast.setTranslateY(-40);
+        toast.setOpacity(0);
+        root.getChildren().add(toast);
+
+        javafx.animation.FadeTransition ftIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(300), toast);
+        ftIn.setFromValue(0); ftIn.setToValue(1);
+        ftIn.setOnFinished(e -> {
+            javafx.animation.PauseTransition pt = new javafx.animation.PauseTransition(javafx.util.Duration.millis(1500));
+            pt.setOnFinished(e2 -> {
+                javafx.animation.FadeTransition ftOut = new javafx.animation.FadeTransition(javafx.util.Duration.millis(400), toast);
+                ftOut.setFromValue(1); ftOut.setToValue(0);
+                ftOut.setOnFinished(e3 -> root.getChildren().remove(toast));
+                ftOut.play();
+            });
+            pt.play();
+        });
+        ftIn.play();
     }
 }
