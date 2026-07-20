@@ -81,7 +81,7 @@ public class MainController {
     private Pane rootPane;
 
     private static final String[] BACKDROP_COLORS = {
-        "#050f0a", "#0a0a1a", "#100a1a", "#111111", "#ffffff"
+        "#000000", "#050f0a", "#0a0a1a", "#100a1a", "#111111", "#ffffff"
     };
 
     private void applyNavState(boolean expanded) {
