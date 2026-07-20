@@ -201,12 +201,19 @@ public class MainController {
         saveBackdropPref(hexColor);
     }
 
+    private void clearOtherBackdropPrefs(Preferences p, String keepKey) {
+        if (!keepKey.equals("backdrop_"))      p.remove("backdrop_" + BMIApplication.currentUserId);
+        if (!keepKey.equals("backdrop_image_")) p.remove("backdrop_image_" + BMIApplication.currentUserId);
+        if (!keepKey.equals("backdrop_crop_"))  p.remove("backdrop_crop_" + BMIApplication.currentUserId);
+    }
+
     private void saveBackdropPref(String value) {
         if (BMIApplication.currentUserId <= 0) return;
         try {
             Preferences p = Preferences.userNodeForPackage(getClass());
+            clearOtherBackdropPrefs(p, "backdrop_");
             p.put("backdrop_" + BMIApplication.currentUserId, value);
-            p.remove("backdrop_image_" + BMIApplication.currentUserId);
+            p.flush();
         } catch (Exception e) { /* ignore */ }
     }
 
@@ -214,9 +221,9 @@ public class MainController {
         if (BMIApplication.currentUserId <= 0) return;
         try {
             Preferences p = Preferences.userNodeForPackage(getClass());
+            clearOtherBackdropPrefs(p, "backdrop_image_");
             p.put("backdrop_image_" + BMIApplication.currentUserId, file.getAbsolutePath());
-            p.remove("backdrop_" + BMIApplication.currentUserId);
-            p.remove("backdrop_crop_" + BMIApplication.currentUserId);
+            p.flush();
         } catch (Exception e) { /* ignore */ }
     }
 
@@ -224,10 +231,10 @@ public class MainController {
         if (BMIApplication.currentUserId <= 0) return;
         try {
             Preferences p = Preferences.userNodeForPackage(getClass());
+            clearOtherBackdropPrefs(p, "backdrop_crop_");
             p.put("backdrop_crop_" + BMIApplication.currentUserId,
                   originalFile.getAbsolutePath() + "|" + x + "|" + y + "|" + w + "|" + h);
-            p.remove("backdrop_" + BMIApplication.currentUserId);
-            p.remove("backdrop_image_" + BMIApplication.currentUserId);
+            p.flush();
         } catch (Exception e) { /* ignore */ }
     }
 
