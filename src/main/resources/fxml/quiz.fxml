@@ -100,6 +100,10 @@
 
         <!-- spacer fills remaining space, keeping nav close to content -->
         <Region VBox.vgrow="ALWAYS"/>
+
+        <Label fx:id="sloganLabel" text=""
+               style="-fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-padding: 8 0 4 0; -fx-cursor: hand;"
+               maxWidth="Infinity" alignment="CENTER" onMouseClicked="#onSloganClick"/>
     </VBox>
 
     <Label fx:id="resultScore" visible="false" managed="false"/>
