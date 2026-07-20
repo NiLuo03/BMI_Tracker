@@ -83,83 +83,55 @@ public class MainController {
         "#050f0a", "#0a0a1a", "#100a1a", "#000000", "#111111", "#ffffff"
     };
 
+    private void applyNavState(boolean expanded) {
+        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz};
+        String[][] btnDefs = {
+            {" 首页", ""}, {" BMI 记录", ""}, {" 数据分析", ""}, {" 趋势预测", ""},
+            {" 膳食推荐", ""}, {" 食物对比", ""}, {" 食物榜单", ""}, {" 膳食记录", ""}, {" 健康问答", ""}
+        };
+        for (int i = 0; i < btns.length; i++) {
+            btns[i].setText(expanded ? btnDefs[i][0] : btnDefs[i][1]);
+            btns[i].setMaxWidth(expanded ? Double.MAX_VALUE : 38);
+            btns[i].setAlignment(expanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+        }
+        toggleNavBtn.setMaxWidth(expanded ? Double.MAX_VALUE : 38);
+        toggleNavBtn.setAlignment(expanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
+        StackPane toggleBox = (StackPane) toggleNavBtn.getGraphic();
+        if (toggleBox != null && !toggleBox.getChildren().isEmpty()) {
+            SVGPath toggleSvg = (SVGPath) toggleBox.getChildren().get(0);
+            toggleSvg.setScaleX(expanded ? 0.018 : -0.018);
+        }
+        menuSettings.setVisible(expanded);
+        menuSettings.setManaged(expanded);
+        sidebar.setAlignment(javafx.geometry.Pos.TOP_LEFT);
+        if (avatarHBox != null) avatarHBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        if (avatarStatusBox != null) {
+            avatarStatusBox.setVisible(expanded);
+            avatarStatusBox.setManaged(expanded);
+        }
+        if (categoryMainLabel != null) {
+            categoryMainLabel.setVisible(expanded);
+            categoryMainLabel.setManaged(expanded);
+        }
+        if (categoryServiceLabel != null) {
+            categoryServiceLabel.setVisible(expanded);
+            categoryServiceLabel.setManaged(expanded);
+        }
+        Insets margin = expanded ? Insets.EMPTY : new Insets(0, 0, 0, 7);
+        for (Button b : btns) VBox.setMargin(b, margin);
+        VBox.setMargin(toggleNavBtn, margin);
+    }
+
     @FXML
     void toggleNav() {
         navExpanded = !navExpanded;
         double target = navExpanded ? 150 : 48;
-        Button[] btns = {btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz};
-
         Timeline anim = new Timeline(
             new KeyFrame(Duration.millis(200),
                 new KeyValue(sidebar.prefWidthProperty(), target))
         );
         anim.play();
-
-        for (int i = 0; i < btns.length; i++) {
-            if (btns[i] == btnHome) {
-                btnHome.setText(navExpanded ? " 首页" : "");
-                btnHome.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnHome.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnBmi) {
-                btnBmi.setText(navExpanded ? " BMI 记录" : "");
-                btnBmi.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnBmi.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnHistory) {
-                btnHistory.setText(navExpanded ? " 数据分析" : "");
-                btnHistory.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnHistory.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnPredict) {
-                btnPredict.setText(navExpanded ? " 趋势预测" : "");
-                btnPredict.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnPredict.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnDiet) {
-                btnDiet.setText(navExpanded ? " 膳食推荐" : "");
-                btnDiet.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnDiet.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnCompare) {
-                btnCompare.setText(navExpanded ? " 食物对比" : "");
-                btnCompare.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnCompare.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnRank) {
-                btnRank.setText(navExpanded ? " 食物榜单" : "");
-                btnRank.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnRank.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnMealRecord) {
-                btnMealRecord.setText(navExpanded ? " 膳食记录" : "");
-                btnMealRecord.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnMealRecord.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            } else if (btns[i] == btnQuiz) {
-                btnQuiz.setText(navExpanded ? " 健康问答" : "");
-                btnQuiz.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-                btnQuiz.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-            }
-        }
-        toggleNavBtn.setMaxWidth(navExpanded ? Double.MAX_VALUE : 38);
-        toggleNavBtn.setAlignment(navExpanded ? javafx.geometry.Pos.CENTER_LEFT : javafx.geometry.Pos.CENTER);
-        StackPane toggleBox = (StackPane) toggleNavBtn.getGraphic();
-        if (toggleBox != null && !toggleBox.getChildren().isEmpty()) {
-            SVGPath toggleSvg = (SVGPath) toggleBox.getChildren().get(0);
-            toggleSvg.setScaleX(navExpanded ? 0.018 : -0.018);
-        }
-        menuSettings.setVisible(navExpanded);
-        menuSettings.setManaged(navExpanded);
-        sidebar.setAlignment(javafx.geometry.Pos.TOP_LEFT);
-        if (avatarHBox != null) avatarHBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        if (avatarStatusBox != null) {
-            avatarStatusBox.setVisible(navExpanded);
-            avatarStatusBox.setManaged(navExpanded);
-        }
-        if (categoryMainLabel != null) {
-            categoryMainLabel.setVisible(navExpanded);
-            categoryMainLabel.setManaged(navExpanded);
-        }
-        if (categoryServiceLabel != null) {
-            categoryServiceLabel.setVisible(navExpanded);
-            categoryServiceLabel.setManaged(navExpanded);
-        }
-        Insets margin = navExpanded ? Insets.EMPTY : new Insets(0, 0, 0, 7);
-        for (Button b : btns) VBox.setMargin(b, margin);
-        VBox.setMargin(toggleNavBtn, margin);
+        applyNavState(navExpanded);
     }
 
     public void changeBackdrop(String hexColor) {
@@ -332,6 +304,8 @@ public class MainController {
                 if (homeWeightPopup != null) homeWeightPopup.hide();
             });
         });
+
+        applyNavState(true);
     }
 
     private void setupHomePickers() {
