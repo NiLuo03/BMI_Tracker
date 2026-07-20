@@ -152,18 +152,52 @@ public class MainController {
         applyNavState(navExpanded);
     }
 
+    private static boolean isBrightColor(String hex) {
+        try {
+            String h = hex.startsWith("#") ? hex.substring(1) : hex;
+            if (h.length() == 3) h = "" + h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+            int rgb = Integer.parseInt(h, 16);
+            double r = ((rgb >> 16) & 0xff) / 255.0;
+            double g = ((rgb >> 8) & 0xff) / 255.0;
+            double b = (rgb & 0xff) / 255.0;
+            return 0.299 * r + 0.587 * g + 0.114 * b > 0.5;
+        } catch (Exception e) { return true; }
+    }
+
+    private static boolean isBrightImage(Image image) {
+        try {
+            PixelReader pr = image.getPixelReader();
+            int w = (int) image.getWidth();
+            int h = (int) image.getHeight();
+            int sx = w / 2, sy = h / 2;
+            double total = 0;
+            int count = 0;
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    int px = sx + dx, py = sy + dy;
+                    if (px >= 0 && px < w && py >= 0 && py < h) {
+                        int argb = pr.getArgb(px, py);
+                        double r = ((argb >> 16) & 0xff) / 255.0;
+                        double g = ((argb >> 8) & 0xff) / 255.0;
+                        double b = (argb & 0xff) / 255.0;
+                        total += 0.299 * r + 0.587 * g + 0.114 * b;
+                        count++;
+                    }
+                }
+            }
+            return count > 0 && total / count > 0.5;
+        } catch (Exception e) { return true; }
+    }
+
+    private void applyTheme(boolean bright) {
+        if (rootPane == null) return;
+        rootPane.getStyleClass().removeAll("light-theme", "black-theme");
+        rootPane.getStyleClass().add(bright ? "light-theme" : "black-theme");
+    }
+
     public void changeBackdrop(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
-        if (rootPane == null) return;
-        boolean isLight = "#ffffff".equals(hexColor);
-        boolean isBlack = "#000000".equals(hexColor);
-        rootPane.getStyleClass().removeAll("light-theme");
-        rootPane.getStyleClass().removeAll("black-theme");
-        if (isLight) {
-            rootPane.getStyleClass().add("light-theme");
-        } else if (isBlack) {
-            rootPane.getStyleClass().add("black-theme");
-        }
+        applyTheme(isBrightColor(hexColor));
         saveBackdropPref(hexColor);
     }
 
@@ -239,24 +273,13 @@ public class MainController {
 
     private void applyBackdropDirect(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
-        if (rootPane == null) return;
-        boolean isLight = "#ffffff".equals(hexColor);
-        boolean isBlack = "#000000".equals(hexColor);
-        rootPane.getStyleClass().removeAll("light-theme");
-        rootPane.getStyleClass().removeAll("black-theme");
-        if (isLight) {
-            rootPane.getStyleClass().add("light-theme");
-        } else if (isBlack) {
-            rootPane.getStyleClass().add("black-theme");
-        }
+        applyTheme(isBrightColor(hexColor));
     }
 
     private void applyBackdropImageDirect(File imageFile) {
-        if (rootPane != null) {
-            rootPane.getStyleClass().removeAll("light-theme", "black-theme");
-        }
-        String url = imageFile.toURI().toString();
-        backdrop.setStyle("-fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
+        Image img = new Image(imageFile.toURI().toString());
+        backdrop.setStyle("-fx-background-image: url('" + imageFile.toURI() + "'); -fx-background-size: cover; -fx-background-position: center;");
+        applyTheme(isBrightImage(img));
     }
 
     private void applyBackdropImage(Image image) {
@@ -266,21 +289,17 @@ public class MainController {
             BackgroundPosition.CENTER,
             new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
         )));
+        applyTheme(isBrightImage(image));
     }
 
     public void changeBackdropImage(java.io.File imageFile) {
-        if (rootPane != null) {
-            rootPane.getStyleClass().removeAll("light-theme", "black-theme");
-        }
-        String url = imageFile.toURI().toString();
-        backdrop.setStyle("-fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
+        Image img = new Image(imageFile.toURI().toString());
+        backdrop.setStyle("-fx-background-image: url('" + imageFile.toURI() + "'); -fx-background-size: cover; -fx-background-position: center;");
+        applyTheme(isBrightImage(img));
         saveBackdropImagePref(imageFile);
     }
 
     public void changeBackdropCropped(File originalFile, int cropX, int cropY, int cropW, int cropH) {
-        if (rootPane != null) {
-            rootPane.getStyleClass().removeAll("light-theme", "black-theme");
-        }
         Image full = new Image(originalFile.toURI().toString());
         Image cropped = new WritableImage(full.getPixelReader(), cropX, cropY, cropW, cropH);
         applyBackdropImage(cropped);
