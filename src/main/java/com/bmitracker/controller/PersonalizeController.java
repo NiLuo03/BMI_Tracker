@@ -1,8 +1,8 @@
 package com.bmitracker.controller;
 
+import com.bmitracker.component.ImageCropper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
@@ -26,10 +26,14 @@ public class PersonalizeController {
         );
         Stage stage = (Stage) hintLabel.getScene().getWindow();
         File file = fc.showOpenDialog(stage);
-        if (file != null) {
-            MainController.getInstance().changeBackdropImage(file);
-            if (hintLabel != null) hintLabel.setText("已切换为自定义图片");
-        }
+        if (file == null) return;
+
+        ImageCropper.show(file, stage).ifPresentOrElse(crop -> {
+            MainController.getInstance().changeBackdropCropped(file, crop.x(), crop.y(), crop.width(), crop.height());
+            if (hintLabel != null) hintLabel.setText("已切换为自定义图片（已裁剪）");
+        }, () -> {
+            if (hintLabel != null) hintLabel.setText("已取消裁剪");
+        });
     }
 
     private void apply(String color, String name) {

@@ -1,6 +1,7 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.component.ImageCropper;
 import com.bmitracker.component.TitleBar;
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.model.BmiRecord;
@@ -24,6 +25,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -36,6 +42,7 @@ import javafx.util.Duration;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.paint.CycleMethod;
+import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -175,6 +182,18 @@ public class MainController {
             Preferences p = Preferences.userNodeForPackage(getClass());
             p.put("backdrop_image_" + BMIApplication.currentUserId, file.getAbsolutePath());
             p.remove("backdrop_" + BMIApplication.currentUserId);
+            p.remove("backdrop_crop_" + BMIApplication.currentUserId);
+        } catch (Exception e) { /* ignore */ }
+    }
+
+    private void saveBackdropCropPref(File originalFile, int x, int y, int w, int h) {
+        if (BMIApplication.currentUserId <= 0) return;
+        try {
+            Preferences p = Preferences.userNodeForPackage(getClass());
+            p.put("backdrop_crop_" + BMIApplication.currentUserId,
+                  originalFile.getAbsolutePath() + "|" + x + "|" + y + "|" + w + "|" + h);
+            p.remove("backdrop_" + BMIApplication.currentUserId);
+            p.remove("backdrop_image_" + BMIApplication.currentUserId);
         } catch (Exception e) { /* ignore */ }
     }
 
@@ -182,15 +201,37 @@ public class MainController {
         if (BMIApplication.currentUserId <= 0) return;
         try {
             Preferences p = Preferences.userNodeForPackage(getClass());
-            String color = p.get("backdrop_" + BMIApplication.currentUserId, null);
-            if (color != null) {
-                applyBackdropDirect(color);
-                return;
+
+            String cropStr = p.get("backdrop_crop_" + BMIApplication.currentUserId, null);
+            if (cropStr != null) {
+                String[] parts = cropStr.split("\\|");
+                if (parts.length == 5) {
+                    File f = new File(parts[0]);
+                    if (f.exists()) {
+                        int cx = Integer.parseInt(parts[1]);
+                        int cy = Integer.parseInt(parts[2]);
+                        int cw = Integer.parseInt(parts[3]);
+                        int ch = Integer.parseInt(parts[4]);
+                        Image full = new Image(f.toURI().toString());
+                        if (cx + cw <= (int) full.getWidth() && cy + ch <= (int) full.getHeight()) {
+                            Image cropped = new WritableImage(full.getPixelReader(), cx, cy, cw, ch);
+                            applyBackdropImage(cropped);
+                            return;
+                        }
+                    }
+                }
             }
+
             String imagePath = p.get("backdrop_image_" + BMIApplication.currentUserId, null);
             if (imagePath != null) {
                 File f = new File(imagePath);
                 if (f.exists()) { applyBackdropImageDirect(f); return; }
+            }
+
+            String color = p.get("backdrop_" + BMIApplication.currentUserId, null);
+            if (color != null) {
+                applyBackdropDirect(color);
+                return;
             }
         } catch (Exception e) { /* ignore */ }
         applyBackdropDirect("#ffffff");
@@ -218,6 +259,15 @@ public class MainController {
         backdrop.setStyle("-fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
     }
 
+    private void applyBackdropImage(Image image) {
+        backdrop.setStyle(null);
+        backdrop.setBackground(new Background(new BackgroundImage(
+            image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
+        )));
+    }
+
     public void changeBackdropImage(java.io.File imageFile) {
         if (rootPane != null) {
             rootPane.getStyleClass().removeAll("light-theme", "black-theme");
@@ -225,6 +275,16 @@ public class MainController {
         String url = imageFile.toURI().toString();
         backdrop.setStyle("-fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
         saveBackdropImagePref(imageFile);
+    }
+
+    public void changeBackdropCropped(File originalFile, int cropX, int cropY, int cropW, int cropH) {
+        if (rootPane != null) {
+            rootPane.getStyleClass().removeAll("light-theme", "black-theme");
+        }
+        Image full = new Image(originalFile.toURI().toString());
+        Image cropped = new WritableImage(full.getPixelReader(), cropX, cropY, cropW, cropH);
+        applyBackdropImage(cropped);
+        saveBackdropCropPref(originalFile, cropX, cropY, cropW, cropH);
     }
 
     public void changeBackdrop(int idx) {
