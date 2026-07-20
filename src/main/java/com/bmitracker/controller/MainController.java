@@ -200,7 +200,7 @@ public class MainController {
     private void setGlassFrosted(boolean frosted) {
         if (frosted) {
             boolean light = rootPane.getStyleClass().contains("light-theme");
-            Color bg = light ? Color.rgb(220, 220, 230, 0.55) : Color.rgb(140, 140, 155, 0.18);
+            Color bg = light ? Color.rgb(170, 170, 185, 0.65) : Color.rgb(110, 110, 125, 0.30);
             glassPanel.setBackground(new Background(new BackgroundFill(bg, new CornerRadii(20), Insets.EMPTY)));
         } else {
             glassPanel.setBackground(null);
