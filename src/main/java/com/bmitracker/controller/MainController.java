@@ -26,10 +26,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -195,9 +197,21 @@ public class MainController {
         rootPane.getStyleClass().add(bright ? "light-theme" : "black-theme");
     }
 
+    private void setGlassFrosted(boolean frosted) {
+        if (frosted) {
+            boolean light = rootPane.getStyleClass().contains("light-theme");
+            Color bg = light ? Color.rgb(220, 220, 235, 0.45) : Color.rgb(200, 200, 215, 0.12);
+            glassPanel.setBackground(new Background(new BackgroundFill(bg, new CornerRadii(20), Insets.EMPTY)));
+        } else {
+            glassPanel.setBackground(null);
+        }
+    }
+
     public void changeBackdrop(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
         applyTheme(isBrightColor(hexColor));
+        boolean pure = "#ffffff".equals(hexColor) || "#000000".equals(hexColor);
+        setGlassFrosted(pure);
         saveBackdropPref(hexColor);
     }
 
@@ -281,12 +295,15 @@ public class MainController {
     private void applyBackdropDirect(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
         applyTheme(isBrightColor(hexColor));
+        boolean pure = "#ffffff".equals(hexColor) || "#000000".equals(hexColor);
+        setGlassFrosted(pure);
     }
 
     private void applyBackdropImageDirect(File imageFile) {
         Image img = new Image(imageFile.toURI().toString());
         backdrop.setStyle("-fx-background-image: url('" + imageFile.toURI() + "'); -fx-background-size: cover; -fx-background-position: center;");
         applyTheme(isBrightImage(img));
+        setGlassFrosted(false);
     }
 
     private void applyBackdropImage(Image image) {
@@ -297,6 +314,7 @@ public class MainController {
             new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
         )));
         applyTheme(isBrightImage(image));
+        setGlassFrosted(false);
     }
 
     public void changeBackdropImage(java.io.File imageFile) {
