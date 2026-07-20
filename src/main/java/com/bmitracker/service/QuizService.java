@@ -106,6 +106,8 @@ public class QuizService {
         public int totalQuestions;
         public int totalScore;
         public int bestScore;
+        public int continuousDays;
+        public int allTimeBest;
     }
 
     public TodayStats getTodayStats(int userId) {
@@ -119,6 +121,17 @@ public class QuizService {
                 stats.totalScore += r.getScore() * 5;
                 if (r.getScore() * 5 > stats.bestScore) stats.bestScore = r.getScore() * 5;
             }
+
+            List<java.time.LocalDate> dates = dao.getAnswerDates(userId);
+            java.time.LocalDate today = java.time.LocalDate.now();
+            int streak = 0;
+            for (java.time.LocalDate d : dates) {
+                if (d.equals(today.minusDays(streak))) streak++;
+                else break;
+            }
+            stats.continuousDays = streak;
+
+            stats.allTimeBest = dao.getBestScore(userId) * 5;
         } catch (SQLException e) { /* return empty */ }
         return stats;
     }

@@ -13,7 +13,7 @@
         <VBox fx:id="prepareArea" spacing="20" alignment="TOP_CENTER">
 
             <!-- Top row: Today Stats | Wrong Book | Leaderboard -->
-            <HBox spacing="12" alignment="CENTER" maxWidth="Infinity">
+            <HBox spacing="12" alignment="TOP_CENTER" maxWidth="Infinity" fillHeight="false">
                 <VBox fx:id="todayPanel" spacing="6" alignment="TOP_CENTER"
                       style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 16px;"
                       HBox.hgrow="ALWAYS">
@@ -32,12 +32,22 @@
                     <Region style="-fx-min-height: 6;"/>
                     <HBox spacing="24" alignment="CENTER">
                         <VBox spacing="2" alignment="CENTER">
-                            <Label fx:id="todayScore" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
-                            <Label text="得分" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                            <Label fx:id="todayBest" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                            <Label text="今日最高" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
                         </VBox>
                         <VBox spacing="2" alignment="CENTER">
-                            <Label fx:id="todayBest" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
-                            <Label text="最高" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                            <Label fx:id="bestEver" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                            <Label text="历史最佳" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                        </VBox>
+                    </HBox>
+                    <Region style="-fx-min-height: 6;"/>
+                    <HBox spacing="24" alignment="CENTER">
+                        <VBox spacing="2" alignment="CENTER">
+                            <HBox spacing="4" alignment="BASELINE_CENTER">
+                                <Label text="连续" style="-fx-font-size: 14px; -fx-text-fill: -text-secondary;"/>
+                                <Label fx:id="todayStreak" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;"/>
+                                <Label text="天" style="-fx-font-size: 14px; -fx-text-fill: -text-secondary;"/>
+                            </HBox>
                         </VBox>
                     </HBox>
                 </VBox>
@@ -57,7 +67,7 @@
 
                 <VBox fx:id="leaderboardPanel" spacing="6" alignment="TOP_CENTER"
                       style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 12px; -fx-padding: 16px;"
-                      HBox.hgrow="ALWAYS">
+                      HBox.hgrow="ALWAYS" minHeight="320">
                     <Label text="🏆 排行榜" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                     <HBox spacing="4" alignment="CENTER">
                         <ToggleButton fx:id="btnWeekly" text="周榜" selected="true"
@@ -65,16 +75,19 @@
                         <ToggleButton fx:id="btnAlltime" text="总榜"
                                       style="-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
                     </HBox>
-                    <VBox fx:id="leaderboardList" spacing="4" alignment="TOP_CENTER"/>
+                    <ScrollPane fitToWidth="true" maxHeight="320"
+                                style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+                        <VBox fx:id="leaderboardList" spacing="4" alignment="TOP_CENTER"/>
+                    </ScrollPane>
                 </VBox>
             </HBox>
 
             <!-- Quiz start section -->
-            <VBox spacing="12" alignment="CENTER">
-                <Label text="健康问答" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
-                <Label text="共二十道题目" style="-fx-font-size: 13px; -fx-text-fill: -text-secondary;"/>
-                <Button text="开始问答" onAction="#onStart" styleClass="btn-primary" prefWidth="200" prefHeight="44"
-                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 12px;"/>
+            <VBox spacing="16" alignment="CENTER">
+                <Label text="健康问答" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+                <Label text="共二十道题目" style="-fx-font-size: 15px; -fx-text-fill: -text-secondary;"/>
+                <Button text="开始问答" onAction="#onStart" styleClass="btn-primary" prefWidth="220" prefHeight="50"
+                        style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 14px;"/>
             </VBox>
         </VBox>
 

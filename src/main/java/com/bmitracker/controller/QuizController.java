@@ -36,7 +36,7 @@ public class QuizController {
     @FXML private Label wrongBookCount;
     @FXML private Button btnWrongPractice;
     @FXML private Label sloganLabel;
-    @FXML private Label todayCount, todayAccuracy, todayScore, todayBest;
+    @FXML private Label todayCount, todayAccuracy, todayBest, todayStreak, bestEver;
 
     private boolean wrongPracticeMode = false;
     private List<String> slogans;
@@ -166,8 +166,9 @@ public class QuizController {
         } else {
             todayAccuracy.setText("-");
         }
-        todayScore.setText(String.valueOf(s.totalScore));
         todayBest.setText(String.valueOf(s.bestScore));
+        todayStreak.setText(String.valueOf(s.continuousDays));
+        bestEver.setText(String.valueOf(s.allTimeBest));
     }
 
     @FXML

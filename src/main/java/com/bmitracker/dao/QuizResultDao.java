@@ -86,6 +86,28 @@ public class QuizResultDao {
         return list;
     }
 
+    public List<java.time.LocalDate> getAnswerDates(int userId) throws SQLException {
+        List<java.time.LocalDate> dates = new ArrayList<>();
+        String sql = "SELECT DISTINCT CAST(createTime AS DATE) AS d FROM quiz_results WHERE userId = ? ORDER BY d DESC";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) dates.add(rs.getDate("d").toLocalDate());
+        }
+        return dates;
+    }
+
+    public int getBestScore(int userId) throws SQLException {
+        String sql = "SELECT COALESCE(MAX(score), 0) FROM quiz_results WHERE userId = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
     private QuizResult map(ResultSet rs) throws SQLException {
         QuizResult r = new QuizResult();
         r.setResultId(rs.getInt("resultId"));
