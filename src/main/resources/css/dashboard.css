@@ -11,10 +11,10 @@
     -text-muted: #9ca3af;
     -sidebar-text: #8c8c8c;
     -card-bg: rgba(255,255,255,0.03);
-    -card-border: rgba(16,185,129,0.08);
-    -card-hover-bg: rgba(16,185,129,0.06);
-    -glass-bg: rgba(200,200,215,0.04);
-    -glass-border: rgba(200,200,215,0.06);
+    -card-border: rgba(255,255,255,0.06);
+    -card-hover-bg: rgba(255,255,255,0.06);
+    -glass-bg: rgba(28,30,38,0.78);
+    -glass-border: rgba(255,255,255,0.10);
     -topbar-bg: rgba(0,0,0,0.85);
     -menu-bg: #141414;
     -input-bg: rgba(255,255,255,0.04);
@@ -31,18 +31,18 @@
     -text-tertiary: #555555;
     -text-muted: #777777;
     -sidebar-text: #111111;
-    -card-bg: rgba(255,255,255,0.85);
-    -card-border: rgba(0,0,0,0.08);
+    -card-bg: rgba(255,255,255,0.22);
+    -card-border: rgba(255,255,255,0.15);
     -card-hover-bg: rgba(0,0,0,0.03);
-    -glass-bg: rgba(200,200,215,0.04);
-    -glass-border: rgba(200,200,215,0.06);
+    -glass-bg: rgba(240,242,248,0.72);
+    -glass-border: rgba(255,255,255,0.25);
     -topbar-bg: rgba(255,255,255,0.92);
     -menu-bg: #f5f5f5;
     -input-bg: rgba(255,255,255,0.80);
     -dashboard-bg: rgba(245,245,245,0.60);
     -welcome-bg: linear-gradient(to right, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
     -hero-card-bg: linear-gradient(to bottom right, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
-    -feature-card-bg: rgba(255,255,255,0.70);
+    -feature-card-bg: rgba(255,255,255,0.15);
     -banner-bg: linear-gradient(to right, rgba(0,0,0,0.02), rgba(0,0,0,0.01), rgba(0,0,0,0.02));
 }
 
@@ -615,7 +615,7 @@
 /* backgrounds & borders */
 .light-theme .user-avatar { -fx-background-color: linear-gradient(to bottom right, #888888, #666666) !important; }
 .light-theme .online-dot { -fx-background-color: #999999 !important; }
-.light-theme .glass-panel { -fx-background-color: rgba(220,220,220,0.55); -fx-border-color: rgba(0,0,0,0.06); }
+.light-theme .glass-panel { -fx-background-color: rgba(240,242,248,0.72); -fx-border-color: rgba(255,255,255,0.25); }
 .light-theme .banner-gradient,
 .light-theme .welcome-banner,
 .light-theme .hero-card,
@@ -744,10 +744,13 @@
     -fx-border-color: rgba(0,0,0,0.12);
 }
 
-/* --- 纯黑主题：无绿色、无玻璃板 --- */
+/* --- 纯黑主题 --- */
 .black-theme {
-    -glass-bg: rgba(200,200,215,0.04);
-    -glass-border: rgba(200,200,215,0.06);
+    -card-bg: rgba(255,255,255,0.03);
+    -card-border: rgba(255,255,255,0.04);
+    -glass-bg: rgba(18,20,26,0.85);
+    -glass-border: rgba(255,255,255,0.05);
+    -feature-card-bg: rgba(255,255,255,0.03);
 }
 .black-theme .top-bar-label { -fx-text-fill: #e0e0e0; }
 .black-theme .top-nav-btn:hover { -fx-text-fill: #e0e0e0; -fx-background-color: rgba(255,255,255,0.06); }

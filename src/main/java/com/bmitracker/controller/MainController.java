@@ -26,15 +26,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.animation.KeyFrame;
@@ -197,24 +196,9 @@ public class MainController {
         rootPane.getStyleClass().add(bright ? "light-theme" : "black-theme");
     }
 
-    private void setGlassFrosted(boolean frosted) {
-        if (frosted) {
-            boolean light = rootPane.getStyleClass().contains("light-theme");
-            if (light) {
-                glassPanel.setStyle("-fx-background-color: rgba(195,195,210,0.82); -fx-background-radius: 20px; -fx-border-color: rgba(160,160,175,0.30); -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 24px 22px;");
-            } else {
-                glassPanel.setStyle("-fx-background-color: rgba(130,130,145,0.40); -fx-background-radius: 20px; -fx-border-color: rgba(150,150,165,0.22); -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 24px 22px;");
-            }
-        } else {
-            glassPanel.setStyle("-fx-background-color: -glass-bg; -fx-background-radius: 20px; -fx-border-color: -glass-border; -fx-border-width: 1px; -fx-border-radius: 20px; -fx-padding: 24px 22px;");
-        }
-    }
-
     public void changeBackdrop(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
         applyTheme(isBrightColor(hexColor));
-        boolean pure = "#ffffff".equals(hexColor) || "#000000".equals(hexColor);
-        setGlassFrosted(pure);
         saveBackdropPref(hexColor);
     }
 
@@ -298,15 +282,12 @@ public class MainController {
     private void applyBackdropDirect(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
         applyTheme(isBrightColor(hexColor));
-        boolean pure = "#ffffff".equals(hexColor) || "#000000".equals(hexColor);
-        setGlassFrosted(pure);
     }
 
     private void applyBackdropImageDirect(File imageFile) {
         Image img = new Image(imageFile.toURI().toString());
         backdrop.setStyle("-fx-background-image: url('" + imageFile.toURI() + "'); -fx-background-size: cover; -fx-background-position: center;");
         applyTheme(isBrightImage(img));
-        setGlassFrosted(false);
     }
 
     private void applyBackdropImage(Image image) {
@@ -317,7 +298,6 @@ public class MainController {
             new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
         )));
         applyTheme(isBrightImage(image));
-        setGlassFrosted(false);
     }
 
     public void changeBackdropImage(java.io.File imageFile) {
@@ -493,6 +473,11 @@ public class MainController {
                 if (homeWeightPopup != null) homeWeightPopup.hide();
             });
         });
+
+        DropShadow wideShadow = new DropShadow(35, 0, 12, Color.rgb(0,0,0,0.10));
+        DropShadow tightShadow = new DropShadow(14, 0, 4, Color.rgb(0,0,0,0.12));
+        tightShadow.setInput(wideShadow);
+        glassPanel.setEffect(tightShadow);
 
         applyNavState(true);
         loadBackdropPref();
