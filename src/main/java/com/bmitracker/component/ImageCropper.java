@@ -91,10 +91,14 @@ public class ImageCropper {
         double x = selection.getX(), y = selection.getY();
         double w = selection.getWidth(), h = selection.getHeight();
 
-        topOverlay.setRect(0, 0, displayW, Math.max(0, y));
-        bottomOverlay.setRect(0, y + h, displayW, Math.max(0, displayH - y - h));
-        leftOverlay.setRect(0, y, Math.max(0, x), h);
-        rightOverlay.setRect(x + w, y, Math.max(0, displayW - x - w), h);
+        topOverlay.setX(0);    topOverlay.setY(0);
+        topOverlay.setWidth(displayW);  topOverlay.setHeight(Math.max(0, y));
+        bottomOverlay.setX(0); bottomOverlay.setY(y + h);
+        bottomOverlay.setWidth(displayW); bottomOverlay.setHeight(Math.max(0, displayH - y - h));
+        leftOverlay.setX(0);   leftOverlay.setY(y);
+        leftOverlay.setWidth(Math.max(0, x));  leftOverlay.setHeight(h);
+        rightOverlay.setX(x + w); rightOverlay.setY(y);
+        rightOverlay.setWidth(Math.max(0, displayW - x - w)); rightOverlay.setHeight(h);
     }
 
     private void updateHandles() {
