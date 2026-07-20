@@ -62,6 +62,7 @@ public class MainController {
     @FXML private VBox sidebar;
     @FXML private HBox avatarHBox;
     @FXML private VBox avatarStatusBox;
+    @FXML private VBox mainMenuBox, mainMenuInner, sidebarSpacer, serviceMenuBox, serviceMenuInner, sidebarBottomSpacer;
     @FXML private Label categoryMainLabel, categoryServiceLabel;
     @FXML private Label avatarLabel, sidebarUserName;
     @FXML private Label welcomeLabel, bmiStatusLabel, trendLabel;
@@ -117,6 +118,14 @@ public class MainController {
             categoryServiceLabel.setVisible(expanded);
             categoryServiceLabel.setManaged(expanded);
         }
+        if (sidebarSpacer != null) {
+            sidebarSpacer.setVisible(expanded);
+            sidebarSpacer.setManaged(expanded);
+        }
+        if (mainMenuBox != null) VBox.setVgrow(mainMenuBox, expanded ? null : javafx.scene.layout.Priority.ALWAYS);
+        if (serviceMenuBox != null) VBox.setVgrow(serviceMenuBox, expanded ? null : javafx.scene.layout.Priority.ALWAYS);
+        if (mainMenuBox != null) mainMenuBox.setAlignment(expanded ? javafx.geometry.Pos.TOP_LEFT : javafx.geometry.Pos.CENTER);
+        if (serviceMenuBox != null) serviceMenuBox.setAlignment(expanded ? javafx.geometry.Pos.TOP_LEFT : javafx.geometry.Pos.CENTER);
         Insets margin = expanded ? Insets.EMPTY : new Insets(0, 0, 0, 7);
         for (Button b : btns) VBox.setMargin(b, margin);
         VBox.setMargin(toggleNavBtn, margin);

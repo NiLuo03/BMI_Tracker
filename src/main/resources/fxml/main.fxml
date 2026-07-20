@@ -42,9 +42,9 @@
                     </graphic>
                 </Button>
 
-                <VBox spacing="0">
+                <VBox fx:id="mainMenuBox" spacing="0">
                     <Label fx:id="categoryMainLabel" text="主菜单" styleClass="sidebar-category"/>
-                    <VBox spacing="20">
+                    <VBox fx:id="mainMenuInner" spacing="20">
                         <Button fx:id="btnHome" text=" 首页" onAction="#showHome" styleClass="sidebar-btn" maxWidth="Infinity"/>
                         <Button fx:id="btnBmi" text=" BMI 记录" onAction="#showBmiRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
                         <Button fx:id="btnHistory" text=" 数据分析" onAction="#showHistory" styleClass="sidebar-btn" maxWidth="Infinity"/>
@@ -52,11 +52,11 @@
                     </VBox>
                 </VBox>
 
-                <VBox VBox.vgrow="ALWAYS"/>
+                <VBox fx:id="sidebarSpacer" VBox.vgrow="ALWAYS"/>
 
-                <VBox spacing="0">
+                <VBox fx:id="serviceMenuBox" spacing="0">
                     <Label fx:id="categoryServiceLabel" text="生活服务" styleClass="sidebar-category"/>
-                    <VBox spacing="20">
+                    <VBox fx:id="serviceMenuInner" spacing="20">
                         <Button fx:id="btnDiet" text=" 膳食推荐" onAction="#showDiet" styleClass="sidebar-btn" maxWidth="Infinity"/>
                         <Button fx:id="btnCompare" text=" 食物对比" onAction="#showFood" styleClass="sidebar-btn" maxWidth="Infinity"/>
                         <Button fx:id="btnRank" text=" 食物榜单" onAction="#showFoodRank" styleClass="sidebar-btn" maxWidth="Infinity"/>
@@ -65,7 +65,7 @@
                     </VBox>
                 </VBox>
 
-                <VBox VBox.vgrow="ALWAYS"/>
+                <VBox fx:id="sidebarBottomSpacer" VBox.vgrow="ALWAYS"/>
 
                 <HBox spacing="0" alignment="CENTER_LEFT">
                     <Button fx:id="toggleNavBtn" text="" onAction="#toggleNav" styleClass="sidebar-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity">
