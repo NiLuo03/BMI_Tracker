@@ -157,6 +157,14 @@ public class MainController {
         }
     }
 
+    public void changeBackdropImage(java.io.File imageFile) {
+        if (rootPane != null) {
+            rootPane.getStyleClass().removeAll("light-theme", "black-theme");
+        }
+        String url = imageFile.toURI().toString();
+        backdrop.setStyle("-fx-background-color: null; -fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
+    }
+
     public void changeBackdrop(int idx) {
         if (idx >= 0 && idx < BACKDROP_COLORS.length) {
             changeBackdrop(BACKDROP_COLORS[idx]);

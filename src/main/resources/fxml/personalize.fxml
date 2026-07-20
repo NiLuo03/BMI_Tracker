@@ -27,6 +27,12 @@
                        stroke="rgba(255,255,255,0.20)" strokeWidth="1.5"/>
             <Label text="纯白" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
         </VBox>
+        <VBox spacing="4" alignment="CENTER" style="-fx-cursor: hand;" onMouseClicked="#selectCustom">
+            <StackPane prefWidth="80" prefHeight="80" style="-fx-background-color: rgba(128,128,128,0.15); -fx-background-radius: 14; -fx-border-color: rgba(255,255,255,0.15); -fx-border-width: 1.5px; -fx-border-radius: 14; -fx-border-style: dashed;">
+                <Label text="+" style="-fx-font-size: 28px; -fx-text-fill: -text-secondary;"/>
+            </StackPane>
+            <Label text="自定义图片" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
+        </VBox>
     </FlowPane>
 
     <Label fx:id="hintLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
