@@ -18,9 +18,9 @@
 
     <HBox fx:id="contentArea" VBox.vgrow="ALWAYS" spacing="14">
         <VBox fx:id="leftArea" spacing="8" VBox.vgrow="ALWAYS">
-            <VBox fx:id="chartBox" styleClass="gradient-card">
-                <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
-                <Canvas fx:id="chartCanvas" height="180"/>
+            <VBox fx:id="chartBox" styleClass="gradient-card"
+                  style="-fx-padding: 12 16 12 16;">
+                <Canvas fx:id="chartCanvas" width="400" height="180"/>
             </VBox>
 
             <ScrollPane fx:id="listScroll" VBox.vgrow="ALWAYS" fitToWidth="true"
@@ -30,15 +30,6 @@
         </VBox>
 
         <VBox fx:id="rightArea" spacing="8" alignment="TOP_CENTER">
-            <HBox fx:id="monthNav" alignment="CENTER_LEFT">
-                <Button fx:id="prevMonthBtn" text="◀" styleClass="top-nav-btn"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Label fx:id="monthLabel" text="2026.07"
-                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="nextMonthBtn" text="▶" styleClass="top-nav-btn"/>
-            </HBox>
-
             <VBox fx:id="calendarBox"
                   style="-fx-background-color: rgba(0,0,0,0.02);
                          -fx-background-radius: 10px;
@@ -46,6 +37,15 @@
                          -fx-border-width: 1px;
                          -fx-border-radius: 10px;
                          -fx-padding: 10 6 6 6;">
+                <HBox fx:id="monthNav" alignment="CENTER_LEFT"
+                      style="-fx-padding: 0 0 6 0;">
+                    <Button fx:id="prevMonthBtn" text="◀" styleClass="top-nav-btn"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="monthLabel" text="2026.07"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="nextMonthBtn" text="▶" styleClass="top-nav-btn"/>
+                </HBox>
                 <GridPane fx:id="calendarGrid" hgap="0" vgap="0"
                           style="-fx-background-color: transparent;"/>
             </VBox>

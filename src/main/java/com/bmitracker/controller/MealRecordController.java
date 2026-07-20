@@ -63,12 +63,6 @@ public class MealRecordController {
             if (nv.doubleValue() > 0) buildCalendar();
         });
 
-        chartBox.widthProperty().addListener((obs, ov, nv) -> {
-            chartCanvas.setWidth(Math.max(1, nv.doubleValue() - 32));
-        });
-        chartBox.heightProperty().addListener((obs, ov, nv) -> {
-            chartCanvas.setHeight(Math.max(1, nv.doubleValue() - 24));
-        });
         chartCanvas.widthProperty().addListener(o -> drawChart());
         chartCanvas.heightProperty().addListener(o -> drawChart());
 
@@ -259,7 +253,7 @@ public class MealRecordController {
         calendarGrid.getColumnConstraints().clear();
         calendarGrid.getRowConstraints().clear();
 
-        double available = rightArea.getWidth() - 12;
+        double available = rightArea.prefWidth(-1) - 12;
         if (available <= 0) return;
         double cellSize = available / 7;
         if (cellSize <= 0) return;
@@ -329,9 +323,10 @@ public class MealRecordController {
             }
             final LocalDate cellDate = date;
             cell.setOnMouseClicked(e -> {
+                if (cellDate.equals(selectedDate)) return;
                 selectedDate = cellDate;
                 drawChart();
-                buildCalendar();
+                refreshCalendarStyles();
                 refreshList();
             });
 
@@ -355,6 +350,53 @@ public class MealRecordController {
 
     private String getParamUnit() {
         return currentParam == Param.CALORIE ? "kcal" : "g";
+    }
+
+    private void refreshCalendarStyles() {
+        LocalDate firstDay = calendarMonth.withDayOfMonth(1);
+        int startCol = firstDay.getDayOfWeek().getValue() - 1;
+        int daysInMonth = calendarMonth.lengthOfMonth();
+
+        for (int d = 1; d <= daysInMonth; d++) {
+            LocalDate date = calendarMonth.withDayOfMonth(d);
+            int col = (startCol + d - 1) % 7;
+            int row = 1 + (startCol + d - 1) / 7;
+            if (row < 1 || row > 6) continue;
+            if (col < 0 || col > 6) continue;
+
+            javafx.scene.Node node = getNodeByRowCol(calendarGrid, col, row);
+            if (!(node instanceof VBox)) continue;
+            VBox cell = (VBox) node;
+            boolean isSelected = date.equals(selectedDate);
+
+            if (isSelected) {
+                cell.setStyle("-fx-background-color: rgba(16,185,129,0.12);"
+                        + "-fx-border-color: #10b981;"
+                        + "-fx-border-width: 1.5px;"
+                        + "-fx-border-radius: 4px;"
+                        + "-fx-background-radius: 4px;"
+                        + (recordsByDate.containsKey(date) ? "-fx-cursor: hand;" : ""));
+            } else {
+                cell.setStyle(recordsByDate.containsKey(date) ? "-fx-cursor: hand;" : "");
+            }
+
+            if (!cell.getChildren().isEmpty() && cell.getChildren().get(0) instanceof Label) {
+                Label numLbl = (Label) cell.getChildren().get(0);
+                numLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 14px; "
+                        + (isSelected ? "-fx-font-weight: bold;" : ""));
+            }
+        }
+    }
+
+    private static javafx.scene.Node getNodeByRowCol(GridPane grid, int col, int row) {
+        for (javafx.scene.Node node : grid.getChildren()) {
+            Integer r = GridPane.getRowIndex(node);
+            Integer c = GridPane.getColumnIndex(node);
+            int nr = r == null ? 0 : r;
+            int nc = c == null ? 0 : c;
+            if (nr == row && nc == col) return node;
+        }
+        return null;
     }
 
     private String formatDateTitle(LocalDate date) {
