@@ -13,8 +13,8 @@
     -card-bg: rgba(255,255,255,0.03);
     -card-border: rgba(16,185,129,0.08);
     -card-hover-bg: rgba(16,185,129,0.06);
-    -glass-bg: rgba(200,200,215,0.07);
-    -glass-border: rgba(200,200,215,0.10);
+    -glass-bg: rgba(200,200,215,0.04);
+    -glass-border: rgba(200,200,215,0.06);
     -topbar-bg: rgba(0,0,0,0.85);
     -menu-bg: #141414;
     -input-bg: rgba(255,255,255,0.04);
@@ -34,8 +34,8 @@
     -card-bg: rgba(255,255,255,0.85);
     -card-border: rgba(0,0,0,0.08);
     -card-hover-bg: rgba(0,0,0,0.03);
-    -glass-bg: rgba(220,220,235,0.35);
-    -glass-border: rgba(200,200,215,0.20);
+    -glass-bg: rgba(200,200,215,0.04);
+    -glass-border: rgba(200,200,215,0.06);
     -topbar-bg: rgba(255,255,255,0.92);
     -menu-bg: #f5f5f5;
     -input-bg: rgba(255,255,255,0.80);
@@ -746,8 +746,8 @@
 
 /* --- 纯黑主题：无绿色、无玻璃板 --- */
 .black-theme {
-    -glass-bg: rgba(200,200,215,0.06);
-    -glass-border: rgba(200,200,215,0.08);
+    -glass-bg: rgba(200,200,215,0.04);
+    -glass-border: rgba(200,200,215,0.06);
 }
 .black-theme .top-bar-label { -fx-text-fill: #e0e0e0; }
 .black-theme .top-nav-btn:hover { -fx-text-fill: #e0e0e0; -fx-background-color: rgba(255,255,255,0.06); }
