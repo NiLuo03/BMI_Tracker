@@ -152,6 +152,7 @@ public class AIChatController {
 
     private void createBallStage() {
         ballStage = new Stage();
+        if (mainStage != null) ballStage.initOwner(mainStage);
         ballStage.initStyle(StageStyle.TRANSPARENT);
         ballStage.setAlwaysOnTop(true);
         ballStage.setResizable(false);
@@ -281,6 +282,7 @@ public class AIChatController {
         if (particleStage != null) return;
         if (mainStage == null) return;
         particleStage = new Stage();
+        if (mainStage != null) particleStage.initOwner(mainStage);
         particleStage.initStyle(StageStyle.TRANSPARENT);
         particleStage.setAlwaysOnTop(true);
         particleStage.setResizable(false);
@@ -394,6 +396,7 @@ public class AIChatController {
 
     private void createChatStage() {
         chatStage = new Stage();
+        if (mainStage != null) chatStage.initOwner(mainStage);
         chatStage.initStyle(StageStyle.UTILITY);
         chatStage.setTitle("AI 助手");
         chatStage.setAlwaysOnTop(true);
