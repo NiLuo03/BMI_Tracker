@@ -40,11 +40,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.prefs.Preferences;
 
 public class MainController {
 
@@ -155,6 +157,58 @@ public class MainController {
         } else if (isBlack) {
             rootPane.getStyleClass().add("black-theme");
         }
+        saveBackdropPref(hexColor);
+    }
+
+    private void saveBackdropPref(String value) {
+        if (BMIApplication.currentUserId <= 0) return;
+        Preferences p = Preferences.userNodeForPackage(getClass());
+        p.put("backdrop_" + BMIApplication.currentUserId, value);
+        p.remove("backdrop_image_" + BMIApplication.currentUserId);
+    }
+
+    private void saveBackdropImagePref(File file) {
+        if (BMIApplication.currentUserId <= 0) return;
+        Preferences p = Preferences.userNodeForPackage(getClass());
+        p.put("backdrop_image_" + BMIApplication.currentUserId, file.getAbsolutePath());
+        p.remove("backdrop_" + BMIApplication.currentUserId);
+    }
+
+    private void loadBackdropPref() {
+        if (BMIApplication.currentUserId <= 0) return;
+        Preferences p = Preferences.userNodeForPackage(getClass());
+        String color = p.get("backdrop_" + BMIApplication.currentUserId, null);
+        if (color != null) {
+            applyBackdropDirect(color);
+            return;
+        }
+        String imagePath = p.get("backdrop_image_" + BMIApplication.currentUserId, null);
+        if (imagePath != null) {
+            File f = new File(imagePath);
+            if (f.exists()) applyBackdropImageDirect(f);
+        }
+    }
+
+    private void applyBackdropDirect(String hexColor) {
+        backdrop.setStyle("-fx-background-color: " + hexColor + ";");
+        if (rootPane == null) return;
+        boolean isLight = "#ffffff".equals(hexColor);
+        boolean isBlack = "#000000".equals(hexColor);
+        rootPane.getStyleClass().removeAll("light-theme");
+        rootPane.getStyleClass().removeAll("black-theme");
+        if (isLight) {
+            rootPane.getStyleClass().add("light-theme");
+        } else if (isBlack) {
+            rootPane.getStyleClass().add("black-theme");
+        }
+    }
+
+    private void applyBackdropImageDirect(File imageFile) {
+        if (rootPane != null) {
+            rootPane.getStyleClass().removeAll("light-theme", "black-theme");
+        }
+        String url = imageFile.toURI().toString();
+        backdrop.setStyle("-fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
     }
 
     public void changeBackdropImage(java.io.File imageFile) {
@@ -162,7 +216,8 @@ public class MainController {
             rootPane.getStyleClass().removeAll("light-theme", "black-theme");
         }
         String url = imageFile.toURI().toString();
-        backdrop.setStyle("-fx-background-color: null; -fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
+        backdrop.setStyle("-fx-background-image: url('" + url + "'); -fx-background-size: cover; -fx-background-position: center;");
+        saveBackdropImagePref(imageFile);
     }
 
     public void changeBackdrop(int idx) {
@@ -327,6 +382,7 @@ public class MainController {
         });
 
         applyNavState(true);
+        loadBackdropPref();
     }
 
     private void setupHomePickers() {
