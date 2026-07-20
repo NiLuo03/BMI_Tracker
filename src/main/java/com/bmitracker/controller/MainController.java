@@ -162,31 +162,37 @@ public class MainController {
 
     private void saveBackdropPref(String value) {
         if (BMIApplication.currentUserId <= 0) return;
-        Preferences p = Preferences.userNodeForPackage(getClass());
-        p.put("backdrop_" + BMIApplication.currentUserId, value);
-        p.remove("backdrop_image_" + BMIApplication.currentUserId);
+        try {
+            Preferences p = Preferences.userNodeForPackage(getClass());
+            p.put("backdrop_" + BMIApplication.currentUserId, value);
+            p.remove("backdrop_image_" + BMIApplication.currentUserId);
+        } catch (Exception e) { /* ignore */ }
     }
 
     private void saveBackdropImagePref(File file) {
         if (BMIApplication.currentUserId <= 0) return;
-        Preferences p = Preferences.userNodeForPackage(getClass());
-        p.put("backdrop_image_" + BMIApplication.currentUserId, file.getAbsolutePath());
-        p.remove("backdrop_" + BMIApplication.currentUserId);
+        try {
+            Preferences p = Preferences.userNodeForPackage(getClass());
+            p.put("backdrop_image_" + BMIApplication.currentUserId, file.getAbsolutePath());
+            p.remove("backdrop_" + BMIApplication.currentUserId);
+        } catch (Exception e) { /* ignore */ }
     }
 
     private void loadBackdropPref() {
         if (BMIApplication.currentUserId <= 0) return;
-        Preferences p = Preferences.userNodeForPackage(getClass());
-        String color = p.get("backdrop_" + BMIApplication.currentUserId, null);
-        if (color != null) {
-            applyBackdropDirect(color);
-            return;
-        }
-        String imagePath = p.get("backdrop_image_" + BMIApplication.currentUserId, null);
-        if (imagePath != null) {
-            File f = new File(imagePath);
-            if (f.exists()) { applyBackdropImageDirect(f); return; }
-        }
+        try {
+            Preferences p = Preferences.userNodeForPackage(getClass());
+            String color = p.get("backdrop_" + BMIApplication.currentUserId, null);
+            if (color != null) {
+                applyBackdropDirect(color);
+                return;
+            }
+            String imagePath = p.get("backdrop_image_" + BMIApplication.currentUserId, null);
+            if (imagePath != null) {
+                File f = new File(imagePath);
+                if (f.exists()) { applyBackdropImageDirect(f); return; }
+            }
+        } catch (Exception e) { /* ignore */ }
         applyBackdropDirect("#ffffff");
     }
 
