@@ -8,7 +8,6 @@ public class PersonalizeController {
 
     @FXML private Label hintLabel;
 
-    @FXML void selectBlack(MouseEvent e) { apply("#000000", "纯黑"); }
     @FXML void selectWhite(MouseEvent e) { apply("#ffffff", "纯白"); }
 
     private void apply(String color, String name) {
