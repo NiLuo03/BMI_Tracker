@@ -121,13 +121,53 @@
                                                 </VBox>
                                             </StackPane>
 
-                                            <HBox spacing="10">
-                                                <Button text="📋 历史记录" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showHistory"/>
-                                                <Button text="🥗 膳食推荐" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showDiet"/>
+                                            <HBox spacing="10" HBox.hgrow="ALWAYS">
+                                                <Button onAction="#showHistory" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                                    <graphic>
+                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
+                                                            <VBox spacing="4" alignment="CENTER">
+                                                                <Label text="📊" style="-fx-font-size: 24px;"/>
+                                                                <Label text="历史记录" styleClass="label-heading" style="-fx-font-size: 14px;"/>
+                                                                <Label text="查看BMI变化" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
+                                                            </VBox>
+                                                        </StackPane>
+                                                    </graphic>
+                                                </Button>
+                                                <Button onAction="#showDiet" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                                    <graphic>
+                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
+                                                            <VBox spacing="4" alignment="CENTER">
+                                                                <Label text="🍜" style="-fx-font-size: 24px;"/>
+                                                                <Label text="饮食推荐" styleClass="label-heading" style="-fx-font-size: 14px;"/>
+                                                                <Label text="AI智能生成" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
+                                                            </VBox>
+                                                        </StackPane>
+                                                    </graphic>
+                                                </Button>
                                             </HBox>
-                                            <HBox spacing="10">
-                                                <Button text="🔮 趋势预测" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showPrediction"/>
-                                                <Button text="🍎 食物对比" styleClass="sidebar-btn" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#showFood"/>
+                                            <HBox spacing="10" HBox.hgrow="ALWAYS">
+                                                <Button onAction="#showPrediction" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                                    <graphic>
+                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
+                                                            <VBox spacing="4" alignment="CENTER">
+                                                                <Label text="📈" style="-fx-font-size: 24px;"/>
+                                                                <Label text="趋势预测" styleClass="label-heading" style="-fx-font-size: 14px;"/>
+                                                                <Label text="线性回归分析" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
+                                                            </VBox>
+                                                        </StackPane>
+                                                    </graphic>
+                                                </Button>
+                                                <Button onAction="#showFood" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                                    <graphic>
+                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
+                                                            <VBox spacing="4" alignment="CENTER">
+                                                                <Label text="🥦" style="-fx-font-size: 24px;"/>
+                                                                <Label text="食物对比" styleClass="label-heading" style="-fx-font-size: 14px;"/>
+                                                                <Label text="营养横向比较" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
+                                                            </VBox>
+                                                        </StackPane>
+                                                    </graphic>
+                                                </Button>
                                             </HBox>
                                         </VBox>
 
