@@ -110,7 +110,7 @@ public class QuizController {
 
     private void showRandomSlogan() {
         if (slogans == null || slogans.isEmpty()) return;
-        sloganLabel.setText("\"" + slogans.get(random.nextInt(slogans.size())) + "\"");
+        sloganLabel.setText(slogans.get(random.nextInt(slogans.size())));
     }
 
     @FXML
