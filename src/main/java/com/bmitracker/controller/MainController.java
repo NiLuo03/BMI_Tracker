@@ -185,8 +185,9 @@ public class MainController {
         String imagePath = p.get("backdrop_image_" + BMIApplication.currentUserId, null);
         if (imagePath != null) {
             File f = new File(imagePath);
-            if (f.exists()) applyBackdropImageDirect(f);
+            if (f.exists()) { applyBackdropImageDirect(f); return; }
         }
+        applyBackdropDirect("#ffffff");
     }
 
     private void applyBackdropDirect(String hexColor) {
@@ -234,7 +235,6 @@ public class MainController {
         loadSidebarUser();
         loadDashboardData();
         if (root != null) rootPane = root;
-        changeBackdrop("#ffffff");
 
         setupHomePickers();
 
