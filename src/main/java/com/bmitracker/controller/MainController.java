@@ -147,9 +147,13 @@ public class MainController {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
         if (rootPane == null) return;
         boolean isLight = "#ffffff".equals(hexColor);
+        boolean isBlack = "#000000".equals(hexColor);
         rootPane.getStyleClass().removeAll("light-theme");
+        rootPane.getStyleClass().removeAll("black-theme");
         if (isLight) {
             rootPane.getStyleClass().add("light-theme");
+        } else if (isBlack) {
+            rootPane.getStyleClass().add("black-theme");
         }
     }
 
