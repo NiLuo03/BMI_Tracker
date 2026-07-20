@@ -298,6 +298,33 @@
 .quick-link-semi:hover { -fx-background-color: rgba(16,185,129,0.10); -fx-border-color: #10b981; }
 .card-title { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -text-primary; -fx-padding: 0 0 10 0; }
 .card-subtitle { -fx-font-size: 12px; -fx-text-fill: -text-secondary; }
+.meal-tab {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-padding: 6 18;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+.meal-tab:hover {
+    -fx-background-color: rgba(16,185,129,0.10);
+    -fx-text-fill: #34d399;
+}
+.meal-tab-active {
+    -fx-background-color: rgba(16,185,129,0.15);
+    -fx-text-fill: #34d399;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 18;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(16,185,129,0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
 .separator-dark { -fx-background-color: rgba(16,185,129,0.08); }
 .label-heading { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #10b981; }
 .label-subheading { -fx-font-size: 12px; -fx-text-fill: -text-secondary; }

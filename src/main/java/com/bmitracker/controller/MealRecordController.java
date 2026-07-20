@@ -1,8 +1,11 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.model.Food;
 import com.bmitracker.model.MealRecord;
 import com.bmitracker.model.User;
+import com.bmitracker.service.FoodService;
+import com.bmitracker.service.FoodServiceImpl;
 import com.bmitracker.service.MealRecordService;
 import com.bmitracker.service.UserService;
 import javafx.application.Platform;
@@ -21,6 +24,7 @@ import javafx.scene.text.TextAlignment;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MealRecordController {
 
@@ -34,6 +38,30 @@ public class MealRecordController {
 
     private final MealRecordService recordService = new MealRecordService();
     private final UserService userService = new UserService();
+    private final FoodService foodService = new FoodServiceImpl();
+
+    private VBox addPanel;
+    private FlowPane foodGrid, selectedFlow;
+    private TextField searchField;
+    private Label foodCountLabel, mealCalLbl, totalCalLbl;
+    private Button mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn, clearMealBtn;
+
+    private List<Food> allFoods = Collections.emptyList();
+
+    static class FoodEntry {
+        Food food; double grams;
+        FoodEntry(Food f, double g) { food = f; grams = g; }
+        double getCalories() { return food.getCalories() * grams / 100.0; }
+        double getProtein() { return food.getProtein() * grams / 100.0; }
+        double getFat() { return food.getFat() * grams / 100.0; }
+        double getCarb() { return food.getCarb() * grams / 100.0; }
+    }
+
+    private final Map<String, List<FoodEntry>> entries = new HashMap<>();
+    private String currentMealType = "LUNCH";
+
+    private static final String[] MEAL_KEYS = {"BREAKFAST", "LUNCH", "DINNER", "SNACK"};
+    private static final String[] MEAL_NAMES = {"早餐", "午餐", "晚餐", "加餐"};
 
     enum Param { CALORIE, PROTEIN, FAT, CARB }
     private Param currentParam = Param.CALORIE;
@@ -410,5 +438,246 @@ public class MealRecordController {
 
     @FXML
     void handleAddMeal() {
+        for (String k : MEAL_KEYS) entries.put(k, new ArrayList<>());
+        currentMealType = "LUNCH";
+        new Thread(() -> {
+            allFoods = foodService.getAllFoods();
+            Platform.runLater(() -> contentArea.getChildren().setAll(buildAddPanel()));
+        }).start();
+    }
+
+    private VBox buildAddPanel() {
+        addPanel = new VBox(10);
+        addPanel.setPadding(new Insets(8, 0, 0, 0));
+
+        HBox head = new HBox(8);
+        head.setAlignment(Pos.CENTER_LEFT);
+        Label title = new Label("记一餐");
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -text-primary;");
+        Region sp = new Region(); HBox.setHgrow(sp, Priority.ALWAYS);
+        Button cancelBtn = new Button("取消");
+        cancelBtn.getStyleClass().add("btn-secondary");
+        cancelBtn.setOnAction(e -> reloadOverview());
+        head.getChildren().addAll(title, sp, cancelBtn);
+
+        HBox mealTabs = new HBox(4);
+        mealTabs.setAlignment(Pos.CENTER_LEFT);
+        mealBreakfastBtn = makeMealTab("早餐", "BREAKFAST");
+        mealLunchBtn = makeMealTab("午餐", "LUNCH");
+        mealDinnerBtn = makeMealTab("晚餐", "DINNER");
+        mealSnackBtn = makeMealTab("加餐", "SNACK");
+        mealLunchBtn.getStyleClass().setAll("meal-tab-active");
+        mealTabs.getChildren().addAll(mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn);
+
+        VBox foodArea = new VBox(6);
+        foodArea.setStyle("-fx-background-color: rgba(0,0,0,0.02); -fx-background-radius: 8px; -fx-padding: 10px;");
+
+        HBox searchRow = new HBox(8);
+        searchRow.setAlignment(Pos.CENTER_LEFT);
+        searchField = new TextField();
+        searchField.setPromptText("搜索食物...");
+        searchField.getStyleClass().add("text-field-dark");
+        searchField.setPrefWidth(300);
+        searchField.textProperty().addListener((o, ov, nv) -> updateFoodGrid(nv));
+        foodCountLabel = new Label("共 0 种食物");
+        foodCountLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: -text-secondary;");
+        searchRow.getChildren().addAll(searchField, foodCountLabel);
+
+        foodGrid = new FlowPane(6, 6);
+        foodGrid.setPrefHeight(200);
+
+        ScrollPane foodScroll = new ScrollPane(foodGrid);
+        foodScroll.setFitToWidth(true);
+        foodScroll.setPrefHeight(200);
+        foodScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+
+        foodArea.getChildren().addAll(searchRow, foodScroll);
+
+        VBox selectedArea = new VBox(6);
+        selectedArea.setStyle("-fx-background-color: rgba(0,0,0,0.02); -fx-background-radius: 8px; -fx-padding: 10px;");
+
+        HBox selHeader = new HBox(8);
+        selHeader.setAlignment(Pos.CENTER_LEFT);
+        Label selTitle = new Label("已选食物");
+        selTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: -text-primary;");
+        mealCalLbl = new Label("0 kcal");
+        mealCalLbl.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #10b981;");
+        Region sp2 = new Region(); HBox.setHgrow(sp2, Priority.ALWAYS);
+        clearMealBtn = new Button("清空");
+        clearMealBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-font-size: 11px; -fx-cursor: hand; -fx-padding: 4 8; -fx-background-radius: 4; -fx-border-color: rgba(239,68,68,0.3); -fx-border-radius: 4;");
+        clearMealBtn.setOnAction(e -> { getEntries().clear(); refreshSelected(); updateFoodGrid(searchField.getText()); });
+        selHeader.getChildren().addAll(selTitle, mealCalLbl, sp2, clearMealBtn);
+
+        selectedFlow = new FlowPane(6, 6);
+        selectedFlow.setPrefHeight(120);
+
+        ScrollPane selScroll = new ScrollPane(selectedFlow);
+        selScroll.setFitToWidth(true);
+        selScroll.setPrefHeight(120);
+        selScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+
+        selectedArea.getChildren().addAll(selHeader, selScroll);
+
+        HBox bottom = new HBox(10);
+        bottom.setAlignment(Pos.CENTER_RIGHT);
+        totalCalLbl = new Label("总热量: 0 kcal");
+        totalCalLbl.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #10b981;");
+        Button saveBtn = new Button("确认保存");
+        saveBtn.getStyleClass().add("btn-primary");
+        saveBtn.setOnAction(e -> saveMeal());
+        bottom.getChildren().addAll(totalCalLbl, saveBtn);
+
+        addPanel.getChildren().addAll(head, mealTabs, foodArea, selectedArea, bottom);
+        updateFoodGrid("");
+        refreshSelected();
+        return addPanel;
+    }
+
+    private Button makeMealTab(String name, String key) {
+        Button btn = new Button(name);
+        btn.getStyleClass().add("meal-tab");
+        btn.setOnAction(e -> {
+            currentMealType = key;
+            for (Button b : new Button[]{mealBreakfastBtn, mealLunchBtn, mealDinnerBtn, mealSnackBtn})
+                b.getStyleClass().setAll("meal-tab");
+            btn.getStyleClass().setAll("meal-tab-active");
+            refreshSelected();
+            updateFoodGrid(searchField.getText());
+        });
+        return btn;
+    }
+
+    private List<FoodEntry> getEntries() {
+        return entries.get(currentMealType);
+    }
+
+    private void updateFoodGrid(String keyword) {
+        foodGrid.getChildren().clear();
+        if (allFoods.isEmpty()) return;
+
+        List<Food> shown = (keyword == null || keyword.isEmpty())
+            ? allFoods
+            : allFoods.stream().filter(f -> f.getFoodName().contains(keyword)).collect(Collectors.toList());
+
+        Set<Integer> selectedIds = getEntries().stream()
+            .map(e -> e.food.getFoodId()).collect(Collectors.toSet());
+
+        for (Food food : shown) {
+            boolean isSelected = selectedIds.contains(food.getFoodId());
+            Button btn = new Button(food.getFoodName());
+            btn.setStyle(isSelected
+                ? "-fx-background-color: rgba(16,185,129,0.20); -fx-text-fill: #34d399; -fx-font-size: 12px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: rgba(16,185,129,0.3); -fx-border-radius: 6;"
+                : "-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: #b0b0b0; -fx-font-size: 12px; -fx-padding: 4 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: transparent; -fx-border-width: 1; -fx-border-radius: 6;"
+            );
+            int fid = food.getFoodId();
+            btn.setOnAction(e -> {
+                List<FoodEntry> entryList = getEntries();
+                Optional<FoodEntry> existing = entryList.stream()
+                    .filter(en -> en.food.getFoodId() == fid).findFirst();
+                if (existing.isPresent()) {
+                    entryList.remove(existing.get());
+                } else {
+                    entryList.add(new FoodEntry(food, 100));
+                }
+                refreshSelected();
+                updateFoodGrid(searchField.getText());
+            });
+            foodGrid.getChildren().add(btn);
+        }
+        foodCountLabel.setText(String.format("共 %d 种食物", shown.size()));
+    }
+
+    private void refreshSelected() {
+        List<FoodEntry> entryList = getEntries();
+        selectedFlow.getChildren().clear();
+
+        if (entryList.isEmpty()) {
+            Label empty = new Label("暂无选择");
+            empty.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 12px;");
+            selectedFlow.getChildren().add(empty);
+            mealCalLbl.setText("0 kcal");
+            updateTotal();
+            return;
+        }
+
+        double mealCal = 0;
+        for (int i = 0; i < entryList.size(); i++) {
+            FoodEntry entry = entryList.get(i);
+            mealCal += entry.getCalories();
+            final int idx = i;
+
+            HBox card = new HBox(4);
+            card.setStyle("-fx-padding: 4 6; -fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 6;");
+            card.setAlignment(Pos.CENTER_LEFT);
+
+            Label name = new Label(entry.food.getFoodName());
+            name.setStyle("-fx-text-fill: -text-primary; -fx-font-size: 12px; -fx-font-weight: bold;");
+            name.setPrefWidth(80);
+            name.setMaxWidth(80);
+
+            TextField gramField = new TextField(String.valueOf((int) entry.grams));
+            gramField.setPrefWidth(50);
+            gramField.setStyle("-fx-background-color: rgba(255,255,255,0.06); -fx-text-fill: -text-primary; -fx-background-radius: 4; -fx-font-size: 11px;");
+            gramField.textProperty().addListener((obs, ov, nv) -> {
+                try { double g = Double.parseDouble(nv); if (g > 0) { entry.grams = g; refreshSelected(); } }
+                catch (NumberFormatException ignored) {}
+            });
+
+            Label unit = new Label("g");
+            unit.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
+
+            Label cal = new Label(String.format("%.0f", entry.getCalories()));
+            cal.setStyle("-fx-text-fill: #10b981; -fx-font-size: 11px; -fx-font-weight: bold;");
+            cal.setPrefWidth(45);
+
+            Button removeBtn = new Button("✕");
+            removeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #ef4444; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 1 4;");
+            removeBtn.setOnAction(e -> { entryList.remove(idx); refreshSelected(); updateFoodGrid(searchField.getText()); });
+
+            card.getChildren().addAll(name, gramField, unit, cal, removeBtn);
+            selectedFlow.getChildren().add(card);
+        }
+
+        mealCalLbl.setText(String.format("%s小计: %.0f kcal", MEAL_NAMES[Arrays.asList(MEAL_KEYS).indexOf(currentMealType)], mealCal));
+        updateTotal();
+    }
+
+    private void updateTotal() {
+        double total = 0;
+        for (var list : entries.values())
+            for (FoodEntry e : list) total += e.getCalories();
+        totalCalLbl.setText(String.format("总热量: %.0f kcal", total));
+    }
+
+    private void saveMeal() {
+        List<MealRecord> recs = new ArrayList<>();
+        for (Map.Entry<String, List<FoodEntry>> e : entries.entrySet()) {
+            for (FoodEntry fe : e.getValue()) {
+                MealRecord r = new MealRecord();
+                r.setUserId(BMIApplication.currentUserId);
+                r.setFoodId(fe.food.getFoodId());
+                r.setMealType(e.getKey());
+                r.setGrams(fe.grams);
+                r.setRecordDate(LocalDate.now());
+                recs.add(r);
+            }
+        }
+        if (recs.isEmpty()) return;
+
+        try {
+            recordService.saveRecords(BMIApplication.currentUserId, LocalDate.now(), recs);
+            reloadOverview();
+        } catch (Exception ex) {
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setTitle("提示"); a.setHeaderText(null); a.setContentText("保存失败: " + ex.getMessage());
+            a.showAndWait();
+        }
+    }
+
+    private void reloadOverview() {
+        selectedDate = LocalDate.now();
+        calendarMonth = LocalDate.now().withDayOfMonth(1);
+        loadMonthRecords();
+        contentArea.getChildren().setAll(leftArea, rightArea);
     }
 }
