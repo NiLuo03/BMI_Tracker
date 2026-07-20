@@ -199,7 +199,7 @@ public class QuizController {
             cell.setPrefSize(36, 36);
             cell.setMinSize(36, 36);
             cell.setAlignment(Pos.CENTER);
-            cell.setStyle("-fx-background-color: #374151; -fx-text-fill: #9ca3af; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;");
+            cell.setStyle("-fx-background-color: rgba(128,128,128,0.12); -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;");
             int fi = i;
             cell.setOnMouseClicked(e -> jumpToQuestion(fi));
             grid.add(cell, i % cols, i / cols);
@@ -270,11 +270,11 @@ public class QuizController {
             String ua = userAnswers[i];
             String style;
             if (i == currentIndex) {
-                style = "-fx-background-color: rgba(96,165,250,0.3); -fx-text-fill: #93c5fd; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-border-color: #60a5fa; -fx-border-width: 1.5px; -fx-border-radius: 6px;";
+                style = "-fx-background-color: rgba(96,165,250,0.2); -fx-text-fill: #3b82f6; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-border-color: #3b82f6; -fx-border-width: 1.5px; -fx-border-radius: 6px;";
             } else if (ua != null) {
-                style = "-fx-background-color: rgba(96,165,250,0.15); -fx-text-fill: #60a5fa; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
+                style = "-fx-background-color: rgba(16,185,129,0.15); -fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
             } else {
-                style = "-fx-background-color: #374151; -fx-text-fill: #9ca3af; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
+                style = "-fx-background-color: rgba(128,128,128,0.12); -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
             }
             cell.setStyle(style);
         }
@@ -404,7 +404,7 @@ public class QuizController {
             QuizQuestion q = questions.get(idx);
             boolean isCorrectAns = ua != null && ua.equals(q.getAnswer());
             String style = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;";
-            if (ua == null) style += "-fx-background-color: #374151; -fx-text-fill: #9ca3af;";
+            if (ua == null) style += "-fx-background-color: rgba(128,128,128,0.12); -fx-text-fill: -text-secondary;";
             else if (isCorrectAns) style += "-fx-background-color: rgba(16,185,129,0.25); -fx-text-fill: #10b981;";
             else style += "-fx-background-color: rgba(239,68,68,0.25); -fx-text-fill: #ef4444;";
             cell.setStyle(style);
