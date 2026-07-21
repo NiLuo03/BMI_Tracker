@@ -7,6 +7,7 @@ import com.bmitracker.util.ParticleTextCanvas;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,7 @@ public class LoginController {
             particlePane.getChildren().clear();
             particlePane.getChildren().add(particleText);
         }
+        Platform.runLater(() -> userNameField.requestFocus());
     }
 
     private final UserService userService = new UserService();
