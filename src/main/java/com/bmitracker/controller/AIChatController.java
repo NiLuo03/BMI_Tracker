@@ -470,21 +470,41 @@ public class AIChatController {
         inputField.setDisable(true);
         sendBtn.setDisable(true);
 
+        Label aiLabel = new Label("");
+        aiLabel.setWrapText(true);
+        aiLabel.setMaxWidth(240);
+        aiLabel.setPadding(new Insets(8, 12, 8, 12));
+        aiLabel.setStyle("-fx-background-color: #e8f5e9; -fx-background-radius: 12; -fx-text-fill: #333; -fx-font-size: 13;");
+
+        ImageView avatar = new ImageView(aiAvatar.getImage());
+        avatar.setFitWidth(36); avatar.setFitHeight(36); avatar.setPreserveRatio(true);
+        Circle avatarClip = new Circle(18, 18, 18);
+        avatar.setClip(avatarClip);
+
+        HBox aiBox = new HBox(6, avatar, aiLabel);
+        aiBox.setAlignment(Pos.TOP_LEFT);
+        messageArea.getChildren().add(aiBox);
+        scrollToBottom();
+
         new Thread(() -> {
             try {
-                String response = callCozeChat(messages);
+                StringBuilder full = new StringBuilder();
+                callCozeChatStreaming(messages, chunk -> {
+                    full.append(chunk);
+                    Platform.runLater(() -> {
+                        aiLabel.setText(full.toString().trim());
+                        scrollToBottom();
+                    });
+                });
+                String resp = full.toString().trim();
+                if (!resp.isEmpty()) messages.add(new ChatMessage("assistant", resp));
+            } catch (Exception ex) {
+                Platform.runLater(() -> aiLabel.setText("抱歉，服务繁忙，请稍后再试。"));
+            } finally {
                 Platform.runLater(() -> {
-                    addMessage("AI", response);
-                    messages.add(new ChatMessage("assistant", response));
                     inputField.setDisable(false);
                     sendBtn.setDisable(false);
                     inputField.requestFocus();
-                });
-            } catch (Exception ex) {
-                Platform.runLater(() -> {
-                    addMessage("AI", "抱歉，服务繁忙，请稍后再试。");
-                    inputField.setDisable(false);
-                    sendBtn.setDisable(false);
                 });
             }
         }).start();
@@ -520,7 +540,8 @@ public class AIChatController {
         scrollToBottom();
     }
 
-    private String callCozeChat(List<ChatMessage> chatMessages) throws Exception {
+    private void callCozeChatStreaming(List<ChatMessage> chatMessages,
+                                       java.util.function.Consumer<String> onChunk) throws Exception {
         StringBuilder messagesJson = new StringBuilder();
         String safePrompt = systemPrompt != null ? systemPrompt
                 : "你是一位友好的AI助手，可以回答用户的各种问题，请用中文回复。";
@@ -534,43 +555,56 @@ public class AIChatController {
                     .append("\"}");
         }
 
-        String json = "{\"model\":\"" + MODEL + "\",\"max_tokens\":200,\"messages\":[" + messagesJson + "]}";
+        String json = "{\"model\":\"" + MODEL + "\",\"max_tokens\":200,\"stream\":true,\"messages\":[" + messagesJson + "]}";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + API_KEY)
-                .timeout(java.time.Duration.ofSeconds(30))
+                .timeout(java.time.Duration.ofSeconds(60))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) {
-            return extractMessage(response.body());
+        HttpResponse<java.io.InputStream> response = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofInputStream());
+
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("API error: " + response.statusCode());
         }
-        throw new RuntimeException("API error: " + response.statusCode());
+
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(
+                new java.io.InputStreamReader(response.body(), java.nio.charset.StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("data: ")) {
+                    String data = line.substring(6).trim();
+                    if (data.equals("[DONE]")) break;
+                    String delta = extractDelta(data);
+                    if (delta != null && !delta.isEmpty()) {
+                        onChunk.accept(delta);
+                    }
+                }
+            }
+        }
     }
 
-    private String extractMessage(String body) {
-        String key = "\"message\":{\"content\":\"";
-        int start = body.indexOf(key);
-        if (start < 0) return body;
-        start += key.length();
-        StringBuilder result = new StringBuilder();
-        for (int i = start; i < body.length(); i++) {
-            char c = body.charAt(i);
-            if (c == '\\' && i + 1 < body.length()) {
-                char next = body.charAt(i + 1);
-                if (next == '"') { result.append('"'); i++; }
-                else if (next == 'n') { result.append('\n'); i++; }
-                else if (next == 'r') { result.append('\r'); i++; }
-                else if (next == 't') { result.append('\t'); i++; }
-                else if (next == '\\') { result.append('\\'); i++; }
-                else { result.append(c); }
+    private String extractDelta(String json) {
+        int idx = json.indexOf("\"content\":\"");
+        if (idx < 0) return null;
+        idx += 11;
+        StringBuilder sb = new StringBuilder();
+        for (int i = idx; i < json.length(); i++) {
+            char c = json.charAt(i);
+            if (c == '\\' && i + 1 < json.length()) {
+                char next = json.charAt(i + 1);
+                if (next == '"') { sb.append('"'); i++; }
+                else if (next == 'n') { sb.append('\n'); i++; }
+                else if (next == '\\') { sb.append('\\'); i++; }
+                else { sb.append(c); }
             } else if (c == '"') { break; }
-            else { result.append(c); }
+            else { sb.append(c); }
         }
-        return result.toString();
+        return sb.toString();
     }
 
     private String escapeJson(String s) {
