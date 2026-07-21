@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.effect.DropShadow;
@@ -36,6 +37,8 @@ import java.util.List;
 import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
 import com.bmitracker.service.BmiService;
+import com.bmitracker.util.ChatHistoryStore;
+import com.bmitracker.BMIApplication;
 
 public class AIChatController {
 
@@ -398,7 +401,64 @@ public class AIChatController {
 
         VBox titleBar = new VBox(0);
         titleBar.setStyle("-fx-background-color: #b8e4e4; -fx-padding: 6 12 4 12;");
-        titleBar.setAlignment(Pos.TOP_CENTER);
+
+        Button historyBtn = new Button("📋");
+        historyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #222; -fx-font-size: 12; -fx-cursor: hand; -fx-padding: 0;");
+        historyBtn.setTooltip(new Tooltip("聊天记录"));
+        historyBtn.setPrefSize(28, 28);
+
+        VBox historyPopup = new VBox(4);
+        historyPopup.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 2);");
+        historyPopup.setVisible(false);
+        historyPopup.setManaged(false);
+        historyPopup.setMaxWidth(220);
+        historyPopup.setMinWidth(220);
+        historyPopup.setMaxHeight(320);
+
+        historyBtn.setOnAction(e -> {
+            historyPopup.getChildren().clear();
+            java.util.List<ChatHistoryStore.HistoryEntry> entries = ChatHistoryStore.load(BMIApplication.currentUserId);
+            VBox listBox = new VBox(4);
+            if (entries.isEmpty()) {
+                Label empty = new Label("暂无历史记录");
+                empty.setStyle("-fx-font-size: 12px; -fx-text-fill: #999; -fx-padding: 8;");
+                listBox.getChildren().add(empty);
+            } else {
+                for (ChatHistoryStore.HistoryEntry entry : entries) {
+                    VBox row = new VBox(2);
+                    row.setStyle("-fx-cursor: hand; -fx-padding: 6 8; -fx-background-radius: 6; -fx-border-color: #eee; -fx-border-width: 0 0 1 0; -fx-border-radius: 0;");
+                    row.setOnMouseEntered(ev -> row.setStyle("-fx-cursor: hand; -fx-padding: 6 8; -fx-background-radius: 6; -fx-background-color: #f5f5f5; -fx-border-color: #eee; -fx-border-width: 0 0 1 0; -fx-border-radius: 0;"));
+                    row.setOnMouseExited(ev -> row.setStyle("-fx-cursor: hand; -fx-padding: 6 8; -fx-background-radius: 6; -fx-border-color: #eee; -fx-border-width: 0 0 1 0; -fx-border-radius: 0;"));
+                    Label timeLabel = new Label(entry.time);
+                    timeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #999;");
+                    Label previewLabel = new Label(entry.preview.length() > 28 ? entry.preview.substring(0, 28) + "…" : entry.preview);
+                    previewLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #333;");
+                    previewLabel.setWrapText(true);
+                    previewLabel.setMaxWidth(180);
+                    previewLabel.setMaxHeight(32);
+                    row.getChildren().addAll(timeLabel, previewLabel);
+                    row.setOnMouseClicked(ev -> {
+                        messageArea.getChildren().clear();
+                        messages.clear();
+                        for (String[] r : entry.rounds) {
+                            addMessage(r[0].equals("user") ? "我" : "AI", r[1]);
+                            messages.add(new ChatMessage(r[0], r[1]));
+                        }
+                        historyPopup.setVisible(false);
+                        historyPopup.setManaged(false);
+                    });
+                    listBox.getChildren().add(row);
+                }
+            }
+            ScrollPane sp = new ScrollPane(listBox);
+            sp.setFitToWidth(true);
+            sp.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;");
+            sp.setMaxHeight(320);
+            historyPopup.getChildren().add(sp);
+            historyPopup.setVisible(!historyPopup.isVisible());
+            historyPopup.setManaged(historyPopup.isVisible());
+        });
+
         Label titleLabel = new Label("AI 助手");
         titleLabel.setTextFill(Color.web("#222"));
         titleLabel.setFont(Font.font("System Bold", 14));
@@ -408,7 +468,18 @@ public class AIChatController {
         subtitleLabel.setFont(Font.font("System", 10));
         subtitleLabel.setOpacity(0.8);
 
-        titleBar.getChildren().addAll(titleLabel, subtitleLabel);
+        HBox titleTop = new HBox();
+        Pane leftSpacer = new Pane();
+        leftSpacer.setPrefWidth(30);
+        VBox centerPart = new VBox(0, titleLabel, subtitleLabel);
+        centerPart.setAlignment(javafx.geometry.Pos.CENTER);
+        Pane rightSpacer = new Pane();
+        rightSpacer.setMinWidth(28); rightSpacer.setPrefWidth(28); rightSpacer.setMaxWidth(28);
+
+        titleTop.getChildren().addAll(historyBtn, leftSpacer, centerPart, rightSpacer);
+        HBox.setHgrow(centerPart, Priority.ALWAYS);
+
+        titleBar.getChildren().addAll(titleTop);
 
         messageArea = new VBox(8);
         messageArea.setPadding(new Insets(10));
@@ -438,8 +509,26 @@ public class AIChatController {
         inputBox.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;");
         HBox.setHgrow(inputField, Priority.ALWAYS);
 
-        VBox root = new VBox(titleBar, scrollPane, inputBox);
+        VBox content = new VBox(titleBar, scrollPane, inputBox);
+
+        StackPane root = new StackPane(content, historyPopup);
+        StackPane.setAlignment(historyPopup, javafx.geometry.Pos.TOP_LEFT);
+        historyPopup.setTranslateX(34);
+        historyPopup.setTranslateY(0);
         root.setPrefSize(340, 430);
+
+        root.setOnMouseClicked(e -> {
+            if (historyPopup.isVisible() && !historyPopup.getBoundsInParent().contains(e.getX(), e.getY())) {
+                historyPopup.setVisible(false);
+                historyPopup.setManaged(false);
+            }
+        });
+        root.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+            if (historyPopup.isVisible() && !historyPopup.getBoundsInParent().contains(e.getX(), e.getY())) {
+                historyPopup.setVisible(false);
+                historyPopup.setManaged(false);
+            }
+        });
 
         Scene chatScene = new Scene(root);
         chatStage.setScene(chatScene);
@@ -451,6 +540,7 @@ public class AIChatController {
                 scrollPane.setVvalue(1.0));
 
         chatStage.setOnCloseRequest(e -> {
+            saveHistory();
             chatStage = null;
         });
 
@@ -621,6 +711,79 @@ public class AIChatController {
             }
         }
         return sb.toString();
+    }
+
+    private void saveHistory() {
+        if (messages.isEmpty()) return;
+        java.util.List<String[]> rounds = new java.util.ArrayList<>();
+        for (ChatMessage m : messages) {
+            rounds.add(new String[]{m.role, m.content});
+        }
+        new Thread(() -> {
+            String preview = "";
+            try {
+                List<ChatMessage> summaryMsgs = new ArrayList<>();
+                summaryMsgs.add(new ChatMessage("system", "用一句话概括以下对话的主题，5-10个字，不要解释，只输出概括。"));
+                StringBuilder ctx = new StringBuilder();
+                for (ChatMessage m : messages) {
+                    if ("user".equals(m.role)) ctx.append("用户：").append(m.content).append("\n");
+                    else ctx.append("助手：").append(m.content).append("\n");
+                }
+                summaryMsgs.add(new ChatMessage("user", ctx.toString()));
+                preview = callCozeChatSync(summaryMsgs);
+            } catch (Exception e) { /* fallback below */ }
+            if (preview == null || preview.trim().isEmpty()) {
+                for (ChatMessage m : messages) {
+                    if ("assistant".equals(m.role)) {
+                        String t = m.content.replaceAll("\\s+", "").trim();
+                        preview = t.length() > 30 ? t.substring(0, 30) : t;
+                        break;
+                    }
+                }
+            }
+            ChatHistoryStore.save(BMIApplication.currentUserId, preview, rounds);
+        }).start();
+    }
+
+    private String callCozeChatSync(List<ChatMessage> chatMessages) throws Exception {
+        StringBuilder messagesJson = new StringBuilder();
+        messagesJson.append("{\"role\":\"system\",\"content\":\"用一句话概括以下对话的主题，5-10个字，不要解释，只输出概括。\"}");
+        for (ChatMessage msg : chatMessages) {
+            messagesJson.append(",{\"role\":\"")
+                    .append(msg.role)
+                    .append("\",\"content\":\"")
+                    .append(escapeJson(msg.content))
+                    .append("\"}");
+        }
+        String json = "{\"model\":\"" + MODEL + "\",\"max_tokens\":50,\"messages\":[" + messagesJson + "]}";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + API_KEY)
+                .timeout(java.time.Duration.ofSeconds(15))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            String body = response.body();
+            int idx = body.indexOf("\"content\":\"");
+            if (idx < 0) return body;
+            idx += 11;
+            StringBuilder sb = new StringBuilder();
+            for (int i = idx; i < body.length(); i++) {
+                char c = body.charAt(i);
+                if (c == '\\' && i + 1 < body.length()) {
+                    char next = body.charAt(i + 1);
+                    if (next == '"') { sb.append('"'); i++; }
+                    else if (next == 'n') { sb.append('\n'); i++; }
+                    else if (next == '\\') { sb.append('\\'); i++; }
+                    else { sb.append(c); }
+                } else if (c == '"') { break; }
+                else { sb.append(c); }
+            }
+            return sb.toString().trim();
+        }
+        throw new RuntimeException("API error: " + response.statusCode());
     }
 
     private static class ChatMessage {

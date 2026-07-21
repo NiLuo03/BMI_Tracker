@@ -346,6 +346,18 @@ public class QuizController {
     void onSubmit() {
         saveCurrentAnswer();
 
+        int unanswered = 0;
+        for (String a : userAnswers) { if (a == null) unanswered++; }
+        if (unanswered > 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("提示");
+            alert.setHeaderText(null);
+            alert.setContentText("您还有 " + unanswered + " 道题目未答，确认提交吗？");
+            alert.initOwner(root.getScene().getWindow());
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isEmpty() || result.get() != ButtonType.OK) return;
+        }
+
         int correct = 0;
         wrongIdxList.clear();
         for (int i = 0; i < questions.size(); i++) {
