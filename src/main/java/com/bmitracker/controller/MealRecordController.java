@@ -16,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -70,9 +71,10 @@ public class MealRecordController {
     private int userSex = 0;
 
     private Map<LocalDate, List<MealRecord>> recordsByDate = new LinkedHashMap<>();
+    private double rightWidth;
 
     private static final DateTimeFormatter DATE_MMDD = DateTimeFormatter.ofPattern("MM.dd");
-    private static final DateTimeFormatter MONTH_FMT = DateTimeFormatter.ofPattern("yyyy.MM");
+    private static final DateTimeFormatter MONTH_FMT = DateTimeFormatter.ofPattern("yyyy年M月");
     private static final String[] WEEKDAYS = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
 
     @FXML
@@ -82,9 +84,9 @@ public class MealRecordController {
         contentArea.widthProperty().addListener((obs, ov, nv) -> {
             double total = nv.doubleValue() - 14;
             double leftW = total * 1.616 / 2.616;
-            double rightW = total / 2.616;
+            rightWidth = total / 2.616;
             leftArea.setPrefWidth(leftW);
-            rightArea.setPrefWidth(rightW);
+            rightArea.setPrefWidth(rightWidth);
             buildCalendar();
         });
         contentArea.heightProperty().addListener((obs, ov, nv) -> {
@@ -104,6 +106,17 @@ public class MealRecordController {
         });
 
         loadMonthRecords();
+
+        listScroll.addEventFilter(ScrollEvent.SCROLL, e -> {
+            double v = listScroll.getVvalue();
+            double h = listScroll.getContent().getBoundsInLocal().getHeight();
+            double vh = listScroll.getViewportBounds().getHeight();
+            if (h <= vh) return;
+            double maxScroll = h - vh;
+            double speed = 3.0;                                 // <滚轮速度> 越大滚得越快，默认1.0
+            listScroll.setVvalue(Math.min(1, Math.max(0, v - e.getDeltaY() / maxScroll * speed)));
+            e.consume();
+        });
     }
 
     private void loadMonthRecords() {
@@ -181,14 +194,14 @@ public class MealRecordController {
             gc.setFill(Color.rgb(0, 0, 0, 0.12));
             gc.fillRoundRect(bar2X, bar2Y, barW, h2, 3, 3);
 
-            gc.setFill(Color.rgb(51, 51, 51));
-            gc.setFont(Font.font("Microsoft YaHei", 10));
+            gc.setFill(Color.rgb(51, 51, 51));                         // <字体> 柱状图数值颜色
+            gc.setFont(Font.font("Microsoft YaHei", 10));              // <字体> 柱状图数值字族+字号
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText(String.format("%.0f", data[i][0]), bar1X + barW / 2, bar1Y - 4);
             gc.fillText(String.format("%.0f", data[i][1]), bar2X + barW / 2, bar2Y - 4);
 
-            gc.setFill(Color.rgb(85, 85, 85));
-            gc.setFont(Font.font("Microsoft YaHei", 11));
+            gc.setFill(Color.rgb(85, 85, 85));                         // <字体> 柱状图标尺颜色
+            gc.setFont(Font.font("Microsoft YaHei", 11));              // <字体> 柱状图标尺字族+字号
             gc.fillText(labels[i], centerX, marginT + plotH + 16);
         }
     }
@@ -197,7 +210,7 @@ public class MealRecordController {
         mealListBox.getChildren().clear();
         if (recordsByDate.isEmpty()) {
             Label empty = new Label("本月暂无膳食记录");
-            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 14px; -fx-padding: 20 0;");
+            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 14px; -fx-padding: 20 0;");  // <字体> 列表空态 字号14 颜色#666666
             empty.setAlignment(Pos.CENTER);
             empty.setMaxWidth(Double.MAX_VALUE);
             mealListBox.getChildren().add(empty);
@@ -216,13 +229,13 @@ public class MealRecordController {
             List<MealRecord> recs = entry.getValue();
             double sum = getParamSum(recs, currentParam);
 
-            VBox card = new VBox(4);
-            card.setStyle("-fx-background-color: rgba(0,0,0,0.02);"
+            VBox card = new VBox(0);
+            card.setStyle("-fx-background-color: #ffffff;"
                     + "-fx-background-radius: 10px;"
                     + "-fx-border-color: rgba(0,0,0,0.06);"
                     + "-fx-border-width: 1px;"
                     + "-fx-border-radius: 10px;"
-                    + "-fx-padding: 12 14;");
+                    + "-fx-padding: 0;");
 
             if (date.equals(selectedDate)) {
                 card.setStyle(card.getStyle() + "-fx-border-color: rgba(16,185,129,0.35);");
@@ -230,22 +243,39 @@ public class MealRecordController {
 
             HBox header = new HBox(6);
             header.setAlignment(Pos.CENTER_LEFT);
+            header.setOnMouseEntered(e -> header.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 6px;"));
+            header.setOnMouseExited(e -> header.setStyle(""));
             Label dateLbl = new Label(formatDateTitle(date));
-            dateLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: bold;");
+            dateLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: bold;");  // <字体> 列表日期标题 字号15 字重bold 颜色#111111
+            Label suffixLbl = new Label(getDateSuffix(date));
+            suffixLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px;");                       // <字体> 周几/昨天/今天 标签 字号12 颜色#888888
+            Region dateGap = new Region();                                                            // <间距> 日期与周几之间的间距
+            dateGap.setPrefWidth(0.5);
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
             Label sumLbl = new Label(String.format("%.0f %s", sum, getParamUnit()));
-            sumLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 15px; -fx-font-weight: bold;");
-            header.getChildren().addAll(dateLbl, spacer, sumLbl);
-            header.setPadding(new Insets(0, 0, 4, 0));
+            sumLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 15px; -fx-font-weight: bold;");  // <字体> 列表参数合计值 字号15 字重bold 颜色#10b981
+            header.getChildren().addAll(dateLbl, dateGap, suffixLbl, spacer, sumLbl);
+            header.setPadding(new Insets(12, 14, 4, 14));
             card.getChildren().add(header);
 
+            // <分割线> 日期标题下方的分割线（贯穿左右，无左右 padding）
+            Region headSep = new Region();                                                            // <间距> 此处加大过间距（16px行间距）
+            headSep.setStyle("-fx-background-color: #f0f0f0;");
+            headSep.setPrefHeight(0.1);                                                                  // <分割线粗度> 0.1px
+            headSep.setMaxHeight(2);
+            headSep.setMaxWidth(Double.MAX_VALUE);
+            card.getChildren().add(headSep);
+            // </分割线>
+
             for (int i = 0; i < recs.size(); i++) {
-                if (i > 0) {
-                    Separator sep = new Separator();
-                    sep.setStyle("-fx-background: rgba(0,0,0,0.06);");
-                    sep.setPadding(new Insets(4, 0, 4, 0));
-                    card.getChildren().add(sep);
+                if (i > 0) {                                             // <分割线> 各条记录间的分割线（贯穿左右）
+                    Region gap = new Region();                            // <间距> 此处加大过间距（16px行间距）
+                    gap.setStyle("-fx-background-color: #f0f0f0;");
+                    gap.setPrefHeight(0.1);                                                              // <分割线粗度> 0.1px
+                    gap.setMaxHeight(2);
+                    gap.setMaxWidth(Double.MAX_VALUE);
+                    card.getChildren().add(gap);                         // </分割线>
                 }
 
                 MealRecord r = recs.get(i);
@@ -253,20 +283,22 @@ public class MealRecordController {
 
                 HBox row = new HBox(8);
                 row.setAlignment(Pos.CENTER_LEFT);
-                row.setPadding(new Insets(6, 0, 6, 0));
+                row.setOnMouseEntered(e -> row.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 6px;"));
+                row.setOnMouseExited(e -> row.setStyle(""));
+                row.setPadding(new Insets(6, 14, 6, 14));
 
                 VBox nameBox = new VBox(2);
                 nameBox.setAlignment(Pos.CENTER_LEFT);
                 Label nameLbl = new Label(r.getFoodName());
-                nameLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 15px;");
+                nameLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 16px;");     // <字体> 列表食物名称 字号15 颜色#222222
                 Label gramLbl = new Label(String.format("%.0f g", r.getGrams()));
-                gramLbl.setStyle("-fx-text-fill: #888888; -fx-font-size: 13px;");
+                gramLbl.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");     // <字体> 列表克数 字号13 颜色#888888
                 nameBox.getChildren().addAll(nameLbl, gramLbl);
 
                 Region rowSpacer = new Region();
                 HBox.setHgrow(rowSpacer, Priority.ALWAYS);
                 Label valLbl = new Label(String.format("%.0f %s", val, getParamUnit()));
-                valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 15px; -fx-font-weight: bold;");
+                valLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 16px;");  // <字体> 列表单行参数值 字号15 颜色#10b981
 
                 row.getChildren().addAll(nameBox, rowSpacer, valLbl);
                 card.getChildren().add(row);
@@ -281,24 +313,40 @@ public class MealRecordController {
         calendarGrid.getColumnConstraints().clear();
         calendarGrid.getRowConstraints().clear();
 
-        double available = rightArea.prefWidth(-1) - 12;
-        if (available <= 0) return;
-        double cellSize = available / 7;
+        double ca = contentArea.getWidth();
+        if (ca > 0) rightWidth = (ca - 14) / 2.616;
+        double cw = rightWidth;
+        if (cw <= 0) return;
+        double cellSize = (cw - 12) / 7;
         if (cellSize <= 0) return;
+        double rh = Math.max(cellSize - 6, 1);
+
+        calendarGrid.setPrefSize(7 * cellSize, cellSize * 0.65 + 6 * rh);
+        calendarGrid.setMaxSize(7 * cellSize, cellSize * 0.65 + 6 * rh);
 
         for (int i = 0; i < 7; i++) {
-            calendarGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
+            ColumnConstraints col = new ColumnConstraints(cellSize);
+            col.setMinWidth(cellSize);
+            col.setMaxWidth(cellSize);
+            col.setHgrow(Priority.NEVER);
+            calendarGrid.getColumnConstraints().add(col);
         }
-        calendarGrid.getRowConstraints().add(new RowConstraints(cellSize * 0.55));
-        for (int i = 0; i < 6; i++) {
-            calendarGrid.getRowConstraints().add(new RowConstraints(cellSize));
+        {
+            RowConstraints hdr = new RowConstraints(cellSize * 0.65, cellSize * 0.65, cellSize * 0.65);
+            hdr.setVgrow(Priority.NEVER);
+            calendarGrid.getRowConstraints().add(hdr);                                    // <行高> 周几标题行高
+        }
+        for (int i = 0; i < 5; i++) {
+            RowConstraints row = new RowConstraints(cellSize, cellSize, cellSize);
+            row.setVgrow(Priority.NEVER);
+            calendarGrid.getRowConstraints().add(row);                                    // <行高> 日期行行高
         }
 
         for (int col = 0; col < 7; col++) {
             Label dayLabel = new Label(WEEKDAYS[col]);
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            dayLabel.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px; -fx-font-weight: bold;");
+            dayLabel.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px;");  // <字体> 日历星期表头 字号11 颜色#777777
             calendarGrid.add(dayLabel, col, 0);
             GridPane.setHalignment(dayLabel, HPos.CENTER);
         }
@@ -334,22 +382,32 @@ public class MealRecordController {
 
             Label numLbl = new Label(String.valueOf(d));
             numLbl.setAlignment(Pos.CENTER);
-            numLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 14px; "
-                    + (isSelected ? "-fx-font-weight: bold;" : ""));
+            numLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px");         // <字体> 日历日期数字 字号14 颜色#111111
 
             cell.getChildren().add(numLbl);
 
-            if (hasData && sum > 0) {
-                Label valLbl = new Label(String.format("%.0f", sum));
-                valLbl.setAlignment(Pos.CENTER);
-                valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 10px;");
-                cell.getChildren().add(valLbl);
-            }
+            Label valLbl;// 空占位对齐
+            if(sum>0)
+                valLbl = new Label(String.format("%.0f", sum));
+            else valLbl = new Label("");
+            valLbl.setAlignment(Pos.CENTER);
+            valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 8px;");      // <字体> 日历卡路里数值 字号8 颜色#10b981
+            cell.getChildren().add(valLbl);
 
             if (hasData) {
                 cell.setStyle(cell.getStyle() + "-fx-cursor: hand;");
             }
             final LocalDate cellDate = date;
+            cell.setOnMouseEntered(e -> {
+                if (!cellDate.equals(selectedDate)) {
+                    cell.setStyle(cell.getStyle() + "-fx-background-color: #f0f0f0; -fx-background-radius: 4px;");
+                }
+            });
+            cell.setOnMouseExited(e -> {
+                if (!cellDate.equals(selectedDate)) {
+                    refreshCalendarStyles();
+                }
+            });
             cell.setOnMouseClicked(e -> {
                 if (cellDate.equals(selectedDate)) return;
                 selectedDate = cellDate;
@@ -428,12 +486,15 @@ public class MealRecordController {
     }
 
     private String formatDateTitle(LocalDate date) {
+        return DATE_MMDD.format(date);
+    }
+
+    private String getDateSuffix(LocalDate date) {
         LocalDate today = LocalDate.now();
-        String prefix = DATE_MMDD.format(date);
-        if (date.equals(today)) return prefix + " 今天";
-        if (date.equals(today.minusDays(1))) return prefix + " 昨天";
+        if (date.equals(today)) return "今天";
+        if (date.equals(today.minusDays(1))) return "昨天";
         String[] cn = {"", "周一", "周二", "周三", "周四", "周五", "周六", "周日"};
-        return prefix + " " + cn[date.getDayOfWeek().getValue()];
+        return cn[date.getDayOfWeek().getValue()];
     }
 
     @FXML

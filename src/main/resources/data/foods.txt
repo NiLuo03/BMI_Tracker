@@ -1,4 +1,4 @@
-foodName|category|calories|protein|fat|carb|meal_type|food_texture|flavor|storage|cooking_method|image
+foodName|category|calories|protein|fat|carb|meal_type|food_texture|flavor|storage|cooking_method|image|serving_size
 米饭|主食|116|2.6|0.3|25.9|午餐|软糯|清淡|常温|煮|1.jpg
 馒头|主食|223|7.0|1.1|44.2|早餐|软糯|清淡|冷冻|蒸|2.jpg
 面条煮|主食|110|3.9|0.3|23.3|午餐|弹韧|咸|冷藏|煮|3.jpg

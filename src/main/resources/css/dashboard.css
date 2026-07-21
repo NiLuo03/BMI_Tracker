@@ -2,7 +2,7 @@
 
 .root {
     -fx-background-color: transparent;
-    -fx-font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    -fx-font-family: "Microsoft YaHei", "PingFang SC", sans-serif;   /* <字体> 全局字族 <font-family> */
 
     /* --- looked-up colors (dark theme defaults) --- */
     -text-primary: #d0d0d0;
