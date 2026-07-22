@@ -33,6 +33,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
@@ -340,6 +341,7 @@ public class MainController {
 
     @FXML
     void initialize() {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/AlimamaDongFangDaKai-Regular.ttf"), 14);
         rootClip.widthProperty().bind(root.widthProperty());
         rootClip.heightProperty().bind(root.heightProperty());
         instance = this;

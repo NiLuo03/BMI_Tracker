@@ -125,8 +125,8 @@
 .sidebar-btn {
     -fx-background-color: transparent;
     -fx-text-fill: -sidebar-text;
-    -fx-font-size: 13px;
-    -fx-font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-family: "阿里妈妈东方大楷", "Microsoft YaHei", "PingFang SC", sans-serif;
     -fx-padding: 9px 10px;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
@@ -168,7 +168,10 @@
 .sidebar-btn.active .quiz-icon {
     -fx-background-color: #ffffff;
 }
-.sidebar-category { -fx-text-fill: -text-tertiary; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 12px 10px 4px 10px; }
+.sidebar-user-name {
+    -fx-font-family: "阿里妈妈东方大楷", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+.sidebar-category { -fx-text-fill: -text-tertiary; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 12px 10px 4px 10px; -fx-font-family: "阿里妈妈东方大楷", "Microsoft YaHei", "PingFang SC", sans-serif; }
 .user-avatar { -fx-background-color: linear-gradient(to bottom right, #10b981, #059669); -fx-background-radius: 50%; -fx-min-width: 36; -fx-min-height: 36; -fx-max-width: 36; -fx-max-height: 36; }
 .user-avatar .label { -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px; }
 .online-dot { -fx-background-color: #10b981; -fx-background-radius: 50%; -fx-min-width: 8; -fx-min-height: 8; -fx-max-width: 8; -fx-max-height: 8; }
