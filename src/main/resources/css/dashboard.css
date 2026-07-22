@@ -1559,21 +1559,21 @@
     -fx-padding: 0;
     -fx-effect: dropshadow(gaussian, rgba(149,157,165,0.2), 24, 0, 0, 8);
 }
-.ntf-card > .header-panel {
+.ntf-card .header-panel {
     -fx-background-color: transparent;
     -fx-padding: 15px 0 0 15px;
 }
-.ntf-card > .header-panel > .graphic-container {
+.ntf-card .header-panel .graphic-container {
     -fx-padding: 0;
 }
-.ntf-card > *.content {
+.ntf-card .content {
     -fx-padding: 5px 15px 15px 15px;
 }
 .ntf-card .button-bar {
     -fx-padding: 0 15px 15px 15px;
     -fx-background-color: transparent;
 }
-.ntf-card .button-bar > .container {
+.ntf-card .button-bar .container {
     -fx-spacing: 8;
 }
 .ntf-card .button {
