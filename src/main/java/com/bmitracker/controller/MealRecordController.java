@@ -153,6 +153,19 @@ public class MealRecordController {
         GraphicsContext gc = chartCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, w, h);
 
+        // legend
+        int legX = (int) w - 90, legY = 6;
+        gc.setFill(Color.rgb(16, 185, 129, 0.8));
+        gc.fillRect(legX, legY, 10, 10);
+        gc.setFill(Color.rgb(51, 51, 51));
+        gc.setFont(Font.font("Microsoft YaHei", 10));
+        gc.setTextAlign(javafx.scene.text.TextAlignment.LEFT);
+        gc.fillText("今日摄入", legX + 14, legY + 10);
+        gc.setFill(Color.rgb(0, 0, 0, 0.12));
+        gc.fillRect(legX, legY + 16, 10, 10);
+        gc.setFill(Color.rgb(51, 51, 51));
+        gc.fillText("建议摄入", legX + 14, legY + 26);
+
         List<MealRecord> todayRecords = recordsByDate.getOrDefault(selectedDate, Collections.emptyList());
         double userCal = todayRecords.stream().mapToDouble(MealRecord::getCalories).sum();
         double userPro = todayRecords.stream().mapToDouble(MealRecord::getProtein).sum();

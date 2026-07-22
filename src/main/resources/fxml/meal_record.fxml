@@ -14,7 +14,7 @@
     <HBox alignment="CENTER_LEFT">
         <Label text="膳食记录" styleClass="label-heading, heading-accent"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="记一餐" styleClass="btn-primary" onAction="#handleAddMeal"/>
+        <Button fx:id="addMealBtn" text="记一餐" styleClass="btn-primary" onAction="#handleAddMeal"/>
     </HBox>
 
     <HBox fx:id="contentArea" VBox.vgrow="ALWAYS" spacing="14">
