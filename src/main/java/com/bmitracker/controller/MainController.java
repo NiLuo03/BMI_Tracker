@@ -342,11 +342,11 @@ public class MainController {
     @FXML
     void initialize() {
         try {
-            java.net.URL fontUrl = getClass().getResource("/fonts/AlimamaDongFangDaKai-Regular.ttf");
+            java.net.URL fontUrl = getClass().getResource("/fonts/AlimamaShuHeiTi-Bold.ttf");
             if (fontUrl != null) {
                 Font.loadFont(fontUrl.toExternalForm(), 14);
             } else {
-                System.err.println("字体文件未找到: /fonts/AlimamaDongFangDaKai-Regular.ttf");
+                System.err.println("字体文件未找到: /fonts/AlimamaShuHeiTi-Bold.ttf");
             }
         } catch (Exception e) {
             System.err.println("加载字体失败: " + e.getMessage());
