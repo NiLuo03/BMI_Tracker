@@ -150,11 +150,11 @@
                                                 </VBox>
                                                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
                                                     <Label text="最高 BMI" styleClass="stat-label"/>
-                                                    <Label fx:id="statMaxBmi" text="--" styleClass="stat-value stat-value-red"/>
+                                                    <Label fx:id="statMaxBmi" text="--" styleClass="stat-value stat-value-red" style="-fx-text-fill: #dc2626;"/>
                                                 </VBox>
                                                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
                                                     <Label text="最低 BMI" styleClass="stat-label"/>
-                                                    <Label fx:id="statMinBmi" text="--" styleClass="stat-value stat-value-green"/>
+                                                    <Label fx:id="statMinBmi" text="--" styleClass="stat-value stat-value-green" style="-fx-text-fill: #059669;"/>
                                                 </VBox>
                                                 <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
                                                     <Label text="健康天数" styleClass="stat-label"/>
