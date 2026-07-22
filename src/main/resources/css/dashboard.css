@@ -154,19 +154,13 @@
     -fx-border-radius: 3px;
 }
 .quiz-icon {
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
-    -fx-background-color: -sidebar-text;
-    -fx-shape: "M2 2h20c1.1 0 2 .9 2 2v13c0 1.1-.9 2-2 2h-9l-4 4v-4H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2z";
-    -fx-scale-shape: true;
+    -fx-fill: -sidebar-text;
 }
 .sidebar-btn:hover .quiz-icon {
-    -fx-background-color: #ffffff;
+    -fx-fill: #ffffff;
 }
 .sidebar-btn.active .quiz-icon {
-    -fx-background-color: #ffffff;
+    -fx-fill: #ffffff;
 }
 .sidebar-user-name {
     -fx-font-family: "Alimama ShuHeiTi Bold", "阿里妈妈数黑体 Bold", "阿里妈妈数黑体", "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -751,10 +745,10 @@
     -fx-fill: #111111 !important;
 }
 .light-theme .sidebar-btn:hover .quiz-icon {
-    -fx-background-color: #111111 !important;
+    -fx-fill: #111111 !important;
 }
 .light-theme .sidebar-btn.active .quiz-icon {
-    -fx-background-color: #111111 !important;
+    -fx-fill: #111111 !important;
 }
 .black-theme .sidebar-btn:hover .sidebar-icon {
     -fx-fill: #e0e0e0 !important;
@@ -763,10 +757,10 @@
     -fx-fill: #e0e0e0 !important;
 }
 .black-theme .sidebar-btn:hover .quiz-icon {
-    -fx-background-color: #e0e0e0 !important;
+    -fx-fill: #e0e0e0 !important;
 }
 .black-theme .sidebar-btn.active .quiz-icon {
-    -fx-background-color: #e0e0e0 !important;
+    -fx-fill: #e0e0e0 !important;
 }
 
 /* backgrounds & borders */
