@@ -341,7 +341,16 @@ public class MainController {
 
     @FXML
     void initialize() {
-        Font.loadFont(getClass().getResourceAsStream("/fonts/AlimamaDongFangDaKai-Regular.ttf"), 14);
+        try {
+            java.net.URL fontUrl = getClass().getResource("/fonts/AlimamaDongFangDaKai-Regular.ttf");
+            if (fontUrl != null) {
+                Font.loadFont(fontUrl.toExternalForm(), 14);
+            } else {
+                System.err.println("字体文件未找到: /fonts/AlimamaDongFangDaKai-Regular.ttf");
+            }
+        } catch (Exception e) {
+            System.err.println("加载字体失败: " + e.getMessage());
+        }
         rootClip.widthProperty().bind(root.widthProperty());
         rootClip.heightProperty().bind(root.heightProperty());
         instance = this;
