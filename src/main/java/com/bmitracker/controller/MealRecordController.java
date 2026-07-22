@@ -35,7 +35,7 @@ public class MealRecordController {
     @FXML private Canvas chartCanvas;
     @FXML private GridPane calendarGrid;
     @FXML private Label monthLabel;
-    @FXML private Button prevMonthBtn, nextMonthBtn;
+    @FXML private Button prevMonthBtn, nextMonthBtn, addMealBtn;
 
     private final MealRecordService recordService = new MealRecordService();
     private final UserService userService = new UserService();
@@ -499,6 +499,7 @@ public class MealRecordController {
     void handleAddMeal() {
         for (String k : MEAL_KEYS) entries.put(k, new ArrayList<>());
         currentMealType = "LUNCH";
+        addMealBtn.setVisible(false);
         new Thread(() -> {
             allFoods = foodService.getAllFoods();
             Platform.runLater(() -> contentArea.getChildren().setAll(buildAddPanel()));
@@ -736,6 +737,7 @@ public class MealRecordController {
     private void reloadOverview() {
         selectedDate = LocalDate.now();
         calendarMonth = LocalDate.now().withDayOfMonth(1);
+        addMealBtn.setVisible(true);
         loadMonthRecords();
         contentArea.getChildren().setAll(leftArea, rightArea);
     }

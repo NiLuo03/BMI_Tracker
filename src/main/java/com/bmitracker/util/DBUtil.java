@@ -114,21 +114,45 @@ public class DBUtil {
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY (userId) REFERENCES users(userId))");
 
-            // 检查是否需要初始化食物数据（空表或旧表缺标签）
-            boolean needsSeed;
-            try {
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM foods WHERE meal_type IS NOT NULL");
-                rs.next();
-                needsSeed = rs.getInt(1) == 0;
-                rs.close();
-            } catch (SQLException e) {
-                needsSeed = true; // 表不存在或列缺失时执行 seed
-            }
-            if (needsSeed) {
-                stmt.execute("DELETE FROM foods");
-                seedFoods(stmt);
+            // 检查食物数据是否与 foods.txt 一致，不一致则重刷
+            int fileCount = countFoodDataLines();
+            if (fileCount > 0) {
+                try {
+                    ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM foods");
+                    rs.next();
+                    int dbCount = rs.getInt(1);
+                    rs.close();
+                    if (dbCount != fileCount) {
+                        stmt.execute("DELETE FROM foods");
+                        seedFoods(stmt);
+                    }
+                } catch (SQLException e) {
+                    stmt.execute("DELETE FROM foods");
+                    seedFoods(stmt);
+                }
             }
         }
+    }
+
+    private static int countFoodDataLines() {
+        String dataFile = "/data/foods.txt";
+        int count = 0;
+        try (InputStream is = DBUtil.class.getResourceAsStream(dataFile);
+             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) { firstLine = false; continue; }
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                String[] parts = line.split("\\|");
+                if (parts.length < 11) continue;
+                count++;
+            }
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "无法读取食物数据文件: " + dataFile, e);
+        }
+        return count;
     }
 
     private static void seedFoods(Statement stmt) throws SQLException {
