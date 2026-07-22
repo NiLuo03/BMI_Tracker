@@ -97,6 +97,8 @@
                                          -fx-border-radius: 20px;
                                          -fx-padding: 24px 22px;">
 
+                                <StackPane fx:id="glassContent" style="-fx-background-color: transparent;">
+
                                 <VBox spacing="16" fx:id="homeContent">
 
                                     <HBox spacing="14">
@@ -205,7 +207,14 @@
                                     </HBox>
 
                                 </VBox>
+
                             </StackPane>
+
+                            <StackPane styleClass="nav-overlay" pickOnBounds="false" mouseTransparent="false">
+                                <Region styleClass="nav-arrow nav-arrow-left" onMouseClicked="#handleNavBack"/>
+                                <Region styleClass="nav-arrow nav-arrow-right" onMouseClicked="#handleNavForward"/>
+                            </StackPane>
+                        </StackPane>
                         </StackPane>
                     </content>
                 </ScrollPane>

@@ -66,6 +66,7 @@ public class MainController {
 
     @FXML private StackPane contentPane;
     @FXML private StackPane glassPanel;
+    @FXML private StackPane glassContent;
     @FXML private TitleBar titleBar;
     @FXML private StackPane root;
     @FXML private Rectangle rootClip;
@@ -100,6 +101,8 @@ public class MainController {
 
     private boolean navExpanded = true;
     private final BmiService bmiService = new BmiService();
+    private final List<String> navHistory = new ArrayList<>();
+    private int navIndex = -1;
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static List<String> slogans;
     private static final Random RANDOM = new Random();
@@ -792,9 +795,11 @@ public class MainController {
 
     @FXML
     void showHome(ActionEvent event) {
-        if (homeContent != null && glassPanel != null) {
-            glassPanel.getChildren().setAll(homeContent);
+        if (homeContent != null && glassContent != null) {
+            glassContent.getChildren().setAll(homeContent);
             loadDashboardData();
+            navHistory.clear();
+            navIndex = -1;
         }
     }
 
@@ -821,19 +826,21 @@ public class MainController {
     void showMealRecord(ActionEvent event) { loadView("meal_record.fxml"); }
     @FXML
     void showQuiz(ActionEvent event) {
-        glassPanel.getChildren().setAll(loadingLabel());
+        glassContent.getChildren().setAll(loadingLabel());
         Platform.runLater(() -> {
             try {
                 if (quizView == null) {
                     quizView = FXMLLoader.load(getClass().getResource("/fxml/quiz.fxml"));
                 }
-                glassPanel.getChildren().setAll(quizView);
+                glassContent.getChildren().setAll(quizView);
+                navHistory.clear();
+                navIndex = -1;
             } catch (Exception e) {
                 e.printStackTrace();
                 Label err = new Label("加载失败: " + e.getMessage());
                 err.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px;");
                 StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
-                glassPanel.getChildren().setAll(err);
+                glassContent.getChildren().setAll(err);
             }
         });
     }
@@ -861,11 +868,18 @@ public class MainController {
     }
 
     public void loadView(String fxml) {
-        glassPanel.getChildren().setAll(loadingLabel());
+        if (!fxml.equals(navHistory.isEmpty() ? "" : navHistory.get(navIndex))) {
+            while (navIndex < navHistory.size() - 1) {
+                navHistory.remove(navHistory.size() - 1);
+            }
+            navHistory.add(fxml);
+            navIndex = navHistory.size() - 1;
+        }
+        glassContent.getChildren().setAll(loadingLabel());
         Platform.runLater(() -> {
             try {
                 Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
-                glassPanel.getChildren().setAll(view);
+                glassContent.getChildren().setAll(view);
             } catch (Exception e) {
                 e.printStackTrace();
                 String msg = e.getMessage();
@@ -875,7 +889,43 @@ public class MainController {
                 err.setWrapText(true);
                 err.setMaxWidth(500);
                 StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
-                glassPanel.getChildren().setAll(err);
+                glassContent.getChildren().setAll(err);
+            }
+        });
+    }
+
+    @FXML
+    void handleNavBack() {
+        if (navIndex > 0) {
+            navIndex--;
+            loadViewAt(navHistory.get(navIndex));
+        }
+    }
+
+    @FXML
+    void handleNavForward() {
+        if (navIndex < navHistory.size() - 1) {
+            navIndex++;
+            loadViewAt(navHistory.get(navIndex));
+        }
+    }
+
+    private void loadViewAt(String fxml) {
+        glassContent.getChildren().setAll(loadingLabel());
+        Platform.runLater(() -> {
+            try {
+                Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
+                glassContent.getChildren().setAll(view);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String msg = e.getMessage();
+                if (msg != null && msg.length() > 120) msg = msg.substring(0, 120) + "…";
+                Label err = new Label("加载失败: " + (msg != null ? msg : e.getClass().getSimpleName()));
+                err.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 13px;");
+                err.setWrapText(true);
+                err.setMaxWidth(500);
+                StackPane.setAlignment(err, javafx.geometry.Pos.CENTER);
+                glassContent.getChildren().setAll(err);
             }
         });
     }

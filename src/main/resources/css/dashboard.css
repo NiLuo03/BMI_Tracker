@@ -1250,8 +1250,8 @@
     -fx-scale-y: 1.05;
 }
 .record-card-inner {
-    -fx-padding: 18px 22px;
-    -fx-spacing: 14;
+    -fx-padding: 28px 30px;
+    -fx-spacing: 16;
 }
 .light-theme .record-card {
     -fx-background-color: rgba(255,255,255,0.70);
@@ -1454,3 +1454,57 @@
 .black-theme .history-detail-card {
     -fx-background-color: rgba(255,255,255,0.05);
 }
+
+/* ====== Navigation overlay arrows ====== */
+.nav-overlay {
+    -fx-alignment: top-left;
+    -fx-padding: 10px 0 0 12px;
+    -fx-background-color: transparent;
+    -fx-pref-width: 72px;
+    -fx-max-height: 36px;
+}
+.nav-arrow {
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-background-color: -text-secondary;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 0;
+}
+.nav-arrow:hover {
+    -fx-background-color: -text-primary;
+}
+.nav-arrow-left {
+    -fx-shape: "M 18 4 L 7 14 L 18 24";
+    -fx-scale-shape: false;
+    -fx-background-color: transparent;
+    -fx-border-color: -text-secondary;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+.nav-arrow-left:hover {
+    -fx-border-color: -text-primary;
+    -fx-background-color: transparent;
+}
+.nav-arrow-right {
+    -fx-shape: "M 7 4 L 18 14 L 7 24";
+    -fx-scale-shape: false;
+    -fx-background-color: transparent;
+    -fx-border-color: -text-secondary;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+.nav-arrow-right:hover {
+    -fx-border-color: -text-primary;
+    -fx-background-color: transparent;
+}
+.light-theme .nav-arrow-left { -fx-border-color: #636363; }
+.light-theme .nav-arrow-left:hover { -fx-border-color: #111111; }
+.light-theme .nav-arrow-right { -fx-border-color: #636363; }
+.light-theme .nav-arrow-right:hover { -fx-border-color: #111111; }
+.black-theme .nav-arrow-left { -fx-border-color: #6b7280; }
+.black-theme .nav-arrow-left:hover { -fx-border-color: #d0d0d0; }
+.black-theme .nav-arrow-right { -fx-border-color: #6b7280; }
+.black-theme .nav-arrow-right:hover { -fx-border-color: #d0d0d0; }
