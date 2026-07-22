@@ -1161,6 +1161,8 @@
 .light-theme .slogan-bar { -fx-border-color: rgba(0,0,0,0.06) !important; }
 .light-theme .zone-indicator { -fx-border-color: #333333 !important; }
 .light-theme .last-record-label { -fx-text-fill: #666666 !important; }
+.light-theme .stat-value-green { -fx-text-fill: #047857 !important; }
+.light-theme .stat-value-red { -fx-text-fill: #dc2626 !important; }
 
 /* ====== Black-theme overrides ====== */
 .black-theme .hero-bmi-number { -fx-text-fill: #e0e0e0 !important; }
