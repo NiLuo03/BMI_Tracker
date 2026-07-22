@@ -21,10 +21,9 @@ import java.util.List;
 public class FoodRankController {
 
     @FXML private ComboBox<String> categoryCombo;
-    @FXML private Button step1Next, step2Next;
-    @FXML private VBox step1Panel, step2Panel, step3Panel;
+    @FXML private Button submitBtn;
+    @FXML private VBox selectPanel, rankPanel;
     @FXML private VBox nutrientGroup, rankList;
-    @FXML private Label step1Indicator, step2Indicator, step3Indicator;
     @FXML private Label rankTitle;
 
     private final FoodService foodService = new FoodServiceImpl();
@@ -41,14 +40,20 @@ public class FoodRankController {
                 rb.setToggleGroup(nutrientToggle);
             }
         }
+
+        Runnable checkReady = () -> {
+            boolean ready = selectedCategory != null && nutrientToggle.getSelectedToggle() != null;
+            submitBtn.setDisable(!ready);
+        };
+
         nutrientToggle.selectedToggleProperty().addListener((obs, old, neo) -> {
-            step2Next.setDisable(neo == null);
             if (neo != null) {
                 String ud = (String) neo.getUserData();
                 String[] parts = ud.split(":");
                 selectedNutrient = parts[0];
                 selectedAsc = Boolean.parseBoolean(parts[1]);
             }
+            checkReady.run();
         });
 
         new Thread(() -> {
@@ -57,33 +62,14 @@ public class FoodRankController {
                 if (categories != null) categoryCombo.getItems().addAll(categories);
                 categoryCombo.setOnAction(e -> {
                     selectedCategory = categoryCombo.getValue();
-                    step1Next.setDisable(selectedCategory == null);
+                    checkReady.run();
                 });
             });
         }).start();
     }
 
     @FXML
-    void onStep1Next() {
-        step1Panel.setVisible(false);
-        step1Panel.setManaged(false);
-        step2Panel.setVisible(true);
-        step2Panel.setManaged(true);
-        step1Indicator.setStyle("-fx-text-fill: #10b981; -fx-font-size: 13;");
-        step2Indicator.setStyle("-fx-text-fill: #10b981; -fx-font-size: 13; -fx-font-weight: bold;");
-    }
-
-    @FXML
-    void onStep2Back() {
-        step2Panel.setVisible(false);
-        step2Panel.setManaged(false);
-        step1Panel.setVisible(true);
-        step1Panel.setManaged(true);
-        step2Indicator.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 13;");
-    }
-
-    @FXML
-    void onStep2Next() {
+    void onSubmit() {
         if (selectedCategory == null || selectedNutrient == null) return;
 
         List<Food> list = foodService.getRankByCategoryAndNutrient(selectedCategory, selectedNutrient, selectedAsc);
@@ -92,25 +78,21 @@ public class FoodRankController {
 
         buildRankList(list);
 
-        step2Panel.setVisible(false);
-        step2Panel.setManaged(false);
-        step3Panel.setVisible(true);
-        step3Panel.setManaged(true);
-        step2Indicator.setStyle("-fx-text-fill: #10b981; -fx-font-size: 13;");
-        step3Indicator.setStyle("-fx-text-fill: #10b981; -fx-font-size: 13; -fx-font-weight: bold;");
+        selectPanel.setVisible(false);
+        selectPanel.setManaged(false);
+        rankPanel.setVisible(true);
+        rankPanel.setManaged(true);
 
         String dirLabel = selectedAsc ? "从低到高" : "从高到低";
         rankTitle.setText("「" + selectedCategory + "」" + nutrientLabel(selectedNutrient) + "排行 " + dirLabel);
     }
 
     @FXML
-    void onStep3Back() {
-        step3Panel.setVisible(false);
-        step3Panel.setManaged(false);
-        step1Panel.setVisible(true);
-        step1Panel.setManaged(true);
-        step2Indicator.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 13;");
-        step3Indicator.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 13;");
+    void onReset() {
+        rankPanel.setVisible(false);
+        rankPanel.setManaged(false);
+        selectPanel.setVisible(true);
+        selectPanel.setManaged(true);
     }
 
     private void buildRankList(List<Food> list) {
