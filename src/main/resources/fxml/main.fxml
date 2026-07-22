@@ -66,7 +66,7 @@
                         <Button fx:id="btnQuiz" onAction="#showQuiz" styleClass="sidebar-btn" maxWidth="Infinity">
                             <graphic>
                                 <HBox spacing="6" alignment="CENTER_LEFT">
-                                    <SVGPath content="M2 1h20c1.2 0 2.2 1 2.2 2.2v13.6c0 1.2-1 2.2-2.2 2.2h-9l-5 6v-6h-4c-1.2 0-2.2-1-2.2-2.2v-13.6c0-1.2 1-2.2 2.2-2.2z" fill="#888888" scaleShape="true" styleClass="quiz-icon" />
+                                    <SVGPath content="M2 1h20c1.2 0 2.2 1 2.2 2.2v13.6c0 1.2-1 2.2-2.2 2.2h-9l-5 6v-6h-4c-1.2 0-2.2-1-2.2-2.2v-13.6c0-1.2 1-2.2 2.2-2.2z" scaleShape="true" styleClass="quiz-icon" />
                                     <Label text="健康问答" style="-fx-text-fill: -sidebar-text; -fx-font-size: 12px;"/>
                                 </HBox>
                             </graphic>
