@@ -154,12 +154,12 @@
     -fx-border-radius: 3px;
 }
 .quiz-icon {
-    -fx-min-width: 18px;
-    -fx-min-height: 18px;
-    -fx-max-width: 18px;
-    -fx-max-height: 18px;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
     -fx-background-color: -sidebar-text;
-    -fx-shape: "M3 2h18c1 0 2 1 2 2v12c0 1-1 2-2 2h-8l-5 5v-5h-5c-1 0-2-1-2-2V4c0-1 1-2 2-2z";
+    -fx-shape: "M2 2h20c1.1 0 2 .9 2 2v13c0 1.1-.9 2-2 2h-9l-4 4v-4H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2z";
     -fx-scale-shape: true;
 }
 .sidebar-btn:hover .quiz-icon {
