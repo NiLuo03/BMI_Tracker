@@ -34,7 +34,7 @@
                         <Label fx:id="avatarLabel" text="U"/>
                     </StackPane>
                     <VBox fx:id="avatarStatusBox" spacing="1">
-                        <Label fx:id="sidebarUserName" text="用户" style="-fx-text-fill: -text-primary; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: '阿里妈妈东方大楷', 'Microsoft YaHei', sans-serif;"/>
+                        <Label fx:id="sidebarUserName" text="用户" style="-fx-text-fill: -text-primary; -fx-font-size: 13px; -fx-font-weight: bold; -fx-font-family: 'Alimama DongFangDaKai', 'Microsoft YaHei', sans-serif;"/>
                         <HBox spacing="4" alignment="CENTER_LEFT">
                             <Region styleClass="online-dot"/>
                             <Label text="在线" style="-fx-text-fill: -text-secondary; -fx-font-size: 10px;"/>
