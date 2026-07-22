@@ -34,7 +34,7 @@
     -card-bg: rgba(255,255,255,0.22);
     -card-border: rgba(255,255,255,0.15);
     -card-hover-bg: rgba(0,0,0,0.03);
-    -glass-bg: rgba(240,242,248,0.45);
+    -glass-bg: rgba(240,242,248,0.75);
     -glass-border: rgba(255,255,255,0.20);
     -topbar-bg: rgba(255,255,255,0.92);
     -menu-bg: #f5f5f5;
@@ -615,7 +615,7 @@
 /* backgrounds & borders */
 .light-theme .user-avatar { -fx-background-color: linear-gradient(to bottom right, #888888, #666666) !important; }
 .light-theme .online-dot { -fx-background-color: #999999 !important; }
-.light-theme .glass-panel { -fx-background-color: rgba(240,242,248,0.45); -fx-border-color: rgba(255,255,255,0.20); }
+.light-theme .glass-panel { -fx-background-color: rgba(240,242,248,0.75); -fx-border-color: rgba(255,255,255,0.20); }
 .light-theme .banner-gradient,
 .light-theme .welcome-banner,
 .light-theme .hero-card,
@@ -815,3 +815,187 @@
 .black-theme .combo-box-dark { -fx-text-fill: #e0e0e0; }
 .black-theme .combo-box-dark .list-cell { -fx-text-fill: #e0e0e0; }
 .black-theme .separator-dark { -fx-background-color: rgba(255,255,255,0.06); }
+
+/* ====== Hero BMI card ====== */
+.hero-bmi-card {
+    -fx-background-color: -hero-card-bg;
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(16,185,129,0.18);
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.10), 20, 0, 0, 8);
+}
+.hero-bmi-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+    -fx-letter-spacing: 1px;
+}
+.hero-bmi-number {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34d399;
+}
+.hero-bmi-status {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 2px 10px;
+    -fx-background-radius: 6px;
+}
+.hero-bmi-status-green {
+    -fx-text-fill: #10b981;
+    -fx-background-color: rgba(16,185,129,0.12);
+}
+.hero-bmi-status-yellow {
+    -fx-text-fill: #f59e0b;
+    -fx-background-color: rgba(245,158,11,0.12);
+}
+.hero-bmi-status-red {
+    -fx-text-fill: #ef4444;
+    -fx-background-color: rgba(239,68,68,0.12);
+}
+.last-record-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -text-tertiary;
+}
+.weight-change-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+/* ====== Zone card ====== */
+.zone-card {
+    -fx-background-color: -card-bg;
+    -fx-background-radius: 14px;
+    -fx-border-color: -card-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+}
+.zone-card-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+.zone-track {
+    -fx-pref-height: 24;
+    -fx-padding: 0;
+}
+.zone-track-bg {
+    -fx-background-color: linear-gradient(to right, #22c55e, #84cc16 20%, #eab308 40%, #f97316 60%, #ef4444 80%, #dc2626);
+    -fx-background-radius: 12px;
+    -fx-min-height: 8;
+    -fx-max-height: 8;
+}
+.zone-indicator {
+    -fx-background-color: transparent;
+    -fx-border-color: -text-primary;
+    -fx-border-width: 2px;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-min-width: 14;
+    -fx-min-height: 14;
+    -fx-max-width: 14;
+    -fx-max-height: 14;
+    -fx-translate-y: -8;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.15), 4, 0, 0, 1);
+}
+.zone-desc {
+    -fx-font-size: 11px;
+    -fx-text-fill: -text-tertiary;
+}
+
+/* ====== Mini chart card ====== */
+.mini-chart-card {
+    -fx-background-color: -card-bg;
+    -fx-background-radius: 14px;
+    -fx-border-color: -card-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+}
+.mini-chart-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-secondary;
+}
+.mini-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.mini-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+.mini-chart .default-color0.chart-series-line {
+    -fx-stroke: #34d399;
+    -fx-stroke-width: 2px;
+    -fx-stroke-line-cap: round;
+}
+.mini-chart .default-color0.chart-line-symbol {
+    -fx-background-color: #34d399, transparent;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px;
+}
+.mini-chart-empty {
+    -fx-font-size: 11px;
+    -fx-text-fill: -text-tertiary;
+    -fx-alignment: CENTER;
+}
+
+/* ====== Slogan bar ====== */
+.slogan-bar {
+    -fx-background-color: -card-bg;
+    -fx-background-radius: 14px;
+    -fx-border-color: -card-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-padding: 12px 18px;
+}
+.slogan-text {
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+    -fx-text-fill: -text-muted;
+    -fx-alignment: CENTER;
+}
+
+/* ====== Stat cards ====== */
+.stat-card {
+    -fx-background-color: -card-bg;
+    -fx-background-radius: 12px;
+    -fx-border-color: -card-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-padding: 10px 6px;
+    -fx-spacing: 4;
+}
+.stat-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: -text-tertiary;
+}
+.stat-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-primary;
+}
+.stat-value-green {
+    -fx-text-fill: #10b981;
+}
+.stat-value-red {
+    -fx-text-fill: #ef4444;
+}
+
+/* ====== Light-theme overrides ====== */
+.light-theme .hero-bmi-card { -fx-border-color: rgba(0,0,0,0.10) !important; -fx-effect: none !important; }
+.light-theme .stat-card { -fx-border-color: rgba(0,0,0,0.06) !important; }
+.light-theme .hero-bmi-number { -fx-text-fill: #059669 !important; }
+.light-theme .zone-card { -fx-border-color: rgba(0,0,0,0.06) !important; }
+.light-theme .mini-chart-card { -fx-border-color: rgba(0,0,0,0.06) !important; }
+.light-theme .mini-chart .default-color0.chart-series-line { -fx-stroke: #059669 !important; }
+.light-theme .mini-chart .default-color0.chart-line-symbol { -fx-background-color: #059669, transparent !important; }
+.light-theme .slogan-bar { -fx-border-color: rgba(0,0,0,0.06) !important; }
+.light-theme .zone-indicator { -fx-border-color: #333333 !important; }
+.light-theme .last-record-label { -fx-text-fill: #666666 !important; }
+
+/* ====== Black-theme overrides ====== */
+.black-theme .hero-bmi-number { -fx-text-fill: #e0e0e0 !important; }
+.black-theme .hero-bmi-card { -fx-border-color: rgba(255,255,255,0.08) !important; -fx-effect: none !important; }

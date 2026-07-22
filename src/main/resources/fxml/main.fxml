@@ -4,6 +4,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.shape.Rectangle?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
@@ -97,80 +99,101 @@
 
                                 <VBox spacing="16" fx:id="homeContent">
 
-                                    <HBox styleClass="welcome-banner" spacing="20" alignment="CENTER_LEFT">
-                                        <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                            <Label fx:id="welcomeLabel" text="欢迎回来" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
-                                            <Label fx:id="bmiStatusLabel" text="BMI -- | 暂无数据" style="-fx-font-size: 13px; -fx-text-fill: -text-secondary;"/>
-                                        </VBox>
-                                        <VBox spacing="2" alignment="CENTER_RIGHT">
-                                            <Label fx:id="trendLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
-                                        </VBox>
-                                    </HBox>
-
                                     <HBox spacing="14">
-                                        <VBox HBox.hgrow="ALWAYS" spacing="14">
-                                            <StackPane styleClass="gradient-card">
-                                                <VBox spacing="10" styleClass="gradient-card-inner"
-                                                      style="-fx-padding: 18px 20px;">
-                                                    <Label text="📊 BMI 计算" styleClass="label-heading"/>
-                                                    <HBox spacing="8" alignment="CENTER_LEFT">
-                                                        <TextField fx:id="homeHeightField" promptText="身高(cm)" prefWidth="110" styleClass="text-field-dark"/>
-                                                        <TextField fx:id="homeWeightField" promptText="体重(kg)" prefWidth="110" styleClass="text-field-dark"/>
-                                                        <Button text="记录" onAction="#handleHomeRecord" styleClass="btn-primary"/>
-                                                    </HBox>
+                                        <VBox spacing="14" HBox.hgrow="ALWAYS">
+                                            <HBox styleClass="welcome-banner" spacing="20" alignment="CENTER_LEFT">
+                                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                                    <Label fx:id="welcomeLabel" text="欢迎回来" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
+                                                    <Label fx:id="bmiStatusLabel" text="BMI -- | 暂无数据" style="-fx-font-size: 13px; -fx-text-fill: -text-secondary;"/>
                                                 </VBox>
+                                                <VBox spacing="2" alignment="CENTER_RIGHT">
+                                                    <Label fx:id="trendLabel" style="-fx-font-size: 12px; -fx-text-fill: -text-secondary;"/>
+                                                </VBox>
+                                            </HBox>
+
+                                            <!-- Hero BMI card (full-width) -->
+                                            <StackPane styleClass="hero-bmi-card">
+                                                <HBox spacing="24" alignment="CENTER_LEFT" style="-fx-padding: 22px 28px;">
+                                                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                                        <Label text="BMI 记录" styleClass="hero-bmi-title"/>
+                                                        <HBox spacing="12" alignment="CENTER_LEFT">
+                                                            <Label fx:id="heroBmiValue" text="--" styleClass="hero-bmi-number"/>
+                                                            <Label fx:id="heroBmiStatus" text="暂无数据" styleClass="hero-bmi-status"/>
+                                                        </HBox>
+                                                        <Label fx:id="lastRecordLabel" text="" styleClass="last-record-label"/>
+                                                    </VBox>
+                                                    <VBox spacing="8" alignment="CENTER_RIGHT">
+                                                        <HBox spacing="8" alignment="CENTER">
+                                                            <TextField fx:id="homeHeightField" promptText="身高(cm)" prefWidth="100" styleClass="text-field-dark"/>
+                                                            <TextField fx:id="homeWeightField" promptText="体重(kg)" prefWidth="100" styleClass="text-field-dark"/>
+                                                            <Button text="记录" onAction="#handleHomeRecord" styleClass="btn-primary" style="-fx-font-size: 13px; -fx-padding: 8px 16px;"/>
+                                                        </HBox>
+                                                        <Label fx:id="weightChangeLabel" text="" styleClass="weight-change-label"/>
+                                                    </VBox>
+                                                </HBox>
                                             </StackPane>
 
+                                            <!-- 参数统计 -->
                                             <HBox spacing="10" HBox.hgrow="ALWAYS">
-                                                <Button onAction="#showHistory" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                                                    <graphic>
-                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
-                                                            <VBox spacing="4" alignment="CENTER">
-                                                                <Label text="📊" style="-fx-font-size: 24px;"/>
-                                                                <Label text="历史记录" styleClass="label-heading" style="-fx-font-size: 14px;"/>
-                                                                <Label text="查看BMI变化" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
-                                                            </VBox>
-                                                        </StackPane>
-                                                    </graphic>
-                                                </Button>
-                                                <Button onAction="#showDiet" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                                                    <graphic>
-                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
-                                                            <VBox spacing="4" alignment="CENTER">
-                                                                <Label text="🍜" style="-fx-font-size: 24px;"/>
-                                                                <Label text="饮食推荐" styleClass="label-heading" style="-fx-font-size: 14px;"/>
-                                                                <Label text="AI智能生成" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
-                                                            </VBox>
-                                                        </StackPane>
-                                                    </graphic>
-                                                </Button>
+                                                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                                                    <Label text="平均 BMI" styleClass="stat-label"/>
+                                                    <Label fx:id="statAvgBmi" text="--" styleClass="stat-value"/>
+                                                </VBox>
+                                                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                                                    <Label text="最高 BMI" styleClass="stat-label"/>
+                                                    <Label fx:id="statMaxBmi" text="--" styleClass="stat-value stat-value-red"/>
+                                                </VBox>
+                                                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                                                    <Label text="最低 BMI" styleClass="stat-label"/>
+                                                    <Label fx:id="statMinBmi" text="--" styleClass="stat-value stat-value-green"/>
+                                                </VBox>
+                                                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER">
+                                                    <Label text="健康天数" styleClass="stat-label"/>
+                                                    <Label fx:id="statHealthyDays" text="--" styleClass="stat-value"/>
+                                                </VBox>
                                             </HBox>
-                                            <HBox spacing="10" HBox.hgrow="ALWAYS">
-                                                <Button onAction="#showPrediction" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                                                    <graphic>
-                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
-                                                            <VBox spacing="4" alignment="CENTER">
-                                                                <Label text="📈" style="-fx-font-size: 24px;"/>
-                                                                <Label text="趋势预测" styleClass="label-heading" style="-fx-font-size: 14px;"/>
-                                                                <Label text="线性回归分析" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
-                                                            </VBox>
+
+                                            <!-- Health zone visual + BMI mini chart -->
+                                            <HBox spacing="14" HBox.hgrow="ALWAYS" prefHeight="120">
+                                                <StackPane styleClass="zone-card" HBox.hgrow="ALWAYS">
+                                                    <VBox spacing="8" style="-fx-padding: 14px 18px;">
+                                                        <Label text="BMI 健康区间" styleClass="zone-card-title"/>
+                                                        <StackPane fx:id="zoneTrack" styleClass="zone-track">
+                                                            <Region styleClass="zone-track-bg"/>
+                                                            <Region fx:id="zoneIndicator" styleClass="zone-indicator"/>
                                                         </StackPane>
-                                                    </graphic>
-                                                </Button>
-                                                <Button onAction="#showFood" style="-fx-background-color: transparent; -fx-padding: 0; -fx-cursor: hand;" maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                                                    <graphic>
-                                                        <StackPane styleClass="feature-card" maxWidth="Infinity">
-                                                            <VBox spacing="4" alignment="CENTER">
-                                                                <Label text="🥦" style="-fx-font-size: 24px;"/>
-                                                                <Label text="食物对比" styleClass="label-heading" style="-fx-font-size: 14px;"/>
-                                                                <Label text="营养横向比较" style="-fx-text-fill: -text-secondary; -fx-font-size: 11px;"/>
-                                                            </VBox>
-                                                        </StackPane>
-                                                    </graphic>
-                                                </Button>
+                                                        <Label fx:id="zoneDescription" text="记录体重数据以查看区间" styleClass="zone-desc"/>
+                                                    </VBox>
+                                                </StackPane>
+                                                <StackPane styleClass="mini-chart-card" HBox.hgrow="ALWAYS" prefWidth="280">
+                                                    <VBox spacing="4" style="-fx-padding: 14px 18px;">
+                                                        <Label text="BMI 趋势" styleClass="mini-chart-title"/>
+                                                        <LineChart fx:id="miniChart" styleClass="mini-chart"
+                                                                  createSymbols="true" legendVisible="false"
+                                                                  animated="false" horizontalGridLinesVisible="false"
+                                                                  verticalGridLinesVisible="false"
+                                                                  alternativeRowFillVisible="false"
+                                                                  alternativeColumnFillVisible="false"
+                                                                  prefHeight="80">
+                                                            <xAxis>
+                                                                <NumberAxis fx:id="miniXAxis" tickLabelsVisible="false" tickMarkVisible="false" minorTickVisible="false"/>
+                                                            </xAxis>
+                                                            <yAxis>
+                                                                <NumberAxis fx:id="miniYAxis" tickLabelsVisible="false" tickMarkVisible="false" minorTickVisible="false"/>
+                                                            </yAxis>
+                                                        </LineChart>
+                                                        <Label fx:id="miniChartEmpty" text="至少2条记录后显示趋势" styleClass="mini-chart-empty"/>
+                                                    </VBox>
+                                                </StackPane>
+                                            </HBox>
+
+                                            <!-- Slogan bar -->
+                                            <HBox styleClass="slogan-bar" alignment="CENTER">
+                                                <Label fx:id="sloganLabel" text="记录第一次体重数据，开启健康之旅！" styleClass="slogan-text"/>
                                             </HBox>
                                         </VBox>
 
+                                        <!-- Data dashboard (right sidebar) -->
                                         <VBox prefWidth="240" styleClass="data-dashboard" spacing="0">
                                             <Label text="数据看板" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-secondary; -fx-padding: 0 0 12 0;"/>
                                             <HBox styleClass="data-row" alignment="CENTER_LEFT"><VBox HBox.hgrow="ALWAYS"><Label text="最新 BMI" styleClass="data-label"/></VBox><Label fx:id="dashBmi" text="--" styleClass="data-value"/></HBox>

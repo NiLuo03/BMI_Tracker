@@ -55,6 +55,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.prefs.Preferences;
+import java.util.Random;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 
 public class MainController {
 
@@ -81,6 +85,15 @@ public class MainController {
     @FXML private VBox homeContent;
     @FXML private TextField homeHeightField;
     @FXML private TextField homeWeightField;
+    @FXML private Label heroBmiValue, heroBmiStatus, lastRecordLabel, weightChangeLabel;
+    @FXML private Label zoneDescription;
+    @FXML private StackPane zoneTrack;
+    @FXML private Region zoneIndicator;
+    @FXML private LineChart<Number, Number> miniChart;
+    @FXML private NumberAxis miniXAxis, miniYAxis;
+    @FXML private Label miniChartEmpty;
+    @FXML private Label sloganLabel;
+    @FXML private Label statAvgBmi, statMaxBmi, statMinBmi, statHealthyDays;
     private Popup homeHeightPopup;
     private Popup homeWeightPopup;
     private Node quizView;
@@ -88,6 +101,8 @@ public class MainController {
     private boolean navExpanded = true;
     private final BmiService bmiService = new BmiService();
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static List<String> slogans;
+    private static final Random RANDOM = new Random();
     private Pane rootPane;
 
     private static final String[] BACKDROP_COLORS = {
@@ -613,11 +628,21 @@ public class MainController {
                 Platform.runLater(() -> {
                     if (records == null || records.isEmpty()) {
                         if (dashRecords != null) dashRecords.setText("0");
+                        if (heroBmiValue != null) heroBmiValue.setText("--");
+                        if (heroBmiStatus != null) heroBmiStatus.setText("暂无数据");
+                        if (lastRecordLabel != null) lastRecordLabel.setText("");
+                        if (weightChangeLabel != null) weightChangeLabel.setText("");
+                        if (zoneDescription != null) zoneDescription.setText("记录体重数据以查看区间");
+                        if (miniChartEmpty != null) miniChartEmpty.setVisible(true);
+                        if (miniChart != null) miniChart.setVisible(false);
+                        resetStats();
+                        loadRandomSlogan();
                         return;
                     }
                     BmiRecord latest = records.get(0);
                     double bmi = latest.getBmi();
                     String status = latest.getStatus();
+
                     if (dashBmi != null) dashBmi.setText(String.format("%.1f", bmi));
                     if (dashStatus != null) {
                         dashStatus.setText(status);
@@ -630,6 +655,29 @@ public class MainController {
                     if (bmiStatusLabel != null) bmiStatusLabel.setText(String.format("BMI %.1f · %s", bmi, status));
                     if (dashIdealWeight != null) dashIdealWeight.setText(String.format("%.0f–%.0f kg", latest.getHeight() * 0.185 * latest.getHeight() / 100, latest.getHeight() * 0.24 * latest.getHeight() / 100));
 
+                    // Hero card
+                    if (heroBmiValue != null) heroBmiValue.setText(String.format("%.1f", bmi));
+                    if (heroBmiStatus != null) {
+                        heroBmiStatus.setText(status);
+                        heroBmiStatus.getStyleClass().removeAll("hero-bmi-status-green", "hero-bmi-status-yellow", "hero-bmi-status-red");
+                        if ("正常".equals(status)) heroBmiStatus.getStyleClass().add("hero-bmi-status-green");
+                        else if ("偏瘦".equals(status) || "超重".equals(status)) heroBmiStatus.getStyleClass().add("hero-bmi-status-yellow");
+                        else heroBmiStatus.getStyleClass().add("hero-bmi-status-red");
+                    }
+                    if (lastRecordLabel != null && latest.getCreateTime() != null) {
+                        lastRecordLabel.setText("上次记录：" + latest.getCreateTime().format(DateTimeFormatter.ofPattern("MM-dd HH:mm")));
+                    }
+                    if (weightChangeLabel != null && records.size() >= 2) {
+                        double prevWeight = records.get(1).getWeight();
+                        double diff = latest.getWeight() - prevWeight;
+                        if (Math.abs(diff) < 0.01) weightChangeLabel.setText("体重持平");
+                        else if (diff > 0) weightChangeLabel.setText(String.format("↑ +%.1f kg", diff));
+                        else weightChangeLabel.setText(String.format("↓ %.1f kg", diff));
+                    } else if (weightChangeLabel != null) {
+                        weightChangeLabel.setText("");
+                    }
+
+                    // Trend comparison
                     if (records.size() >= 2) {
                         double prev = records.get(1).getBmi();
                         if (dashTrend != null) {
@@ -640,10 +688,101 @@ public class MainController {
                         if (trendLabel != null) trendLabel.setText(bmi > prev ? "📈 趋势上升" : bmi < prev ? "📉 趋势下降" : "➡ 趋势平稳");
                     }
 
+                    // Zone visual
+                    updateZoneIndicator(bmi);
+
+                    // Mini chart
+                    updateMiniChart(records);
+
+                    // Slogan
+                    loadRandomSlogan();
+
+                    // Parameter statistics
+                    double sum = 0, max = Double.MIN_VALUE, min = Double.MAX_VALUE;
+                    int healthyCount = 0;
+                    for (BmiRecord r : records) {
+                        double b = r.getBmi();
+                        sum += b;
+                        if (b > max) max = b;
+                        if (b < min) min = b;
+                        if (b >= 18.5 && b < 24) healthyCount++;
+                    }
+                    if (statAvgBmi != null) statAvgBmi.setText(String.format("%.1f", sum / records.size()));
+                    if (statMaxBmi != null) statMaxBmi.setText(String.format("%.1f", max));
+                    if (statMinBmi != null) statMinBmi.setText(String.format("%.1f", min));
+                    if (statHealthyDays != null) statHealthyDays.setText(String.valueOf(healthyCount));
+
                     if (historySummary != null) historySummary.setText(String.format("共%d条记录，最近BMI %.1f", records.size(), bmi));
                 });
             } catch (Exception ignored) {}
         }).start();
+    }
+
+    private void updateZoneIndicator(double bmi) {
+        double minBmi = 14.0, maxBmi = 36.0;
+        double pct = Math.max(0, Math.min(1, (bmi - minBmi) / (maxBmi - minBmi)));
+        if (zoneTrack != null) {
+            double trackWidth = zoneTrack.getWidth();
+            if (trackWidth > 0) {
+                double indicatorW = zoneIndicator != null ? zoneIndicator.prefWidth(-1) : 12;
+                zoneIndicator.setTranslateX((pct - 0.5) * (trackWidth - indicatorW));
+            }
+        }
+        if (zoneDescription != null) {
+            String desc;
+            if (bmi < 18.5) desc = "偏瘦 · 建议增加营养摄入";
+            else if (bmi < 24) desc = "正常 · 继续保持良好习惯";
+            else if (bmi < 28) desc = "超重 · 建议控制饮食增加运动";
+            else desc = "肥胖 · 建议咨询专业医生";
+            zoneDescription.setText(desc);
+        }
+    }
+
+    private void updateMiniChart(List<BmiRecord> records) {
+        if (miniChart == null || miniChartEmpty == null) return;
+        if (records.size() < 2) {
+            miniChartEmpty.setVisible(true);
+            miniChart.setVisible(false);
+            return;
+        }
+        miniChartEmpty.setVisible(false);
+        miniChart.setVisible(true);
+
+        List<BmiRecord> last10 = records.size() > 10 ? records.subList(0, 10) : records;
+        java.util.Collections.reverse(last10);
+
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        for (int i = 0; i < last10.size(); i++) {
+            series.getData().add(new XYChart.Data<>(i + 1, last10.get(i).getBmi()));
+        }
+        miniChart.getData().clear();
+        miniChart.getData().add(series);
+    }
+
+    private void resetStats() {
+        if (statAvgBmi != null) statAvgBmi.setText("--");
+        if (statMaxBmi != null) statMaxBmi.setText("--");
+        if (statMinBmi != null) statMinBmi.setText("--");
+        if (statHealthyDays != null) statHealthyDays.setText("--");
+    }
+
+    private void loadRandomSlogan() {
+        if (sloganLabel == null) return;
+        if (slogans == null) {
+            try (java.io.InputStream is = getClass().getResourceAsStream("/data/slogans.txt");
+                 java.util.Scanner sc = new java.util.Scanner(is)) {
+                slogans = new ArrayList<>();
+                while (sc.hasNextLine()) {
+                    String line = sc.nextLine().trim();
+                    if (!line.isEmpty()) slogans.add(line);
+                }
+            } catch (Exception e) {
+                slogans = List.of("记录每一次体重数据，管理好健康人生");
+            }
+        }
+        if (!slogans.isEmpty()) {
+            sloganLabel.setText(slogans.get(RANDOM.nextInt(slogans.size())));
+        }
     }
 
     @FXML

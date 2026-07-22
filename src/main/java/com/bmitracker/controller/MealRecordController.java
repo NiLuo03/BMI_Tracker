@@ -113,7 +113,7 @@ public class MealRecordController {
             double vh = listScroll.getViewportBounds().getHeight();
             if (h <= vh) return;
             double maxScroll = h - vh;
-            double speed = 3.0;                                 // <滚轮速度> 越大滚得越快，默认1.0
+            double speed = 3.0;
             listScroll.setVvalue(Math.min(1, Math.max(0, v - e.getDeltaY() / maxScroll * speed)));
             e.consume();
         });
@@ -194,14 +194,14 @@ public class MealRecordController {
             gc.setFill(Color.rgb(0, 0, 0, 0.12));
             gc.fillRoundRect(bar2X, bar2Y, barW, h2, 3, 3);
 
-            gc.setFill(Color.rgb(51, 51, 51));                         // <字体> 柱状图数值颜色
-            gc.setFont(Font.font("Microsoft YaHei", 10));              // <字体> 柱状图数值字族+字号
+            gc.setFill(Color.rgb(51, 51, 51));
+            gc.setFont(Font.font("Microsoft YaHei", 10));
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText(String.format("%.0f", data[i][0]), bar1X + barW / 2, bar1Y - 4);
             gc.fillText(String.format("%.0f", data[i][1]), bar2X + barW / 2, bar2Y - 4);
 
-            gc.setFill(Color.rgb(85, 85, 85));                         // <字体> 柱状图标尺颜色
-            gc.setFont(Font.font("Microsoft YaHei", 11));              // <字体> 柱状图标尺字族+字号
+            gc.setFill(Color.rgb(85, 85, 85));
+            gc.setFont(Font.font("Microsoft YaHei", 11));
             gc.fillText(labels[i], centerX, marginT + plotH + 16);
         }
     }
@@ -210,7 +210,7 @@ public class MealRecordController {
         mealListBox.getChildren().clear();
         if (recordsByDate.isEmpty()) {
             Label empty = new Label("本月暂无膳食记录");
-            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 14px; -fx-padding: 20 0;");  // <字体> 列表空态 字号14 颜色#666666
+            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 14px; -fx-padding: 20 0;");
             empty.setAlignment(Pos.CENTER);
             empty.setMaxWidth(Double.MAX_VALUE);
             mealListBox.getChildren().add(empty);
@@ -246,36 +246,34 @@ public class MealRecordController {
             header.setOnMouseEntered(e -> header.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 6px;"));
             header.setOnMouseExited(e -> header.setStyle(""));
             Label dateLbl = new Label(formatDateTitle(date));
-            dateLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: bold;");  // <字体> 列表日期标题 字号15 字重bold 颜色#111111
+            dateLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: bold;");
             Label suffixLbl = new Label(getDateSuffix(date));
-            suffixLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px;");                       // <字体> 周几/昨天/今天 标签 字号12 颜色#888888
-            Region dateGap = new Region();                                                            // <间距> 日期与周几之间的间距
+            suffixLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px;");
+            Region dateGap = new Region();
             dateGap.setPrefWidth(0.5);
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
             Label sumLbl = new Label(String.format("%.0f %s", sum, getParamUnit()));
-            sumLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 15px; -fx-font-weight: bold;");  // <字体> 列表参数合计值 字号15 字重bold 颜色#10b981
+            sumLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 15px; -fx-font-weight: bold;");
             header.getChildren().addAll(dateLbl, dateGap, suffixLbl, spacer, sumLbl);
             header.setPadding(new Insets(12, 14, 4, 14));
             card.getChildren().add(header);
 
-            // <分割线> 日期标题下方的分割线（贯穿左右，无左右 padding）
-            Region headSep = new Region();                                                            // <间距> 此处加大过间距（16px行间距）
+            Region headSep = new Region();
             headSep.setStyle("-fx-background-color: #f0f0f0;");
-            headSep.setPrefHeight(0.1);                                                                  // <分割线粗度> 0.1px
+            headSep.setPrefHeight(0.1);
             headSep.setMaxHeight(2);
             headSep.setMaxWidth(Double.MAX_VALUE);
             card.getChildren().add(headSep);
-            // </分割线>
 
             for (int i = 0; i < recs.size(); i++) {
-                if (i > 0) {                                             // <分割线> 各条记录间的分割线（贯穿左右）
-                    Region gap = new Region();                            // <间距> 此处加大过间距（16px行间距）
+                if (i > 0) {
+                    Region gap = new Region();
                     gap.setStyle("-fx-background-color: #f0f0f0;");
-                    gap.setPrefHeight(0.1);                                                              // <分割线粗度> 0.1px
+                    gap.setPrefHeight(0.1);
                     gap.setMaxHeight(2);
                     gap.setMaxWidth(Double.MAX_VALUE);
-                    card.getChildren().add(gap);                         // </分割线>
+                    card.getChildren().add(gap);
                 }
 
                 MealRecord r = recs.get(i);
@@ -290,15 +288,15 @@ public class MealRecordController {
                 VBox nameBox = new VBox(2);
                 nameBox.setAlignment(Pos.CENTER_LEFT);
                 Label nameLbl = new Label(r.getFoodName());
-                nameLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 16px;");     // <字体> 列表食物名称 字号15 颜色#222222
+                nameLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 16px;");
                 Label gramLbl = new Label(String.format("%.0f g", r.getGrams()));
-                gramLbl.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");     // <字体> 列表克数 字号13 颜色#888888
+                gramLbl.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
                 nameBox.getChildren().addAll(nameLbl, gramLbl);
 
                 Region rowSpacer = new Region();
                 HBox.setHgrow(rowSpacer, Priority.ALWAYS);
                 Label valLbl = new Label(String.format("%.0f %s", val, getParamUnit()));
-                valLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 16px;");  // <字体> 列表单行参数值 字号15 颜色#10b981
+                valLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 16px;");
 
                 row.getChildren().addAll(nameBox, rowSpacer, valLbl);
                 card.getChildren().add(row);
@@ -334,19 +332,19 @@ public class MealRecordController {
         {
             RowConstraints hdr = new RowConstraints(cellSize * 0.65, cellSize * 0.65, cellSize * 0.65);
             hdr.setVgrow(Priority.NEVER);
-            calendarGrid.getRowConstraints().add(hdr);                                    // <行高> 周几标题行高
+            calendarGrid.getRowConstraints().add(hdr);
         }
         for (int i = 0; i < 5; i++) {
             RowConstraints row = new RowConstraints(cellSize, cellSize, cellSize);
             row.setVgrow(Priority.NEVER);
-            calendarGrid.getRowConstraints().add(row);                                    // <行高> 日期行行高
+            calendarGrid.getRowConstraints().add(row);
         }
 
         for (int col = 0; col < 7; col++) {
             Label dayLabel = new Label(WEEKDAYS[col]);
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            dayLabel.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px;");  // <字体> 日历星期表头 字号11 颜色#777777
+            dayLabel.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px;");
             calendarGrid.add(dayLabel, col, 0);
             GridPane.setHalignment(dayLabel, HPos.CENTER);
         }
@@ -382,16 +380,16 @@ public class MealRecordController {
 
             Label numLbl = new Label(String.valueOf(d));
             numLbl.setAlignment(Pos.CENTER);
-            numLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px");         // <字体> 日历日期数字 字号14 颜色#111111
+            numLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px");
 
             cell.getChildren().add(numLbl);
 
-            Label valLbl;// 空占位对齐
+            Label valLbl;
             if(sum>0)
                 valLbl = new Label(String.format("%.0f", sum));
             else valLbl = new Label("");
             valLbl.setAlignment(Pos.CENTER);
-            valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 8px;");      // <字体> 日历卡路里数值 字号8 颜色#10b981
+            valLbl.setStyle("-fx-text-fill: #10b981; -fx-font-size: 8px;");
             cell.getChildren().add(valLbl);
 
             if (hasData) {
