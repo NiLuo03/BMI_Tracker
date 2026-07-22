@@ -78,14 +78,7 @@ public class QuizController {
         btnWeekly.setToggleGroup(tabGroup);
         btnAlltime.setToggleGroup(tabGroup);
         tabGroup.selectedToggleProperty().addListener((obs, old, sel) -> {
-            boolean weekly = sel == btnWeekly;
-            btnWeekly.setStyle(weekly
-                ? "-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"
-                : "-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;");
-            btnAlltime.setStyle(!weekly
-                ? "-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"
-                : "-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;");
-            loadLeaderboard(weekly);
+            loadLeaderboard(sel == btnWeekly);
         });
         loadLeaderboard(true);
         loadWrongBook();
@@ -444,7 +437,7 @@ public class QuizController {
         right.setAlignment(Pos.TOP_CENTER);
 
         ToggleButton sheetToggle = new ToggleButton("答题卡 ▶");
-        sheetToggle.setStyle("-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #10b981; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand; -fx-padding: 6 14;");
+        sheetToggle.getStyleClass().add("toggle-button-dark");
         sheetToggle.setMaxWidth(Double.MAX_VALUE);
 
         VBox sheetContent = new VBox(8);

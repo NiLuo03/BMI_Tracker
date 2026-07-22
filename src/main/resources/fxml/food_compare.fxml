@@ -6,10 +6,11 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodCompareController"
+      styleClass="page-food"
       style="-fx-background-color: transparent;">
     <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
-    <Label text="食物对比" styleClass="label-heading"/>
+    <Label text="食物对比" styleClass="label-heading, heading-accent"/>
     <Label text="选择两种食物，对比营养成分与标签" styleClass="label-subheading"/>
 
     <TitledPane text="筛选条件（可选）" expanded="false" styleClass="filter-panel">
@@ -44,7 +45,12 @@
         <ComboBox fx:id="foodCombo2" promptText="选择食物 2" prefWidth="220" styleClass="combo-box-dark"/>
     </HBox>
 
-    <VBox fx:id="compareContent" spacing="0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
-        <Label text="在上方选择两种食物开始对比" style="-fx-text-fill: -text-secondary; -fx-font-size: 16;" VBox.vgrow="ALWAYS"/>
+    <VBox fx:id="foodEmptyState" styleClass="empty-state" visible="true" managed="true" VBox.vgrow="ALWAYS">
+        <Region styleClass="empty-shape-compare"/>
+        <Label text="在上方选择两种食物开始对比营养成分"
+               style="-fx-font-size: 13px; -fx-text-fill: -text-tertiary; -fx-text-alignment: center;"
+               wrapText="true" maxWidth="280"/>
     </VBox>
+
+    <VBox fx:id="compareContent" spacing="0" alignment="TOP_CENTER" VBox.vgrow="ALWAYS"/>
 </VBox>

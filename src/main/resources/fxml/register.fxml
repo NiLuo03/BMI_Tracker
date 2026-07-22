@@ -56,9 +56,9 @@
                     </fx:define>
                     <HBox spacing="20" alignment="CENTER">
                         <RadioButton fx:id="maleRadio" text="男" selected="true" toggleGroup="$genderGroup"
-                                     style="-fx-text-fill: rgba(255,255,255,0.7);"/>
+                                     styleClass="radio-button-dark"/>
                         <RadioButton fx:id="femaleRadio" text="女" toggleGroup="$genderGroup"
-                                     style="-fx-text-fill: rgba(255,255,255,0.7);"/>
+                                     styleClass="radio-button-dark"/>
                     </HBox>
 
                     <Button text="注 册" onAction="#handleRegister" styleClass="btn-login" maxWidth="Infinity">

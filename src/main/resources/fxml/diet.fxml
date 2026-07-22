@@ -7,36 +7,41 @@
 
 <VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.DietController"
+      styleClass="page-diet"
       style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="AI 膳食推荐" styleClass="label-heading"/>
+    <Label text="AI 膳食推荐" styleClass="label-heading, heading-accent"/>
     <Label text="基于您的体质数据，AI 营养师为您定制一日三餐" styleClass="label-subheading"/>
 
     <Button text="🥗 生成推荐" onAction="#handleGenerate" styleClass="btn-primary" maxWidth="200"/>
 
-    <StackPane styleClass="gradient-card">
-        <TitledPane text="🌅  早餐" expanded="true" styleClass="meal-panel">
+    <StackPane styleClass="card-secondary">
+        <VBox spacing="6" style="-fx-padding: 14px 16px;">
+            <Label text="🌅  早餐" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
             <Label fx:id="breakfastLabel" text="点击上方按钮生成推荐"
-                   wrapText="true" styleClass="meal-content" maxWidth="500"/>
-        </TitledPane>
+                   wrapText="true" style="-fx-text-fill: -text-primary; -fx-font-size: 13px;"/>
+        </VBox>
     </StackPane>
-    <StackPane styleClass="gradient-card">
-        <TitledPane text="☀️  午餐" expanded="true" styleClass="meal-panel">
+    <StackPane styleClass="card-secondary">
+        <VBox spacing="6" style="-fx-padding: 14px 16px;">
+            <Label text="☀️  午餐" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
             <Label fx:id="lunchLabel" text="点击上方按钮生成推荐"
-                   wrapText="true" styleClass="meal-content" maxWidth="500"/>
-        </TitledPane>
+                   wrapText="true" style="-fx-text-fill: -text-primary; -fx-font-size: 13px;"/>
+        </VBox>
     </StackPane>
-    <StackPane styleClass="gradient-card">
-        <TitledPane text="🌙  晚餐" expanded="true" styleClass="meal-panel">
+    <StackPane styleClass="card-secondary">
+        <VBox spacing="6" style="-fx-padding: 14px 16px;">
+            <Label text="🌙  晚餐" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
             <Label fx:id="dinnerLabel" text="点击上方按钮生成推荐"
-                   wrapText="true" styleClass="meal-content" maxWidth="500"/>
-        </TitledPane>
+                   wrapText="true" style="-fx-text-fill: -text-primary; -fx-font-size: 13px;"/>
+        </VBox>
     </StackPane>
     <StackPane styleClass="gradient-card">
-        <TitledPane text="📊  总热量" expanded="true" styleClass="meal-panel">
+        <VBox spacing="6" style="-fx-padding: 14px 16px;">
+            <Label text="📊  总热量" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
             <Label fx:id="totalCalLabel" text="点击上方按钮生成推荐"
-                   styleClass="calorie-highlight"/>
-        </TitledPane>
+                   styleClass="calorie-highlight" style="-fx-padding: 4px 0;"/>
+        </VBox>
     </StackPane>
 </VBox>

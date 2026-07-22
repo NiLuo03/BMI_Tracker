@@ -56,10 +56,10 @@ public class DietController {
                                 if (kv.length < 2) continue;
                                 String key = kv[0].trim().toLowerCase();
                                 String val = kv[1].trim();
-                                if (key.contains("breakfast")) breakfastLabel.setText(val);
-                                else if (key.contains("lunch")) lunchLabel.setText(val);
-                                else if (key.contains("dinner")) dinnerLabel.setText(val);
-                                else if (key.contains("totalcal") || key.contains("totalCal")) totalCalLabel.setText(val);
+                            if (key.contains("breakfast")) { breakfastLabel.setText(val); }
+                                else if (key.contains("lunch")) { lunchLabel.setText(val); }
+                                else if (key.contains("dinner")) { dinnerLabel.setText(val); }
+                                else if (key.contains("totalcal") || key.contains("totalCal")) { totalCalLabel.setText(val); }
                             }
                         } catch (Exception e) {
                             showAlert("AI 返回数据解析失败，请稍后再试");

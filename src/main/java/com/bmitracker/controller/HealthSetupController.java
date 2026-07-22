@@ -58,6 +58,9 @@ public class HealthSetupController {
     private final UserService userService = new UserService();
     private final Set<String> selectedAllergens = new HashSet<>();
     private final Set<String> selectedDiseases = new HashSet<>();
+    private boolean editMode = false;
+
+    public void setEditMode(boolean editMode) { this.editMode = editMode; }
 
     @FXML
     void initialize() {
@@ -72,6 +75,24 @@ public class HealthSetupController {
         diseaseSearchField.setOnAction(e -> searchDiseases());
 
         showAllOptions(allergenOptionsPane, ALL_ALLERGENS, selectedAllergens, true);
+    }
+
+    public void prefillData(String allergens, String diseases) {
+        if (allergens != null && !allergens.trim().isEmpty()) {
+            String[] parts = allergens.split(",");
+            for (String a : parts) {
+                String t = a.trim();
+                if (!t.isEmpty()) selectedAllergens.add(t);
+            }
+            showAllOptions(allergenOptionsPane, ALL_ALLERGENS, selectedAllergens, true);
+        }
+        if (diseases != null && !diseases.trim().isEmpty()) {
+            String[] parts = diseases.split(",");
+            for (String d : parts) {
+                String t = d.trim();
+                if (!t.isEmpty()) selectedDiseases.add(t);
+            }
+        }
     }
 
     @FXML void searchAllergens() {

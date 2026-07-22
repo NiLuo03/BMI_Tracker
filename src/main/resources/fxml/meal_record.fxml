@@ -7,11 +7,12 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.MealRecordController"
+      styleClass="page-diet"
       style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
     <HBox alignment="CENTER_LEFT">
-        <Label text="膳食记录" styleClass="label-heading"/>
+        <Label text="膳食记录" styleClass="label-heading, heading-accent"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="记一餐" styleClass="btn-primary" onAction="#handleAddMeal"/>
     </HBox>

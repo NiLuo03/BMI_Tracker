@@ -7,80 +7,121 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.HistoryController"
+      styleClass="page-history"
       style="-fx-background-color: transparent;">
     <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
 
-    <Label text="数据分析" styleClass="label-heading"/>
+    <Label text="数据分析" styleClass="label-heading, heading-accent"/>
     <Label fx:id="infoLabel" text="点击卡片进入详情" styleClass="label-subheading"/>
 
     <!-- 两张预览卡片 -->
     <HBox spacing="14" VBox.vgrow="ALWAYS">
         <!-- 卡片1：折线图预览 -->
-        <StackPane HBox.hgrow="ALWAYS" styleClass="gradient-card">
-            <VBox fx:id="chartCard" spacing="6" styleClass="gradient-card-inner"
-                  style="-fx-padding: 14px; -fx-cursor: hand;"
-                  onMouseClicked="#openChartDetail">
-                <HBox alignment="CENTER_LEFT" spacing="8">
-                    <Label text="BMI 变化趋势" styleClass="label-heading" style="-fx-font-size: 15px;"/>
+        <StackPane fx:id="chartCard" HBox.hgrow="ALWAYS" styleClass="mac-card"
+                   onMouseClicked="#openChartDetail">
+            <VBox>
+                <HBox styleClass="mac-card-titlebar">
+                    <HBox spacing="6" styleClass="mac-dots">
+                        <Region styleClass="mac-dot-red"/>
+                        <Region styleClass="mac-dot-yellow"/>
+                        <Region styleClass="mac-dot-green"/>
+                    </HBox>
+                    <Label text="BMI 变化趋势" styleClass="mac-card-title"/>
                     <HBox HBox.hgrow="ALWAYS"/>
-                    <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                    <Label text="→" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
                 </HBox>
-                <LineChart fx:id="previewChart" prefHeight="200" styleClass="chart-dark"
-                           mouseTransparent="true">
-                    <xAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></xAxis>
-                    <yAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></yAxis>
-                </LineChart>
-                <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                <VBox styleClass="mac-card-content">
+                    <LineChart fx:id="previewChart" prefHeight="200" styleClass="chart-dark"
+                               mouseTransparent="true">
+                        <xAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></xAxis>
+                        <yAxis><NumberAxis label="" tickLabelsVisible="false" minorTickVisible="false"/></yAxis>
+                    </LineChart>
+                    <Label fx:id="chartPreviewLabel" text="暂无数据" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                </VBox>
             </VBox>
         </StackPane>
 
         <!-- 卡片2：历史记录预览 -->
-        <StackPane HBox.hgrow="ALWAYS" styleClass="gradient-card">
-            <VBox fx:id="tableCard" spacing="6" styleClass="gradient-card-inner"
-                  style="-fx-padding: 14px; -fx-cursor: hand;"
-                  onMouseClicked="#openTableDetail">
-                <HBox alignment="CENTER_LEFT" spacing="8">
-                    <Label text="历史记录" styleClass="label-heading" style="-fx-font-size: 15px;"/>
+        <StackPane fx:id="tableCard" HBox.hgrow="ALWAYS" styleClass="mac-card"
+                   onMouseClicked="#openTableDetail">
+            <VBox>
+                <HBox styleClass="mac-card-titlebar">
+                    <HBox spacing="6" styleClass="mac-dots">
+                        <Region styleClass="mac-dot-red"/>
+                        <Region styleClass="mac-dot-yellow"/>
+                        <Region styleClass="mac-dot-green"/>
+                    </HBox>
+                    <Label text="历史记录" styleClass="mac-card-title"/>
                     <HBox HBox.hgrow="ALWAYS"/>
-                    <Label text="查看详情 →" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                    <Label text="→" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
                 </HBox>
-                <TableView fx:id="previewTable" prefHeight="200" styleClass="table-view-dark" mouseTransparent="true">
-                    <columns>
-                        <TableColumn fx:id="preColId" text="#" prefWidth="40"/>
-                        <TableColumn fx:id="preColBmi" text="BMI" prefWidth="55"/>
-                        <TableColumn fx:id="preColDate" text="日期" prefWidth="100"/>
-                    </columns>
-                </TableView>
-                <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                <VBox styleClass="mac-card-content">
+                    <TableView fx:id="previewTable" prefHeight="200" styleClass="table-view-dark" mouseTransparent="true">
+                        <columns>
+                            <TableColumn fx:id="preColId" text="#" prefWidth="40"/>
+                            <TableColumn fx:id="preColBmi" text="BMI" prefWidth="55"/>
+                            <TableColumn fx:id="preColDate" text="日期" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                    <Label fx:id="tablePreviewLabel" text="暂无记录" style="-fx-font-size: 11px; -fx-text-fill: -text-secondary;"/>
+                </VBox>
             </VBox>
         </StackPane>
     </HBox>
 
     <!-- 折线图详情面板（默认隐藏） -->
-    <VBox fx:id="chartDetail" spacing="10" visible="false" managed="false" VBox.vgrow="ALWAYS">
-        <Button text="← 返回数据分析" onAction="#closeDetail"
-                style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-cursor: hand;"/>
-        <Label text="BMI 变化趋势" styleClass="label-heading"/>
-        <LineChart fx:id="chart" prefHeight="400" VBox.vgrow="ALWAYS" styleClass="chart-dark">
-            <xAxis><NumberAxis label="记录序号"/></xAxis>
-            <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
-        </LineChart>
+    <VBox fx:id="chartDetail" spacing="0" visible="false" managed="false" VBox.vgrow="ALWAYS">
+        <StackPane styleClass="mac-card" VBox.vgrow="ALWAYS">
+            <VBox>
+                <HBox styleClass="mac-card-titlebar">
+                    <HBox spacing="6" styleClass="mac-dots">
+                        <Region styleClass="mac-dot-red"/>
+                        <Region styleClass="mac-dot-yellow"/>
+                        <Region styleClass="mac-dot-green"/>
+                    </HBox>
+                    <Label text="BMI 变化趋势" styleClass="mac-card-title"/>
+                    <HBox HBox.hgrow="ALWAYS"/>
+                    <Label text="← 返回" onMouseClicked="#closeDetail"
+                           style="-fx-font-size: 11px; -fx-text-fill: -text-secondary; -fx-cursor: hand;"/>
+                </HBox>
+                <VBox styleClass="mac-card-content">
+                    <LineChart fx:id="chart" prefHeight="400" VBox.vgrow="ALWAYS" styleClass="chart-dark">
+                        <xAxis><NumberAxis label="记录序号"/></xAxis>
+                        <yAxis><NumberAxis label="BMI值" lowerBound="10" upperBound="40" tickUnit="2"/></yAxis>
+                    </LineChart>
+                </VBox>
+            </VBox>
+        </StackPane>
     </VBox>
 
     <!-- 历史记录详情面板（默认隐藏） -->
-    <VBox fx:id="tableDetail" spacing="10" visible="false" managed="false" VBox.vgrow="ALWAYS">
-        <Button text="← 返回数据分析" onAction="#closeDetail"
-                style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 12px; -fx-cursor: hand;"/>
-        <Label text="历史记录" styleClass="label-heading"/>
-        <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
-            <columns>
-                <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
-                <TableColumn fx:id="colDate" text="记录时间" prefWidth="170"/>
-                <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90"/>
-                <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90"/>
-                <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
-                <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90"/>
-            </columns>
-        </TableView>
+    <VBox fx:id="tableDetail" spacing="0" visible="false" managed="false" VBox.vgrow="ALWAYS">
+        <StackPane styleClass="mac-card" VBox.vgrow="ALWAYS">
+            <VBox>
+                <HBox styleClass="mac-card-titlebar">
+                    <HBox spacing="6" styleClass="mac-dots">
+                        <Region styleClass="mac-dot-red"/>
+                        <Region styleClass="mac-dot-yellow"/>
+                        <Region styleClass="mac-dot-green"/>
+                    </HBox>
+                    <Label text="历史记录" styleClass="mac-card-title"/>
+                    <HBox HBox.hgrow="ALWAYS"/>
+                    <Label text="← 返回" onMouseClicked="#closeDetail"
+                           style="-fx-font-size: 11px; -fx-text-fill: -text-secondary; -fx-cursor: hand;"/>
+                </HBox>
+                <VBox styleClass="mac-card-content">
+                    <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="table-view-dark">
+                        <columns>
+                            <TableColumn fx:id="colId" text="编号" prefWidth="60"/>
+                            <TableColumn fx:id="colDate" text="记录时间" prefWidth="170"/>
+                            <TableColumn fx:id="colHeight" text="身高(cm)" prefWidth="90"/>
+                            <TableColumn fx:id="colWeight" text="体重(kg)" prefWidth="90"/>
+                            <TableColumn fx:id="colBmi" text="BMI" prefWidth="80"/>
+                            <TableColumn fx:id="colStatus" text="健康状态" prefWidth="90"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </StackPane>
     </VBox>
 </VBox>

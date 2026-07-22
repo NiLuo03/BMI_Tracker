@@ -2,7 +2,9 @@ package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
 import com.bmitracker.component.WheelPicker;
+import com.bmitracker.model.User;
 import com.bmitracker.service.BmiService;
+import com.bmitracker.service.UserService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -10,15 +12,18 @@ import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.Parent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
+import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +32,13 @@ public class BmiController {
 
     @FXML private TextField heightField;
     @FXML private TextField weightField;
+    @FXML private VBox healthCard;
+    @FXML private VBox bmiEmptyState;
+    @FXML private FlowPane allergenPane, diseasePane;
+    @FXML private Label allergenEmptyLabel, diseaseEmptyLabel;
 
     private final BmiService bmiService = new BmiService();
+    private final UserService userService = new UserService();
     private Popup heightPopup;
     private Popup weightPopup;
 
@@ -63,6 +73,15 @@ public class BmiController {
             }
         });
 
+        boolean hasRecords = bmiService.getRecordCount(BMIApplication.currentUserId) > 0;
+        if (hasRecords) {
+            bmiEmptyState.setVisible(false);
+            bmiEmptyState.setManaged(false);
+        } else {
+            bmiEmptyState.setVisible(true);
+            bmiEmptyState.setManaged(true);
+        }
+
         heightField.setOnMouseClicked(e -> {
             if (heightPopup != null && heightPopup.isShowing()) {
                 heightPopup.hide();
@@ -84,6 +103,39 @@ public class BmiController {
             }
             showPicker(weightField, weightPopup, 25, 250, 60, picker -> weightPopup = picker);
         });
+
+        loadHealthProfile();
+    }
+
+    private void loadHealthProfile() {
+        User user = userService.getUserById(BMIApplication.currentUserId);
+        if (user == null) return;
+
+        fillTags(allergenPane, allergenEmptyLabel, user.getAllergens(), "尚未记录过敏信息");
+        fillTags(diseasePane, diseaseEmptyLabel, user.getChronicDiseases(), "尚未记录慢性病史");
+    }
+
+    private void fillTags(FlowPane pane, Label emptyLabel, String csv, String emptyText) {
+        pane.getChildren().clear();
+        if (csv == null || csv.trim().isEmpty()) {
+            emptyLabel.setVisible(true);
+            return;
+        }
+        emptyLabel.setVisible(false);
+        String[] items = csv.split(",");
+        for (String item : items) {
+            String trimmed = item.trim();
+            if (trimmed.isEmpty()) continue;
+            Button tag = new Button(trimmed);
+            tag.setStyle("-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 4 12; -fx-font-size: 13px;");
+            pane.getChildren().add(tag);
+        }
+    }
+
+    @FXML
+    void handleEditHealth(ActionEvent event) {
+        MainController main = MainController.getInstance();
+        if (main != null) main.loadView("health_edit.fxml");
     }
 
     private void dismissPopup(MouseEvent event, Popup popup, TextField field) {
@@ -189,6 +241,8 @@ public class BmiController {
             showInfo(String.format("您的 BMI 为 %.1f，状态：%s", bmi, status));
             heightField.clear();
             weightField.clear();
+            bmiEmptyState.setVisible(false);
+            bmiEmptyState.setManaged(false);
         } else {
             showFieldError(heightField, error);
         }

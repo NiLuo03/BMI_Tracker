@@ -6,10 +6,11 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodRankController"
+      styleClass="page-food"
       style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="食物排行" styleClass="label-heading"/>
+    <Label text="食物排行" styleClass="label-heading, heading-accent"/>
     <Label text="分步筛选，找到最适合你的食物" styleClass="label-subheading"/>
 
     <!-- 步骤指示器 -->
@@ -48,10 +49,10 @@
         <Label text="按哪种营养排名？" style="-fx-text-fill: -text-secondary; -fx-font-size: 12;"/>
 
         <VBox spacing="8" fx:id="nutrientGroup">
-            <RadioButton text="热量从低到高（低卡排行）" userData="calories:true" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
-            <RadioButton text="蛋白质从高到低（高蛋白排行）" userData="protein:false" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
-            <RadioButton text="脂肪从低到高（低脂排行）" userData="fat:true" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
-            <RadioButton text="碳水化合物从低到高（低碳排行）" userData="carb:true" style="-fx-text-fill: -text-primary; -fx-font-size: 13;"/>
+            <RadioButton text="热量从低到高（低卡排行）" userData="calories:true" styleClass="radio-button-dark"/>
+            <RadioButton text="蛋白质从高到低（高蛋白排行）" userData="protein:false" styleClass="radio-button-dark"/>
+            <RadioButton text="脂肪从低到高（低脂排行）" userData="fat:true" styleClass="radio-button-dark"/>
+            <RadioButton text="碳水化合物从低到高（低碳排行）" userData="carb:true" styleClass="radio-button-dark"/>
         </VBox>
 
         <Region VBox.vgrow="ALWAYS"/>

@@ -10,6 +10,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import java.util.Comparator;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.List;
 public class HistoryController {
 
     // 预览卡片
-    @FXML private VBox chartCard, tableCard, chartDetail, tableDetail;
+    @FXML private StackPane chartCard, tableCard;
+    @FXML private VBox chartDetail, tableDetail;
     @FXML private LineChart<Number, Number> previewChart, chart;
     @FXML private TableView<BmiRecord> previewTable, tableView;
     @FXML private TableColumn<BmiRecord, Integer> colId, preColId;

@@ -27,6 +27,7 @@ public class FoodCompareController implements Initializable {
     @FXML private ComboBox<Food> foodCombo2;
     @FXML private ScrollPane scrollPane;
     @FXML private VBox compareContent;
+    @FXML private VBox foodEmptyState;
     @FXML private ComboBox<String> filterCategory;
     @FXML private ComboBox<String> filterMealType;
     @FXML private ComboBox<String> filterTexture;
@@ -58,7 +59,11 @@ public class FoodCompareController implements Initializable {
         try {
             List<Food> list = foodService.getAllFoods();
             if (list == null || list.isEmpty()) {
-                Platform.runLater(() -> compareContent.getChildren().add(emptyHint("暂无食物数据")));
+                Platform.runLater(() -> {
+                    foodEmptyState.setVisible(true);
+                    foodEmptyState.setManaged(true);
+                    compareContent.getChildren().clear();
+                });
                 return;
             }
             List<String> categories = foodService.getAllCategories();
@@ -78,7 +83,11 @@ public class FoodCompareController implements Initializable {
                 filterCooking.setItems(FXCollections.observableArrayList(cookings));
             });
         } catch (Exception e) {
-            Platform.runLater(() -> compareContent.getChildren().add(emptyHint("加载失败")));
+            Platform.runLater(() -> {
+                foodEmptyState.setVisible(true);
+                foodEmptyState.setManaged(true);
+                compareContent.getChildren().clear();
+            });
         }
     }
 
@@ -110,9 +119,12 @@ public class FoodCompareController implements Initializable {
     private void buildComparison() {
         compareContent.getChildren().clear();
         if (f1 == null && f2 == null) {
-            compareContent.getChildren().add(emptyHint("在上方选择两种食物开始对比"));
+            foodEmptyState.setVisible(true);
+            foodEmptyState.setManaged(true);
             return;
         }
+        foodEmptyState.setVisible(false);
+        foodEmptyState.setManaged(false);
         HBox cardRow = new HBox(30);
         cardRow.setAlignment(Pos.CENTER);
         cardRow.setPadding(new Insets(20, 0, 30, 0));
@@ -201,13 +213,6 @@ public class FoodCompareController implements Initializable {
 
         row.getChildren().addAll(leftVal, leftSpacer, metricLabel, rightSpacer, rightVal);
         compareContent.getChildren().add(row);
-    }
-
-    private Label emptyHint(String text) {
-        Label hint = new Label(text);
-        hint.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 16;");
-        VBox.setVgrow(hint, Priority.ALWAYS);
-        return hint;
     }
 
     private static String nullToDash(String s) { return s != null && !s.isEmpty() ? s : "-"; }

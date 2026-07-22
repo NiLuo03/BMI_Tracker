@@ -6,24 +6,64 @@
 
 <VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.BmiController"
+      styleClass="page-bmi"
       style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="BMI 计算与记录" styleClass="label-heading"/>
-    <Label text="输入身高体重，系统自动计算并保存 BMI 数据" styleClass="label-subheading"/>
+    <Label text="记录" styleClass="label-heading, heading-accent"/>
+    <Label text="记录身体数据与管理健康档案" styleClass="label-subheading"/>
     <Separator styleClass="separator-dark"/>
 
-    <VBox spacing="12" maxWidth="380">
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="身高(cm)" prefWidth="80" styleClass="field-label"/>
-            <TextField fx:id="heightField" promptText="请输入身高" prefWidth="200" styleClass="text-field-dark"/>
-        </HBox>
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="体重(kg)" prefWidth="80" styleClass="field-label"/>
-            <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200" styleClass="text-field-dark"/>
-        </HBox>
-        <Button text="记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
-            <VBox.margin><Insets top="8.0"/></VBox.margin>
-        </Button>
-    </VBox>
+    <HBox spacing="20">
+        <!-- Left: input card -->
+        <StackPane styleClass="gradient-card" maxWidth="380">
+            <VBox spacing="12" styleClass="gradient-card-inner" style="-fx-padding: 18px 20px;">
+                <VBox fx:id="bmiEmptyState" styleClass="empty-state" visible="false" managed="false">
+                    <StackPane alignment="CENTER">
+                        <Region styleClass="empty-shape-dot"/>
+                        <Region styleClass="empty-shape-dot-inner"/>
+                    </StackPane>
+                    <Label text="开始记录您的身高体重数据，追踪健康变化"
+                           style="-fx-font-size: 13px; -fx-text-fill: -text-tertiary; -fx-text-alignment: center;"
+                           wrapText="true" maxWidth="280"/>
+                </VBox>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="身高(cm)" prefWidth="80" styleClass="field-label"/>
+                    <TextField fx:id="heightField" promptText="请输入身高" prefWidth="200" styleClass="text-field-dark"/>
+                </HBox>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="体重(kg)" prefWidth="80" styleClass="field-label"/>
+                    <TextField fx:id="weightField" promptText="请输入体重" prefWidth="200" styleClass="text-field-dark"/>
+                </HBox>
+                <Button text="记录并计算 BMI" onAction="#handleCalculate" maxWidth="280" styleClass="btn-primary">
+                    <VBox.margin><Insets top="8.0"/></VBox.margin>
+                </Button>
+            </VBox>
+        </StackPane>
+
+        <!-- Right: health profile card -->
+        <StackPane styleClass="gradient-card" HBox.hgrow="ALWAYS">
+            <VBox spacing="10" styleClass="gradient-card-inner" style="-fx-padding: 15px;">
+                <Label text="🫀 健康档案" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
+                <Separator styleClass="separator-dark"/>
+
+                <VBox spacing="4">
+                    <Label text="过敏原" styleClass="field-label"/>
+                    <FlowPane fx:id="allergenPane" hgap="6" vgap="6"/>
+                    <Label fx:id="allergenEmptyLabel" text="尚未记录过敏信息" style="-fx-text-fill: -text-tertiary; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <VBox spacing="4">
+                    <Label text="慢性病史" styleClass="field-label"/>
+                    <FlowPane fx:id="diseasePane" hgap="6" vgap="6"/>
+                    <Label fx:id="diseaseEmptyLabel" text="尚未记录慢性病史" style="-fx-text-fill: -text-tertiary; -fx-font-size: 12px;"/>
+                </VBox>
+
+                <Label text="注册时填写，可随时编辑" style="-fx-text-fill: -text-tertiary; -fx-font-size: 11px;"/>
+                <HBox alignment="CENTER_RIGHT">
+                    <Button text="编辑档案" onAction="#handleEditHealth" styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 6px 18px;"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </HBox>
 </VBox>

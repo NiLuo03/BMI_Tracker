@@ -8,10 +8,11 @@
 
 <VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.PredictionController"
+      styleClass="page-prediction"
       style="-fx-background-color: transparent;">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="趋势预测" styleClass="label-heading"/>
+    <Label text="趋势预测" styleClass="label-heading, heading-accent"/>
     <Label text="基于最小二乘法线性回归，预测 7 天后您的 BMI 变化趋势" styleClass="label-subheading"/>
 
     <Button fx:id="predictBtn" text="开始预测（7天后）" onAction="#handlePredict" styleClass="btn-primary" maxWidth="240"/>

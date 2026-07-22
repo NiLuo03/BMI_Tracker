@@ -5,8 +5,9 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.bmitracker.controller.QuizController"
-           style="-fx-padding: 0;">
+            fx:controller="com.bmitracker.controller.QuizController"
+            styleClass="page-quiz"
+            style="-fx-padding: 0;">
 
     <VBox spacing="0">
         <!-- Prepare Area -->
@@ -71,9 +72,9 @@
                     <Label text="🏆 排行榜" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
                     <HBox spacing="4" alignment="CENTER">
                         <ToggleButton fx:id="btnWeekly" text="周榜" selected="true"
-                                      style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
+                                      styleClass="toggle-button-dark"/>
                         <ToggleButton fx:id="btnAlltime" text="总榜"
-                                      style="-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"/>
+                                      styleClass="toggle-button-dark"/>
                     </HBox>
                     <ScrollPane fitToWidth="true" maxHeight="320"
                                 style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">

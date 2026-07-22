@@ -48,7 +48,7 @@
                     <Label fx:id="categoryMainLabel" text="主菜单" styleClass="sidebar-category"/>
                     <VBox fx:id="mainMenuInner" spacing="20">
                         <Button fx:id="btnHome" text=" 首页" onAction="#showHome" styleClass="sidebar-btn" maxWidth="Infinity"/>
-                        <Button fx:id="btnBmi" text=" BMI 记录" onAction="#showBmiRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
+                        <Button fx:id="btnBmi" text=" 记录" onAction="#showBmiRecord" styleClass="sidebar-btn" maxWidth="Infinity"/>
                         <Button fx:id="btnHistory" text=" 数据分析" onAction="#showHistory" styleClass="sidebar-btn" maxWidth="Infinity"/>
                         <Button fx:id="btnPredict" text=" 趋势预测" onAction="#showPrediction" styleClass="sidebar-btn" maxWidth="Infinity"/>
                     </VBox>

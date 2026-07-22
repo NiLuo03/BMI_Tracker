@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="14" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.HealthEditController"
+      style="-fx-background-color: transparent;">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="← 返回" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: -text-secondary; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 4 10; -fx-background-radius: 6; -fx-border-color: -card-border; -fx-border-width: 1px; -fx-border-radius: 6;"/>
+        <Label text="编辑健康档案" styleClass="label-heading"/>
+    </HBox>
+    <Label text="选择您的过敏原和慢性病史" styleClass="label-subheading"/>
+    <Separator styleClass="separator-dark"/>
+
+    <VBox spacing="8" VBox.vgrow="ALWAYS">
+        <Label text="过敏原" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
+        <TextField fx:id="allergenSearchField" promptText="搜索过敏原..." styleClass="text-field-dark"/>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+            <FlowPane fx:id="allergenOptionsPane" hgap="6" vgap="6" prefWrapLength="600"
+                      style="-fx-padding: 4 0; -fx-background-color: transparent;"/>
+        </ScrollPane>
+    </VBox>
+
+    <Separator styleClass="separator-dark"/>
+
+    <VBox spacing="8" VBox.vgrow="ALWAYS">
+        <Label text="慢性病史" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
+        <TextField fx:id="diseaseSearchField" promptText="搜索慢性病史..." styleClass="text-field-dark"/>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+            <FlowPane fx:id="diseaseOptionsPane" hgap="6" vgap="6" prefWrapLength="600"
+                      style="-fx-padding: 4 0; -fx-background-color: transparent;"/>
+        </ScrollPane>
+    </VBox>
+
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="取消" onAction="#handleBack" styleClass="btn-secondary" style="-fx-padding: 8 28;"/>
+        <Button text="保存" onAction="#handleSave" styleClass="btn-primary" style="-fx-padding: 8 28;"/>
+    </HBox>
+</VBox>
