@@ -133,7 +133,7 @@ public class BmiController {
     }
 
     @FXML
-    void handleEditHealth(ActionEvent event) {
+    void handleEditHealth() {
         MainController main = MainController.getInstance();
         if (main != null) main.loadView("health_edit.fxml");
     }

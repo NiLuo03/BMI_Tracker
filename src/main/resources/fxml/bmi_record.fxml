@@ -16,8 +16,8 @@
 
     <HBox spacing="20">
         <!-- Left: input card -->
-        <StackPane styleClass="gradient-card" maxWidth="380">
-            <VBox spacing="12" styleClass="gradient-card-inner" style="-fx-padding: 18px 20px;">
+        <StackPane styleClass="record-card" maxWidth="380">
+            <VBox spacing="12" styleClass="record-card-inner" style="-fx-padding: 18px 20px;">
                 <VBox fx:id="bmiEmptyState" styleClass="empty-state" visible="false" managed="false">
                     <StackPane alignment="CENTER">
                         <Region styleClass="empty-shape-dot"/>
@@ -41,9 +41,9 @@
             </VBox>
         </StackPane>
 
-        <!-- Right: health profile card -->
-        <StackPane styleClass="gradient-card" HBox.hgrow="ALWAYS">
-            <VBox spacing="10" styleClass="gradient-card-inner" style="-fx-padding: 15px;">
+        <!-- Right: health profile card (clickable) -->
+        <StackPane styleClass="record-card" HBox.hgrow="ALWAYS" onMouseClicked="#handleEditHealth">
+            <VBox spacing="10" styleClass="record-card-inner" style="-fx-padding: 15px 20px;">
                 <Label text="🫀 健康档案" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -text-primary;"/>
                 <Separator styleClass="separator-dark"/>
 
@@ -59,10 +59,7 @@
                     <Label fx:id="diseaseEmptyLabel" text="尚未记录慢性病史" style="-fx-text-fill: -text-tertiary; -fx-font-size: 12px;"/>
                 </VBox>
 
-                <Label text="注册时填写，可随时编辑" style="-fx-text-fill: -text-tertiary; -fx-font-size: 11px;"/>
-                <HBox alignment="CENTER_RIGHT">
-                    <Button text="编辑档案" onAction="#handleEditHealth" styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 6px 18px;"/>
-                </HBox>
+                <Label text="点击卡片编辑档案" style="-fx-text-fill: -text-tertiary; -fx-font-size: 11px;"/>
             </VBox>
         </StackPane>
     </HBox>
