@@ -159,7 +159,7 @@
     -fx-max-width: 18px;
     -fx-max-height: 18px;
     -fx-background-color: -sidebar-text;
-    -fx-shape: "M896 192v608h-288l-96 96-96-96H128V192h768z m-64 64H192v480h256l64 64 64-64h256V256z m-448 192v96h-64v-96h64z m160 0v96h-64v-96h64z m160 0v96h-64v-96h64z";
+    -fx-shape: "M896 192v608h-288l-96 96-96-96H128V192h768z m-64 64V736H576L512 800L448 736H192V256H832z m-448 192v96h-64v-96h64z m160 0v96h-64v-96h64z m160 0v96h-64v-96h64z";
     -fx-scale-shape: true;
 }
 .sidebar-btn:hover .quiz-icon {
