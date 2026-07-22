@@ -187,10 +187,10 @@
                                                 </StackPane>
                                             </HBox>
 
-                                            <!-- Slogan bar -->
-                                            <HBox styleClass="slogan-bar" alignment="CENTER">
-                                                <Label fx:id="sloganLabel" text="记录第一次体重数据，开启健康之旅！" styleClass="slogan-text"/>
-                                            </HBox>
+                                             <!-- Slogan bar -->
+                                             <HBox styleClass="slogan-bar" alignment="CENTER" onMouseClicked="#onSloganClick">
+                                                 <Label fx:id="sloganLabel" text="记录第一次体重数据，开启健康之旅！" styleClass="slogan-text"/>
+                                             </HBox>
                                         </VBox>
 
                                         <!-- Data dashboard (right sidebar) -->

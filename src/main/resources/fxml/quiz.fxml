@@ -147,12 +147,6 @@
 
         <!-- spacer fills remaining space, keeping nav close to content -->
         <Region VBox.vgrow="ALWAYS"/>
-
-        <HBox alignment="CENTER" style="-fx-background-color: rgba(16,185,129,0.06); -fx-background-radius: 10px; -fx-cursor: hand; -fx-padding: 8 20; -fx-min-height: 36;"
-              onMouseClicked="#onSloganClick">
-            <Label fx:id="sloganLabel" text=""
-                   style="-fx-font-size: 13px; -fx-text-fill: #6b7280;"/>
-        </HBox>
     </VBox>
 
     <Label fx:id="resultScore" visible="false" managed="false"/>

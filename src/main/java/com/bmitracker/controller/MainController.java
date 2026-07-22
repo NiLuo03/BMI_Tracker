@@ -786,6 +786,11 @@ public class MainController {
     }
 
     @FXML
+    void onSloganClick() {
+        loadRandomSlogan();
+    }
+
+    @FXML
     void showHome(ActionEvent event) {
         if (homeContent != null && glassPanel != null) {
             glassPanel.getChildren().setAll(homeContent);

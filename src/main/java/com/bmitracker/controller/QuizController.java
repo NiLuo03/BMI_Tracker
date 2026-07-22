@@ -35,12 +35,9 @@ public class QuizController {
     @FXML private VBox wrongBookPanel;
     @FXML private Label wrongBookCount;
     @FXML private Button btnWrongPractice;
-    @FXML private Label sloganLabel;
     @FXML private Label todayCount, todayAccuracy, todayBest, todayStreak, bestEver;
 
     private boolean wrongPracticeMode = false;
-    private List<String> slogans;
-    private final Random random = new Random();
     private List<QuizQuestion> wrongQuestions;
 
     private final QuizService quizService = new QuizService();
@@ -78,37 +75,18 @@ public class QuizController {
         btnWeekly.setToggleGroup(tabGroup);
         btnAlltime.setToggleGroup(tabGroup);
         tabGroup.selectedToggleProperty().addListener((obs, old, sel) -> {
-            loadLeaderboard(sel == btnWeekly);
+            boolean weekly = sel == btnWeekly;
+            btnWeekly.setStyle(weekly
+                ? "-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"
+                : "-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;");
+            btnAlltime.setStyle(!weekly
+                ? "-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;"
+                : "-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand; -fx-padding: 4 16;");
+            loadLeaderboard(weekly);
         });
         loadLeaderboard(true);
         loadWrongBook();
-        loadSlogans();
         loadTodayStats();
-    }
-
-    private void loadSlogans() {
-        slogans = new ArrayList<>();
-        try (java.io.InputStream is = getClass().getResourceAsStream("/data/slogans.txt")) {
-            if (is == null) return;
-            try (java.io.BufferedReader br = new java.io.BufferedReader(
-                    new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (!line.isEmpty()) slogans.add(line);
-                }
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-        showRandomSlogan();
-    }
-
-    private void showRandomSlogan() {
-        if (slogans == null || slogans.isEmpty()) return;
-        sloganLabel.setText(slogans.get(random.nextInt(slogans.size())));
-    }
-
-    @FXML
-    void onSloganClick() {
-        showRandomSlogan();
     }
 
     private void loadLeaderboard(boolean weekly) {
@@ -167,8 +145,6 @@ public class QuizController {
     @FXML
     void onStart() {
         wrongPracticeMode = false;
-        sloganLabel.setVisible(false);
-        sloganLabel.setManaged(false);
         prepareArea.setVisible(false);
         prepareArea.setManaged(false);
         quizArea.setVisible(true);
@@ -183,8 +159,6 @@ public class QuizController {
             return;
         }
         wrongPracticeMode = true;
-        sloganLabel.setVisible(false);
-        sloganLabel.setManaged(false);
         prepareArea.setVisible(false);
         prepareArea.setManaged(false);
         quizArea.setVisible(true);
@@ -437,7 +411,7 @@ public class QuizController {
         right.setAlignment(Pos.TOP_CENTER);
 
         ToggleButton sheetToggle = new ToggleButton("答题卡 ▶");
-        sheetToggle.getStyleClass().add("toggle-button-dark");
+        sheetToggle.setStyle("-fx-background-color: rgba(16,185,129,0.1); -fx-text-fill: #10b981; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand; -fx-padding: 6 14;");
         sheetToggle.setMaxWidth(Double.MAX_VALUE);
 
         VBox sheetContent = new VBox(8);
@@ -623,9 +597,6 @@ public class QuizController {
             quizArea.setManaged(false);
             prepareArea.setVisible(true);
             prepareArea.setManaged(true);
-            sloganLabel.setVisible(true);
-            sloganLabel.setManaged(true);
-            showRandomSlogan();
             loadLeaderboard(btnWeekly.isSelected());
         }
     }
@@ -638,9 +609,6 @@ public class QuizController {
         prepareArea.setManaged(true);
         leaderboardPanel.setVisible(true);
         leaderboardPanel.setManaged(true);
-        sloganLabel.setVisible(true);
-        sloganLabel.setManaged(true);
-        showRandomSlogan();
         loadLeaderboard(btnWeekly.isSelected());
         loadWrongBook();
         loadTodayStats();
