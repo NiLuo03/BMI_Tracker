@@ -20,14 +20,12 @@ public class NotificationUtil {
     public static boolean showConfirm(Window owner, String title, String subtitle) {
         Alert alert = build(owner, Type.INFO, title, subtitle);
         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-        ((Button) alert.getDialogPane().lookupButton(ButtonType.YES)).setText("确定");
-        ((Button) alert.getDialogPane().lookupButton(ButtonType.NO)).setText("取消");
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.YES;
     }
 
     private static Alert build(Window owner, Type type, String title, String subtitle) {
-        Alert alert = new Alert(Alert.AlertType.NONE);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if (owner != null) alert.initOwner(owner);
         alert.setTitle("");
         alert.setHeaderText(null);
@@ -44,9 +42,10 @@ public class NotificationUtil {
         content.getChildren().addAll(titleLbl, subLbl);
         alert.getDialogPane().setContent(content);
 
-        alert.getDialogPane().getStylesheets().add(
-            alert.getClass().getResource("/css/dashboard.css").toExternalForm()
-        );
+        java.net.URL cssUrl = NotificationUtil.class.getResource("/css/dashboard.css");
+        if (cssUrl != null) {
+            alert.getDialogPane().getStylesheets().add(cssUrl.toExternalForm());
+        }
 
         return alert;
     }
