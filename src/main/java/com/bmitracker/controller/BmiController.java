@@ -190,6 +190,7 @@ public class BmiController {
         popup.setAutoHide(false);
         popup.setHideOnEscape(true);
         popup.getContent().add(container);
+        wheel.setOnMouseClicked(ev -> popup.hide());
         setter.accept(popup);
 
         Bounds bounds = field.localToScreen(field.getBoundsInLocal());
