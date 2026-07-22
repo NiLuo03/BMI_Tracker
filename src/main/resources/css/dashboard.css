@@ -1144,10 +1144,10 @@
     -fx-text-fill: -text-primary;
 }
 .stat-value-green {
-    -fx-text-fill: #10b981;
+    -fx-text-fill: #059669;
 }
 .stat-value-red {
-    -fx-text-fill: #ef4444;
+    -fx-text-fill: #dc2626;
 }
 
 /* ====== Light-theme overrides ====== */
