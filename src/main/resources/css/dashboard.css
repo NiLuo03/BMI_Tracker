@@ -1551,3 +1551,106 @@
 .black-theme .nav-arrow-left:hover { -fx-border-color: #d0d0d0; }
 .black-theme .nav-arrow-right { -fx-border-color: #6b7280; }
 .black-theme .nav-arrow-right:hover { -fx-border-color: #d0d0d0; }
+
+/* --- Notification Card (DialogPane) --- */
+.ntf-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(149,157,165,0.2), 24, 0, 0, 8);
+}
+.ntf-card > .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 15px 0 0 15px;
+}
+.ntf-card > .header-panel > .graphic-container {
+    -fx-padding: 0;
+}
+.ntf-card > *.content {
+    -fx-padding: 5px 15px 15px 15px;
+}
+.ntf-card .button-bar {
+    -fx-padding: 0 15px 15px 15px;
+    -fx-background-color: transparent;
+}
+.ntf-card .button-bar > .container {
+    -fx-spacing: 8;
+}
+.ntf-card .button {
+    -fx-background-color: #04e40048;
+    -fx-text-fill: #269b24;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+}
+.ntf-card .button:hover {
+    -fx-background-color: #04e40070;
+}
+.ntf-card .button:cancel {
+    -fx-background-color: transparent;
+    -fx-text-fill: #555;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 6px;
+}
+.ntf-card .button:cancel:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.ntf-icon-circle {
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+    -fx-background-radius: 50%;
+    -fx-alignment: center;
+    -fx-padding: 0;
+}
+.ntf-icon-circle.ntf-success { -fx-background-color: #04e40048; }
+.ntf-icon-circle.ntf-info    { -fx-background-color: #2196f348; }
+.ntf-icon-circle.ntf-warning { -fx-background-color: #ff980048; }
+.ntf-icon-circle.ntf-error   { -fx-background-color: #f4433648; }
+
+.ntf-icon {
+    -fx-min-width: 17px;
+    -fx-min-height: 17px;
+    -fx-max-width: 17px;
+    -fx-max-height: 17px;
+    -fx-fill: #269b24;
+}
+.ntf-info .ntf-icon    { -fx-fill: #1976d2; }
+.ntf-warning .ntf-icon { -fx-fill: #f57c00; }
+.ntf-error .ntf-icon   { -fx-fill: #d32f2f; }
+
+.ntf-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #269b24;
+}
+.ntf-info .ntf-title    { -fx-text-fill: #1976d2; }
+.ntf-warning .ntf-title { -fx-text-fill: #f57c00; }
+.ntf-error .ntf-title   { -fx-text-fill: #d32f2f; }
+
+.ntf-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+.light-theme .ntf-card {
+    -fx-background-color: #ffffff;
+}
+.black-theme .ntf-card {
+    -fx-background-color: #1e1e1e;
+}
+.black-theme .ntf-subtitle {
+    -fx-text-fill: #aaaaaa;
+}
+.black-theme .ntf-card .button:cancel {
+    -fx-text-fill: #aaaaaa;
+    -fx-border-color: #444;
+}
+.black-theme .ntf-card .button:cancel:hover {
+    -fx-background-color: #333;
+}

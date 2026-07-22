@@ -4,6 +4,7 @@ import com.bmitracker.BMIApplication;
 import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.ParticleTextCanvas;
+import com.bmitracker.util.NotificationUtil;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -15,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.CycleMethod;
@@ -130,10 +130,6 @@ public class LoginController {
     }
 
     private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("提示");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+        NotificationUtil.show(userNameField.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", msg);
     }
 }

@@ -3,10 +3,10 @@ package com.bmitracker.controller;
 import com.bmitracker.BMIApplication;
 import com.bmitracker.service.UserService;
 import javafx.event.ActionEvent;
+import com.bmitracker.util.NotificationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
@@ -63,15 +63,12 @@ public class ChangePasswordController {
         }
     }
     private void showAlert(String msg) {
-        Alert a = new Alert(Alert.AlertType.WARNING);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(oldPwdField.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", msg);
     }
 
 
-
     private void showInfo(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(oldPwdField.getScene().getWindow(), NotificationUtil.Type.SUCCESS, "成功", msg);
     }
     private Label oldPwdError;
     private Label newPwdError;

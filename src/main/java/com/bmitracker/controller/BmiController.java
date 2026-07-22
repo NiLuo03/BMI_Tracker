@@ -5,6 +5,7 @@ import com.bmitracker.component.WheelPicker;
 import com.bmitracker.model.User;
 import com.bmitracker.service.BmiService;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -14,7 +15,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -251,8 +251,7 @@ public class BmiController {
 
 
     private void showInfo(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("BMI结果"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(heightField.getScene().getWindow(), NotificationUtil.Type.SUCCESS, "BMI结果", msg);
     }
     private Label heightError;
     private Label weightError;

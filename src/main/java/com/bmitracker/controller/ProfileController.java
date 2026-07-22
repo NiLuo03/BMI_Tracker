@@ -6,6 +6,7 @@ import com.bmitracker.model.BmiRecord;
 import com.bmitracker.model.User;
 import com.bmitracker.service.BmiService;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -255,15 +256,12 @@ public class ProfileController {
     }
 
     private void showAlert(String msg) {
-        Alert a = new Alert(Alert.AlertType.WARNING);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(ageField.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", msg);
     }
 
 
-
     private void showInfo(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(ageField.getScene().getWindow(), NotificationUtil.Type.SUCCESS, "成功", msg);
     }
     private Label ageError;
     private Label heightError;

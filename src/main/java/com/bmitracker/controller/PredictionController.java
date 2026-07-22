@@ -3,11 +3,11 @@ package com.bmitracker.controller;
 import com.bmitracker.BMIApplication;
 import com.bmitracker.model.BmiRecord;
 import com.bmitracker.service.BmiService;
+import com.bmitracker.util.NotificationUtil;
 import com.bmitracker.util.LinearRegression;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -104,7 +104,6 @@ public class PredictionController {
     }
 
     private void showAlert(String msg) {
-        Alert a = new Alert(Alert.AlertType.WARNING);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(chart.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", msg);
     }
 }

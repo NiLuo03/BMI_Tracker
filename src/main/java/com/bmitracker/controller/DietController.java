@@ -5,10 +5,10 @@ import com.bmitracker.model.User;
 import com.bmitracker.service.BmiService;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.CozeClient;
+import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
@@ -77,7 +77,6 @@ public class DietController {
     }
 
     private void showAlert(String msg) {
-        Alert a = new Alert(Alert.AlertType.WARNING);
-        a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        NotificationUtil.show(breakfastLabel.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", msg);
     }
 }

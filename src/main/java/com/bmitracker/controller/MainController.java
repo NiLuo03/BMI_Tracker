@@ -6,6 +6,7 @@ import com.bmitracker.component.TitleBar;
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.model.BmiRecord;
 import com.bmitracker.service.BmiService;
+import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -16,7 +17,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -621,10 +621,8 @@ public class MainController {
             if (error == null) {
                 double bmi = bmiService.calculateBMI(height, weight);
                 String status = bmiService.getHealthStatus(bmi);
-                Alert a = new Alert(Alert.AlertType.INFORMATION);
-                a.setTitle("BMI结果"); a.setHeaderText(null);
-                a.setContentText(String.format("您的 BMI 为 %.1f，状态：%s", bmi, status));
-                a.showAndWait();
+                NotificationUtil.show(root.getScene().getWindow(), NotificationUtil.Type.SUCCESS, "BMI结果",
+                    String.format("您的 BMI 为 %.1f，状态：%s", bmi, status));
                 loadDashboardData();
             }
         } catch (NumberFormatException ignored) {}

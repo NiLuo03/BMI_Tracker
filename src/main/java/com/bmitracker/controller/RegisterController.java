@@ -2,6 +2,7 @@ package com.bmitracker.controller;
 
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -181,14 +182,10 @@ public class RegisterController {
     }
 
     private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("提示"); alert.setHeaderText(null); alert.setContentText(msg);
-        alert.showAndWait();
+        NotificationUtil.show(userNameField.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", msg);
     }
 
     private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("提示"); alert.setHeaderText(null); alert.setContentText(msg);
-        alert.showAndWait();
+        NotificationUtil.show(userNameField.getScene().getWindow(), NotificationUtil.Type.SUCCESS, "成功", msg);
     }
 }

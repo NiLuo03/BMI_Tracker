@@ -3,6 +3,7 @@ package com.bmitracker.controller;
 import com.bmitracker.BMIApplication;
 import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.NotificationUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -101,9 +102,7 @@ public class HealthEditController {
         String diseases = String.join(",", selectedDiseases);
         String err = userService.updateHealthProfile(BMIApplication.currentUserId, allergens, diseases);
         if (err != null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("提示"); alert.setHeaderText(null); alert.setContentText(err);
-            alert.showAndWait();
+            NotificationUtil.show(allergenSearchField.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", err);
             return;
         }
         goBackToBmiRecord();

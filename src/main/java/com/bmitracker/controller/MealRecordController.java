@@ -8,6 +8,7 @@ import com.bmitracker.service.FoodService;
 import com.bmitracker.service.FoodServiceImpl;
 import com.bmitracker.service.MealRecordService;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -741,9 +742,7 @@ public class MealRecordController {
             recordService.saveRecords(BMIApplication.currentUserId, LocalDate.now(), recs);
             reloadOverview();
         } catch (Exception ex) {
-            Alert a = new Alert(Alert.AlertType.WARNING);
-            a.setTitle("提示"); a.setHeaderText(null); a.setContentText("保存失败: " + ex.getMessage());
-            a.showAndWait();
+            NotificationUtil.show(contentArea.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", "保存失败: " + ex.getMessage());
         }
     }
 

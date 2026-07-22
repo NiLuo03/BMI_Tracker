@@ -2,6 +2,7 @@ package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.NotificationUtil;
 import com.bmitracker.util.ParticleTextCanvas;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -212,9 +213,7 @@ public class HealthSetupController {
 
         String err = userService.updateHealthProfile(userId, allergens, diseases);
         if (err != null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("提示"); alert.setHeaderText(null); alert.setContentText(err);
-            alert.showAndWait();
+            NotificationUtil.show(particlePane.getScene().getWindow(), NotificationUtil.Type.WARNING, "提示", err);
             return;
         }
 
@@ -249,10 +248,7 @@ public class HealthSetupController {
             );
             fadeIn.play();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("错误"); alert.setHeaderText(null);
-            alert.setContentText("页面加载失败：" + e.getMessage());
-            alert.showAndWait();
+            NotificationUtil.show(particlePane.getScene().getWindow(), NotificationUtil.Type.ERROR, "错误", "页面加载失败：" + e.getMessage());
         }
     }
 }

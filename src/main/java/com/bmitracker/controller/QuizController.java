@@ -5,6 +5,7 @@ import com.bmitracker.dao.QuizResultDao.LeaderboardEntry;
 import com.bmitracker.service.QuizService;
 import com.bmitracker.service.QuizService.QuizQuestion;
 import com.bmitracker.util.WrongQuestionStore;
+import com.bmitracker.util.NotificationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -316,13 +317,7 @@ public class QuizController {
         int unanswered = 0;
         for (String a : userAnswers) { if (a == null) unanswered++; }
         if (unanswered > 0) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("提示");
-            alert.setHeaderText(null);
-            alert.setContentText("您还有 " + unanswered + " 道题目未答，确认提交吗？");
-            alert.initOwner(root.getScene().getWindow());
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isEmpty() || result.get() != ButtonType.OK) return;
+            if (!NotificationUtil.showConfirm(root.getScene().getWindow(), "提示", "您还有 " + unanswered + " 道题目未答，确认提交吗？")) return;
         }
 
         int correct = 0;
@@ -586,19 +581,12 @@ public class QuizController {
 
     @FXML
     void onQuitQuiz() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("退出答题");
-        alert.setHeaderText(null);
-        alert.setContentText("退出将不记录此次成绩，确定要退出吗？");
-        alert.initOwner(optA.getScene().getWindow());
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            quizArea.setVisible(false);
-            quizArea.setManaged(false);
-            prepareArea.setVisible(true);
-            prepareArea.setManaged(true);
-            loadLeaderboard(btnWeekly.isSelected());
-        }
+        if (!NotificationUtil.showConfirm(optA.getScene().getWindow(), "退出答题", "退出将不记录此次成绩，确定要退出吗？")) return;
+        quizArea.setVisible(false);
+        quizArea.setManaged(false);
+        prepareArea.setVisible(true);
+        prepareArea.setManaged(true);
+        loadLeaderboard(btnWeekly.isSelected());
     }
 
     @FXML
