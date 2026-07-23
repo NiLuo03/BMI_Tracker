@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.FoodCompareController"
       styleClass="page-food"
       style="-fx-background-color: transparent;">
-    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="食物对比" styleClass="label-heading, heading-accent"/>
     <Label text="选择两种食物，对比营养成分与标签" styleClass="label-subheading"/>
@@ -39,9 +39,9 @@
         </VBox>
     </TitledPane>
 
-    <HBox spacing="16" alignment="CENTER_LEFT">
+    <HBox spacing="20" alignment="CENTER">
         <ComboBox fx:id="foodCombo1" promptText="选择食物 1" prefWidth="220" styleClass="combo-box-dark"/>
-        <Label text="VS" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+        <Label text="VS" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
         <ComboBox fx:id="foodCombo2" promptText="选择食物 2" prefWidth="220" styleClass="combo-box-dark"/>
     </HBox>
 
