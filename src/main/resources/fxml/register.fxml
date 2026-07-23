@@ -28,8 +28,11 @@
         <left>
             <StackPane style="-fx-background-color: transparent;" prefWidth="660">
                 <VBox alignment="CENTER" spacing="4" maxWidth="400">
+                <VBox alignment="CENTER" spacing="4" maxWidth="400">
                     <Label text="加入我们" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
                     <Label text="创建您的账户，开始科学管理健康" style="-fx-font-size: 15px; -fx-text-fill: rgba(255,255,255,0.40);"/>
+                    <VBox.margin><Insets bottom="39"/></VBox.margin>  <!-- 左侧标语区距底部30px -->
+                </VBox>
                     <VBox.margin><Insets bottom="30"/></VBox.margin>
                 </VBox>
             </StackPane>
