@@ -97,6 +97,55 @@ public class MealRecordDao {
         }
     }
 
+    public void insertOne(MealRecord record) throws SQLException {
+        String sql = "INSERT INTO meal_records (userId, foodId, mealType, grams, recordDate) VALUES (?,?,?,?,?)";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, record.getUserId());
+            ps.setInt(2, record.getFoodId());
+            ps.setString(3, record.getMealType());
+            ps.setDouble(4, record.getGrams());
+            ps.setDate(5, Date.valueOf(record.getRecordDate()));
+            ps.executeUpdate();
+        }
+    }
+
+    public void updateOne(MealRecord record) throws SQLException {
+        String sql = "UPDATE meal_records SET foodId=?, mealType=?, grams=?, recordDate=? WHERE recordId=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, record.getFoodId());
+            ps.setString(2, record.getMealType());
+            ps.setDouble(3, record.getGrams());
+            ps.setDate(4, Date.valueOf(record.getRecordDate()));
+            ps.setInt(5, record.getRecordId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void deleteOne(int recordId) throws SQLException {
+        String sql = "DELETE FROM meal_records WHERE recordId=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, recordId);
+            ps.executeUpdate();
+        }
+    }
+
+    public List<LocalDate> findDistinctDatesByUser(int userId) throws SQLException {
+        String sql = "SELECT DISTINCT recordDate FROM meal_records WHERE userId = ? ORDER BY recordDate DESC";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            List<LocalDate> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(rs.getDate("recordDate").toLocalDate());
+            }
+            return list;
+        }
+    }
+
     private MealRecord map(ResultSet rs) throws SQLException {
         MealRecord r = new MealRecord();
         r.setRecordId(rs.getInt("recordId"));

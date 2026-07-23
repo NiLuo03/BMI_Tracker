@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.bmitracker.component.WheelPicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bmitracker.controller.MealAddController"
+      style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="记一餐" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>  <!-- <字体> 页面标题 字号20 字重bold 颜色#111111 -->
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="cancelBtn" text="取消" styleClass="btn-primary" onAction="#handleCancel"/>
+    </HBox>
+
+    <HBox fx:id="contentArea" VBox.vgrow="ALWAYS" spacing="14">  <!-- <间距> 左右两区间距14px -->
+        <VBox fx:id="leftArea" spacing="8" VBox.vgrow="ALWAYS">  <!-- <间距> 左区子元素垂直间距8px -->
+            <TextField fx:id="searchField" promptText="搜索食物..." styleClass="text-field-dark"/>
+            <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <FlowPane fx:id="foodGrid" hgap="6" vgap="6" prefWrapLength="300"
+                          style="-fx-padding: 4; -fx-background-color: transparent;"/>  <!-- <间距> 可选项按钮水平间距6 垂直间距6 容器内边距4px -->
+            </ScrollPane>
+            <Label fx:id="servingDescLbl" visible="false"
+                   style="-fx-font-size: 11px; -fx-text-fill: #888888; -fx-padding: 2 4 0 4;"/>  <!-- <字体> 参考份量 字号11 颜色#888888 -->
+        </VBox>
+
+        <VBox fx:id="rightArea" spacing="10" VBox.vgrow="ALWAYS">  <!-- <间距> 右区子元素垂直间距10px -->
+            <GridPane fx:id="mealGrid" hgap="10" vgap="10"
+                      style="-fx-padding: 0;"/>  <!-- <间距> 餐卡水平间距10 垂直间距10 -->
+
+            <VBox fx:id="calcCard" spacing="10"
+                  style="-fx-background-color: rgba(0,0,0,0.02);
+                         -fx-background-radius: 12px;
+                         -fx-border-color: rgba(0,0,0,0.06);
+                         -fx-border-width: 1px;
+                         -fx-border-radius: 12px;
+                         -fx-padding: 12 14;">  <!-- <间距> calcCard内部垂直间距10 内边距12px左右14px -->
+                <HBox spacing="10" alignment="CENTER_LEFT">  <!-- <间距> 克数行水平间距10px -->
+                    <WheelPicker fx:id="dateWheel" visibleItems="1" itemHeight="32"
+                                 prefWidth="130" prefHeight="32"
+                                 style="-fx-background-color: rgba(0,0,0,0.04);
+                                        -fx-background-radius: 10;
+                                        -fx-border-color: rgba(0,0,0,0.08);
+                                        -fx-border-width: 1;
+                                        -fx-border-radius: 10;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="amountLabel" text="0.00"
+                           style="-fx-font-size: 24px; -fx-text-fill: #39C5BB;"/>  <!-- <字体> 克数数值 字号26 颜色#111111 -->
+                    <Label text="g"
+                           style="-fx-font-size: 20px; -fx-text-fill: #666666; -fx-padding: 6 4 0 0;"/>  <!-- <字体> 克数单位"g" 字号15 颜色#666666 -->
+                </HBox>
+
+                <GridPane fx:id="calcGrid" hgap="6" vgap="6" alignment="CENTER"
+                          VBox.vgrow="ALWAYS"/>  <!-- <间距> 计算器按钮水平间距6 垂直间距6 -->
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>

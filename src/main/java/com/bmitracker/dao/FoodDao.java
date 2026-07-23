@@ -123,6 +123,7 @@ public class FoodDao {
         f.setStorage(rs.getString("storage"));
         f.setCookingMethod(rs.getString("cooking_method"));
         f.setImage(rs.getString("image"));
+        f.setServingDesc(rs.getString("serving_desc"));
         return f;
     }
 }

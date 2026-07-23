@@ -16,6 +16,7 @@ public class Food {
     private final StringProperty storage = new SimpleStringProperty();
     private final StringProperty cookingMethod = new SimpleStringProperty();
     private final StringProperty image = new SimpleStringProperty();
+    private final StringProperty servingDesc = new SimpleStringProperty();
 
     public Food() {}
 
@@ -70,6 +71,10 @@ public class Food {
     public String getImage() { return image.get(); }
     public StringProperty imageProperty() { return image; }
     public void setImage(String v) { image.set(v); }
+
+    public String getServingDesc() { return servingDesc.get(); }
+    public StringProperty servingDescProperty() { return servingDesc; }
+    public void setServingDesc(String v) { servingDesc.set(v); }
 
     @Override
     public String toString() {
