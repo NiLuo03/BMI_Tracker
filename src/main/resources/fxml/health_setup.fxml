@@ -8,9 +8,9 @@
 
 <VBox fx:id="root" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.HealthSetupController"
-      style="-fx-background-color: #0a0a0f; -fx-background-radius: 12;">
+      style="-fx-background-color: rgba(255,255,255,0.15), #0a0a0f; -fx-background-insets: 0, 1; -fx-background-radius: 12;">
     <clip>
-        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
+        <Rectangle width="1200" height="800" arcWidth="24" arcHeight="24"/>
     </clip>
 
     <TitleBar/>

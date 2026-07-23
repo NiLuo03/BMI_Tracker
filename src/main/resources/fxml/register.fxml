@@ -6,71 +6,79 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.canvas.Canvas?>
 
 <VBox fx:id="root" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.bmitracker.controller.RegisterController"
-      style="-fx-background-color: #0a0a0f; -fx-background-radius: 12;">
+      style="-fx-background-color: rgba(255,255,255,0.15), #0a0a0f; -fx-background-insets: 0, 1; -fx-background-radius: 12;">
     <clip>
-        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
+        <Rectangle width="1200" height="800" arcWidth="26" arcHeight="26"/>
     </clip>
 
     <TitleBar/>
 
-    <BorderPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a0f;">
+    <StackPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a0f;">
 
-    <left>
-        <StackPane style="-fx-background-color: #0a0a0f;" prefWidth="660">
-            <VBox alignment="CENTER" spacing="4" maxWidth="400">
-                <Label text="加入我们" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
-                <Label text="创建您的账户，开始科学管理健康" style="-fx-font-size: 15px; -fx-text-fill: rgba(255,255,255,0.40);"/>
-                <VBox.margin><Insets bottom="30"/></VBox.margin>
-            </VBox>
+        <StackPane fx:id="particlePane" style="-fx-background-color: transparent;">
+            <Canvas fx:id="particleCanvas" width="1200" height="800"/>
         </StackPane>
-    </left>
 
-    <center>
-        <StackPane style="-fx-background-color: #0a0a0f;">
-            <VBox alignment="CENTER" spacing="16" maxWidth="380">
-                <VBox style="-fx-background-color: rgba(255,255,255,0.06);
-                    -fx-background-radius: 16px;
-                    -fx-border-color: rgba(255,255,255,0.10);
-                    -fx-border-width: 1px;
-                    -fx-border-radius: 16px;
-                    -fx-padding: 36px 32px;" spacing="12">
+        <BorderPane>
 
-                    <VBox spacing="4" alignment="CENTER">
-                        <Label text="用户注册" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
-                        <Label text="创建您的 BMI 追踪账户" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.40);"/>
-                        <VBox.margin><Insets bottom="4"/></VBox.margin>
-                    </VBox>
-
-                    <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
-                    <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
-                    <PasswordField fx:id="confirmField" promptText="确认密码" styleClass="text-field-login"/>
-
-                    <TextField fx:id="ageField" editable="false" promptText="年龄" styleClass="text-field-login" style="-fx-cursor: hand;"/>
-
-                    <fx:define>
-                        <ToggleGroup fx:id="genderGroup"/>
-                    </fx:define>
-                    <HBox spacing="20" alignment="CENTER">
-                        <RadioButton fx:id="maleRadio" text="男" selected="true" toggleGroup="$genderGroup"
-                                     styleClass="radio-button-dark"/>
-                        <RadioButton fx:id="femaleRadio" text="女" toggleGroup="$genderGroup"
-                                     styleClass="radio-button-dark"/>
-                    </HBox>
-
-                    <Button text="注 册" onAction="#handleRegister" styleClass="btn-login" maxWidth="Infinity">
-                        <VBox.margin><Insets top="4"/></VBox.margin>
-                    </Button>
-
-                    <Hyperlink text="已有账号？去登录" onAction="#goToLogin" styleClass="hyperlink-login"/>
+        <left>
+            <StackPane style="-fx-background-color: transparent;" prefWidth="660">
+                <VBox alignment="CENTER" spacing="4" maxWidth="400">
+                    <Label text="加入我们" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
+                    <Label text="创建您的账户，开始科学管理健康" style="-fx-font-size: 15px; -fx-text-fill: rgba(255,255,255,0.40);"/>
+                    <VBox.margin><Insets bottom="30"/></VBox.margin>
                 </VBox>
-            </VBox>
-        </StackPane>
-    </center>
+            </StackPane>
+        </left>
 
-</BorderPane>
+        <center>
+            <StackPane style="-fx-background-color: transparent;">
+                <VBox alignment="CENTER" spacing="16" maxWidth="380">
+                    <VBox style="-fx-background-color: rgba(255,255,255,0.06);
+                        -fx-background-radius: 16px;
+                        -fx-border-color: rgba(255,255,255,0.10);
+                        -fx-border-width: 1px;
+                        -fx-border-radius: 16px;
+                        -fx-padding: 36px 32px;" spacing="12">
+
+                        <VBox spacing="4" alignment="CENTER">
+                            <Label text="用户注册" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.90);"/>
+                            <Label text="创建您的 BMI 追踪账户" style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.40);"/>
+                            <VBox.margin><Insets bottom="4"/></VBox.margin>
+                        </VBox>
+
+                        <TextField fx:id="userNameField" promptText="账号" styleClass="text-field-login"/>
+                        <PasswordField fx:id="passwordField" promptText="密码" styleClass="text-field-login"/>
+                        <PasswordField fx:id="confirmField" promptText="确认密码" styleClass="text-field-login"/>
+
+                        <TextField fx:id="ageField" editable="false" promptText="年龄" styleClass="text-field-login" style="-fx-cursor: hand;"/>
+
+                        <fx:define>
+                            <ToggleGroup fx:id="genderGroup"/>
+                        </fx:define>
+                        <HBox spacing="20" alignment="CENTER">
+                            <RadioButton fx:id="maleRadio" text="男" selected="true" toggleGroup="$genderGroup"
+                                         styleClass="radio-button-dark"/>
+                            <RadioButton fx:id="femaleRadio" text="女" toggleGroup="$genderGroup"
+                                         styleClass="radio-button-dark"/>
+                        </HBox>
+
+                        <Button text="注 册" onAction="#handleRegister" styleClass="btn-login" maxWidth="Infinity">
+                            <VBox.margin><Insets top="4"/></VBox.margin>
+                        </Button>
+
+                        <Hyperlink text="已有账号？去登录" onAction="#goToLogin" styleClass="hyperlink-login"/>
+                    </VBox>
+                </VBox>
+            </StackPane>
+        </center>
+
+    </BorderPane>
+
+    </StackPane>
 
 </VBox>

@@ -3,6 +3,7 @@ package com.bmitracker.controller;
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.NotificationUtil;
+import com.bmitracker.util.ParticleCanvas;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -13,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -30,12 +32,20 @@ public class RegisterController {
     @FXML private TextField ageField;
     @FXML private RadioButton maleRadio;
     @FXML private RadioButton femaleRadio;
+    @FXML private Canvas particleCanvas;
+    @FXML private StackPane particlePane;
 
     private final UserService userService = new UserService();
     private Popup agePopup;
+    private ParticleCanvas particleText;
 
     @FXML
     void initialize() {
+        if (particleCanvas != null) {
+            particleText = new ParticleCanvas(1200, 800);
+            particlePane.getChildren().clear();
+            particlePane.getChildren().add(particleText);
+        }
         ageField.setEditable(false);
         ageField.setFocusTraversable(false);
 
@@ -169,6 +179,7 @@ public class RegisterController {
 
     @FXML
     void goToLogin() {
+        if (particleText != null) particleText.stop();
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));

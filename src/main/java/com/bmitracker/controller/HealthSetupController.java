@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -54,7 +53,6 @@ public class HealthSetupController {
     @FXML private Button step1Btn, step2Btn, step3Btn;
     @FXML private Label allergenNoneLabel, diseaseNoneLabel;
     @FXML private VBox root;
-    @FXML private Rectangle rootClip;
 
     private final UserService userService = new UserService();
     private final Set<String> selectedAllergens = new HashSet<>();
@@ -65,8 +63,6 @@ public class HealthSetupController {
 
     @FXML
     void initialize() {
-        rootClip.widthProperty().bind(root.widthProperty());
-        rootClip.heightProperty().bind(root.heightProperty());
         ParticleTextCanvas canvas = new ParticleTextCanvas(1200, 800,
                 new String[]{"HEALTH", "PROFILE", "ALLERGEN", "DISEASE", "RECORD"});
         particlePane.getChildren().clear();

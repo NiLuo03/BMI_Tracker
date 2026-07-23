@@ -11,14 +11,18 @@
 <StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.bmitracker.controller.MainController"
            styleClass="root"
-           style="-fx-background-radius: 12;">
-    <clip>
-        <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
-    </clip>
+           style="-fx-background-radius: 12; -fx-border-color: rgba(0,0,0,0.15); -fx-border-width: 1px; -fx-border-radius: 12; -fx-border-style: solid;">
 
-    <Region fx:id="backdrop" style="-fx-background-color: #ffffff;"/>
+    <Region fx:id="backdrop" style="-fx-background-color: #ffffff;">
+        <clip>
+            <Rectangle width="1200" height="800" arcWidth="24" arcHeight="24"/>
+        </clip>
+    </Region>
 
     <VBox>
+        <clip>
+            <Rectangle width="1200" height="800" arcWidth="24" arcHeight="24"/>
+        </clip>
         <TitleBar fx:id="titleBar"/>
 
         <BorderPane VBox.vgrow="ALWAYS">

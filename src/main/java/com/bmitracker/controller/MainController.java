@@ -35,7 +35,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -70,7 +69,6 @@ public class MainController {
     @FXML private StackPane glassContent;
     @FXML private TitleBar titleBar;
     @FXML private StackPane root;
-    @FXML private Rectangle rootClip;
     @FXML private Region backdrop;
     @FXML private Button toggleNavBtn;
     @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz;
@@ -217,6 +215,7 @@ public class MainController {
 
     public void changeBackdrop(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
+        updateBorderForBackdrop(isBrightColor(hexColor));
         applyTheme(isBrightColor(hexColor));
         saveBackdropPref(hexColor);
     }
@@ -300,12 +299,14 @@ public class MainController {
 
     private void applyBackdropDirect(String hexColor) {
         backdrop.setStyle("-fx-background-color: " + hexColor + ";");
+        updateBorderForBackdrop(isBrightColor(hexColor));
         applyTheme(isBrightColor(hexColor));
     }
 
     private void applyBackdropImageDirect(File imageFile) {
         Image img = new Image(imageFile.toURI().toString());
         backdrop.setStyle("-fx-background-image: url('" + imageFile.toURI() + "'); -fx-background-size: cover; -fx-background-position: center;");
+        updateBorderForBackdrop(isBrightImage(img));
         applyTheme(isBrightImage(img));
     }
 
@@ -316,14 +317,22 @@ public class MainController {
             BackgroundPosition.CENTER,
             new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
         )));
+        updateBorderForBackdrop(isBrightImage(image));
         applyTheme(isBrightImage(image));
     }
 
     public void changeBackdropImage(java.io.File imageFile) {
         Image img = new Image(imageFile.toURI().toString());
         backdrop.setStyle("-fx-background-image: url('" + imageFile.toURI() + "'); -fx-background-size: cover; -fx-background-position: center;");
+        updateBorderForBackdrop(isBrightImage(img));
         applyTheme(isBrightImage(img));
         saveBackdropImagePref(imageFile);
+    }
+
+    private void updateBorderForBackdrop(boolean bright) {
+        if (root == null) return;
+        String color = bright ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.15)";
+        root.setStyle("-fx-background-radius: 12; -fx-border-color: " + color + "; -fx-border-width: 1px; -fx-border-radius: 12; -fx-border-style: solid;");
     }
 
     public void changeBackdropCropped(File originalFile, int cropX, int cropY, int cropW, int cropH) {
@@ -351,8 +360,6 @@ public class MainController {
         } catch (Exception e) {
             System.err.println("加载字体失败: " + e.getMessage());
         }
-        rootClip.widthProperty().bind(root.widthProperty());
-        rootClip.heightProperty().bind(root.heightProperty());
         instance = this;
         loadSidebarUser();
         loadDashboardData();
