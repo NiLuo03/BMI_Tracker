@@ -15,13 +15,13 @@
 
     <Region fx:id="backdrop" style="-fx-background-color: #ffffff;">
         <clip>
-            <Rectangle width="1200" height="800" arcWidth="24" arcHeight="24"/>
+            <Rectangle fx:id="backdropClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
         </clip>
     </Region>
 
     <VBox>
         <clip>
-            <Rectangle width="1200" height="800" arcWidth="24" arcHeight="24"/>
+            <Rectangle fx:id="contentClip" width="1200" height="800" arcWidth="24" arcHeight="24"/>
         </clip>
         <TitleBar fx:id="titleBar"/>
 

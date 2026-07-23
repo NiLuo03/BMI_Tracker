@@ -18,6 +18,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -34,6 +36,8 @@ public class RegisterController {
     @FXML private RadioButton femaleRadio;
     @FXML private Canvas particleCanvas;
     @FXML private StackPane particlePane;
+    @FXML private Rectangle rootClip;
+    @FXML private VBox root;
 
     private final UserService userService = new UserService();
     private Popup agePopup;
@@ -45,6 +49,10 @@ public class RegisterController {
             particleText = new ParticleCanvas(1200, 800);
             particlePane.getChildren().clear();
             particlePane.getChildren().add(particleText);
+        }
+        if (rootClip != null && root != null) {
+            rootClip.widthProperty().bind(root.widthProperty());
+            rootClip.heightProperty().bind(root.heightProperty());
         }
         ageField.setEditable(false);
         ageField.setFocusTraversable(false);

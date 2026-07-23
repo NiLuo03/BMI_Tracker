@@ -35,6 +35,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -70,6 +71,8 @@ public class MainController {
     @FXML private TitleBar titleBar;
     @FXML private StackPane root;
     @FXML private Region backdrop;
+    @FXML private Rectangle backdropClip;
+    @FXML private Rectangle contentClip;
     @FXML private Button toggleNavBtn;
     @FXML private Button btnHome, btnBmi, btnHistory, btnPredict, btnDiet, btnCompare, btnRank, btnMealRecord, btnQuiz;
     @FXML private MenuButton menuSettings;
@@ -361,6 +364,12 @@ public class MainController {
             System.err.println("加载字体失败: " + e.getMessage());
         }
         instance = this;
+        if (backdropClip != null && contentClip != null && root != null) {
+            backdropClip.widthProperty().bind(root.widthProperty());
+            backdropClip.heightProperty().bind(root.heightProperty());
+            contentClip.widthProperty().bind(root.widthProperty());
+            contentClip.heightProperty().bind(root.heightProperty());
+        }
         loadSidebarUser();
         loadDashboardData();
         if (root != null) rootPane = root;

@@ -22,6 +22,8 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -31,6 +33,8 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Canvas particleCanvas;
     @FXML private StackPane particlePane;
+    @FXML private Rectangle rootClip;
+    @FXML private VBox root;
 
     private ParticleTextCanvas particleText;
 
@@ -42,6 +46,10 @@ public class LoginController {
                     new String[]{"BMI", "PHYSICAL", "ASSESSMENT", "PREDICTION", "HEALTH"});
             particlePane.getChildren().clear();
             particlePane.getChildren().add(particleText);
+        }
+        if (rootClip != null && root != null) {
+            rootClip.widthProperty().bind(root.widthProperty());
+            rootClip.heightProperty().bind(root.heightProperty());
         }
         Platform.runLater(() -> userNameField.requestFocus());
     }
