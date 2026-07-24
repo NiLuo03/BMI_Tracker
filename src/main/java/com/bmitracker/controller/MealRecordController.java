@@ -154,18 +154,22 @@ public class MealRecordController {
         GraphicsContext gc = chartCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, w, h);
 
-        // legend
-        int legX = (int) w - 90, legY = 6;
+        int lx = (int) w - 8, ly1 = 6, ly2 = 76;
         gc.setFill(Color.rgb(16, 185, 129, 0.8));
-        gc.fillRect(legX, legY, 10, 10);
+        gc.fillRect(lx - 4, ly1, 8, 8);
+        gc.setFill(Color.rgb(0, 0, 0, 0.15));
+        gc.fillRect(lx - 4, ly2, 8, 8);
         gc.setFill(Color.rgb(51, 51, 51));
         gc.setFont(Font.font("Microsoft YaHei", 10));
-        gc.setTextAlign(javafx.scene.text.TextAlignment.LEFT);
-        gc.fillText("今日摄入", legX + 14, legY + 10);
-        gc.setFill(Color.rgb(0, 0, 0, 0.12));
-        gc.fillRect(legX, legY + 16, 10, 10);
-        gc.setFill(Color.rgb(51, 51, 51));
-        gc.fillText("建议摄入", legX + 14, legY + 26);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText("今", lx, ly1 + 21);
+        gc.fillText("建", lx, ly2 + 21);
+        gc.fillText("日", lx, ly1 + 32);
+        gc.fillText("议", lx, ly2 + 32);
+        gc.fillText("摄", lx, ly1 + 43);
+        gc.fillText("摄", lx, ly2 + 43);
+        gc.fillText("入", lx, ly1 + 54);
+        gc.fillText("入", lx, ly2 + 54);
 
         List<MealRecord> todayRecords = recordsByDate.getOrDefault(selectedDate, Collections.emptyList());
         double userCal = todayRecords.stream().mapToDouble(MealRecord::getCalories).sum();
@@ -181,10 +185,6 @@ public class MealRecordController {
         double[][] data = {{userCal, stdCal}, {userPro, stdPro}, {userFat, stdFat}, {userCarb, stdCarb}};
         String[] labels = {"热量(kcal)", "蛋白质(g)", "脂肪(g)", "碳水(g)"};
 
-        double maxVal = 0;
-        for (double[] d : data) { maxVal = Math.max(maxVal, Math.max(d[0], d[1])); }
-        if (maxVal <= 0) maxVal = 1;
-
         double marginL = 40, marginR = 16, marginT = 16, marginB = 28;
         double plotW = w - marginL - marginR;
         double plotH = h - marginT - marginB;
@@ -195,18 +195,21 @@ public class MealRecordController {
             double groupX = marginL + i * groupW;
             double centerX = groupX + groupW / 2;
 
-            double h1 = (data[i][0] / maxVal) * plotH;
-            double h2 = (data[i][1] / maxVal) * plotH;
+            double stdVal = data[i][1];
+            if (stdVal <= 0) stdVal = 1;
+            double stdH = plotH * 0.8;
+            double userH = (data[i][0] / stdVal) * plotH * 0.8;
+            if (userH > plotH) userH = plotH;
 
             double bar1X = centerX - barW - 4;
-            double bar1Y = marginT + plotH - h1;
+            double bar1Y = marginT + plotH - userH;
             gc.setFill(Color.rgb(16, 185, 129, 0.8));
-            gc.fillRoundRect(bar1X, bar1Y, barW, h1, 3, 3);
+            gc.fillRoundRect(bar1X, bar1Y, barW, userH, 3, 3);
 
             double bar2X = centerX + 4;
-            double bar2Y = marginT + plotH - h2;
-            gc.setFill(Color.rgb(0, 0, 0, 0.12));
-            gc.fillRoundRect(bar2X, bar2Y, barW, h2, 3, 3);
+            double bar2Y = marginT + plotH - stdH;
+            gc.setFill(Color.rgb(0, 0, 0, 0.15));
+            gc.fillRoundRect(bar2X, bar2Y, barW, stdH, 3, 3);
 
             gc.setFill(Color.rgb(51, 51, 51));
             gc.setFont(Font.font("Microsoft YaHei", 10));
@@ -271,6 +274,12 @@ public class MealRecordController {
             sumLbl.setStyle("-fx-text-fill: #39C5BB; -fx-font-size: 15px; -fx-font-weight: bold;");
             header.getChildren().addAll(dateLbl, dateGap, suffixLbl, spacer, sumLbl);
             header.setPadding(new Insets(12, 14, 4, 14));
+            header.setStyle("-fx-cursor: hand;");
+            final LocalDate headerDate = date;
+            header.setOnMouseClicked(e -> {
+                MealAddController.defaultDate = headerDate;
+                MainController.getInstance().loadView("meal_add.fxml");
+            });
             card.getChildren().add(header);
 
             Region headSep = new Region();
@@ -298,6 +307,12 @@ public class MealRecordController {
                 row.setOnMouseEntered(e -> row.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 6px;"));
                 row.setOnMouseExited(e -> row.setStyle(""));
                 row.setPadding(new Insets(6, 14, 6, 14));
+                row.setStyle("-fx-cursor: hand;");
+                final MealRecord editRec = r;
+                row.setOnMouseClicked(e -> {
+                    MealAddController.pendingEdit = editRec;
+                    MainController.getInstance().loadView("meal_add.fxml");
+                });
 
                 VBox nameBox = new VBox(2);
                 nameBox.setAlignment(Pos.CENTER_LEFT);
@@ -511,13 +526,8 @@ public class MealRecordController {
 
     @FXML
     void handleAddMeal() {
-        for (String k : MEAL_KEYS) entries.put(k, new ArrayList<>());
-        currentMealType = "LUNCH";
-        addMealBtn.setVisible(false);
-        new Thread(() -> {
-            allFoods = foodService.getAllFoods();
-            Platform.runLater(() -> contentArea.getChildren().setAll(buildAddPanel()));
-        }).start();
+        MealAddController.defaultDate = selectedDate;
+        MainController.getInstance().loadView("meal_add.fxml");
     }
 
     private VBox buildAddPanel() {

@@ -83,6 +83,7 @@ public class DBUtil {
             for (String col : new String[]{"meal_type","food_texture","flavor","storage","cooking_method","image"}) {
                 try { stmt.execute("ALTER TABLE foods ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(10)"); } catch (SQLException ignored) {}
             }
+            try { stmt.execute("ALTER TABLE foods ADD COLUMN IF NOT EXISTS serving_desc VARCHAR(100)"); } catch (SQLException ignored) {}
 
             stmt.execute("CREATE TABLE IF NOT EXISTS recommendations (" +
                     "recId INT AUTO_INCREMENT PRIMARY KEY," +
@@ -114,7 +115,7 @@ public class DBUtil {
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY (userId) REFERENCES users(userId))");
 
-            // 检查食物数据是否与 foods.txt 一致，不一致则重刷
+            // 检查食物数据是否与 foods.txt 一致，不一致或列缺数据则重刷
             int fileCount = countFoodDataLines();
             if (fileCount > 0) {
                 try {
@@ -122,7 +123,14 @@ public class DBUtil {
                     rs.next();
                     int dbCount = rs.getInt(1);
                     rs.close();
-                    if (dbCount != fileCount) {
+                    boolean needsReseed = dbCount != fileCount;
+                    if (!needsReseed) {
+                        rs = stmt.executeQuery("SELECT COUNT(*) FROM foods WHERE serving_desc IS NOT NULL AND serving_desc != ''");
+                        rs.next();
+                        needsReseed = rs.getInt(1) == 0 && fileHasServingDesc();
+                        rs.close();
+                    }
+                    if (needsReseed) {
                         stmt.execute("DELETE FROM foods");
                         seedFoods(stmt);
                     }
@@ -132,6 +140,25 @@ public class DBUtil {
                 }
             }
         }
+    }
+
+    private static boolean fileHasServingDesc() {
+        String dataFile = "/data/foods.txt";
+        try (InputStream is = DBUtil.class.getResourceAsStream(dataFile);
+             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) { firstLine = false; continue; }
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                String[] parts = line.split("\\|");
+                if (parts.length >= 13 && !parts[12].isEmpty()) return true;
+            }
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "无法读取食物数据文件", e);
+        }
+        return false;
     }
 
     private static int countFoodDataLines() {
@@ -168,11 +195,12 @@ public class DBUtil {
                 String[] parts = line.split("\\|");
                 if (parts.length < 11) continue;
                 String img = parts.length >= 12 ? parts[11] : "";
+                String desc = parts.length >= 13 && !parts[12].isEmpty() ? parts[12] : "";
                 stmt.execute(String.format(
-                    "INSERT INTO foods (foodName, category, calories, protein, fat, carb, meal_type, food_texture, flavor, storage, cooking_method, image) " +
-                    "VALUES ('%s','%s',%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s')",
+                    "INSERT INTO foods (foodName, category, calories, protein, fat, carb, meal_type, food_texture, flavor, storage, cooking_method, image, serving_desc) " +
+                    "VALUES ('%s','%s',%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s','%s')",
                     parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],
-                    parts[6], parts[7], parts[8], parts[9], parts[10], img));
+                    parts[6], parts[7], parts[8], parts[9], parts[10], img, desc));
             }
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "无法读取食物数据文件: " + dataFile, e);

@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -125,29 +126,34 @@ public class FoodCompareController implements Initializable {
         }
         foodEmptyState.setVisible(false);
         foodEmptyState.setManaged(false);
-        HBox cardRow = new HBox(30);
+
+        boolean light = isLightTheme();
+
+        HBox cardRow = new HBox(50);
         cardRow.setAlignment(Pos.CENTER);
-        cardRow.setPadding(new Insets(20, 0, 30, 0));
-        cardRow.getChildren().addAll(foodCard(f1), foodCard(f2));
+        cardRow.setPadding(new Insets(10, 0, 20, 0));
+        cardRow.getChildren().addAll(foodCard(f1, light), foodCard(f2, light));
         compareContent.getChildren().add(cardRow);
 
         Separator sep = new Separator();
-        sep.setStyle("-fx-background-color: rgba(255,255,255,0.06);");
+        sep.setStyle(light
+                ? "-fx-background-color: rgba(0,0,0,0.10);"
+                : "-fx-background-color: rgba(16,185,129,0.10);");
         compareContent.getChildren().add(sep);
 
-        buildSpecRow("热量", f1, f2, f -> String.format("%.0f 大卡", f.getCalories()));
-        buildSpecRow("蛋白质", f1, f2, f -> String.format("%.1f g", f.getProtein()));
-        buildSpecRow("脂肪", f1, f2, f -> String.format("%.1f g", f.getFat()));
-        buildSpecRow("碳水化合物", f1, f2, f -> String.format("%.1f g", f.getCarb()));
-        buildSpecRow("餐食类型", f1, f2, f -> nullToDash(f.getMealType()));
-        buildSpecRow("口感", f1, f2, f -> nullToDash(f.getFoodTexture()));
-        buildSpecRow("口味", f1, f2, f -> nullToDash(f.getFlavor()));
-        buildSpecRow("储存方式", f1, f2, f -> nullToDash(f.getStorage()));
-        buildSpecRow("烹饪方式", f1, f2, f -> nullToDash(f.getCookingMethod()));
+        buildSpecRow("热量", f1, f2, light, f -> String.format("%.0f", f.getCalories()), "大卡");
+        buildSpecRow("蛋白质", f1, f2, light, f -> String.format("%.1f", f.getProtein()), "g");
+        buildSpecRow("脂肪", f1, f2, light, f -> String.format("%.1f", f.getFat()), "g");
+        buildSpecRow("碳水化合物", f1, f2, light, f -> String.format("%.1f", f.getCarb()), "g");
+        buildSpecRow("餐食类型", f1, f2, light, f -> nullToDash(f.getMealType()), null);
+        buildSpecRow("口感", f1, f2, light, f -> nullToDash(f.getFoodTexture()), null);
+        buildSpecRow("口味", f1, f2, light, f -> nullToDash(f.getFlavor()), null);
+        buildSpecRow("储存方式", f1, f2, light, f -> nullToDash(f.getStorage()), null);
+        buildSpecRow("烹饪方式", f1, f2, light, f -> nullToDash(f.getCookingMethod()), null);
         compareContent.getChildren().add(new Region() {{ setMinHeight(40); }});
     }
 
-    private StackPane foodCard(Food f) {
+    private StackPane foodCard(Food f, boolean light) {
         VBox inner = new VBox(8);
         inner.setAlignment(Pos.TOP_CENTER);
         inner.setPrefWidth(260);
@@ -156,7 +162,9 @@ public class FoodCompareController implements Initializable {
 
         if (f == null) {
             Label placeholder = new Label("未选择");
-            placeholder.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 14;");
+            placeholder.setStyle(light
+                    ? "-fx-text-fill: #333333; -fx-font-size: 14;"
+                    : "-fx-text-fill: #6b7280; -fx-font-size: 14;");
             inner.getChildren().add(placeholder);
             StackPane outer = new StackPane(inner);
             outer.getStyleClass().add("gradient-card");
@@ -164,7 +172,9 @@ public class FoodCompareController implements Initializable {
         }
         Label nameLabel = new Label(f.getFoodName());
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
-        nameLabel.setStyle("-fx-text-fill: #d0d0d0;");
+        nameLabel.setStyle(light
+                ? "-fx-text-fill: #111111;"
+                : "-fx-text-fill: #d0d0d0;");
         inner.getChildren().add(nameLabel);
 
         // 食物图片
@@ -172,17 +182,19 @@ public class FoodCompareController implements Initializable {
             String imgPath = f.getImage();
             if (imgPath != null && !imgPath.isEmpty()) {
                 ImageView imgView = new ImageView();
-                imgView.setFitWidth(180);
-                imgView.setFitHeight(180);
+                imgView.setFitWidth(280);
+                imgView.setFitHeight(280);
                 imgView.setPreserveRatio(true);
-                Image img = new Image(getClass().getResource("/images/foods/" + imgPath).toExternalForm(), 180, 180, true, true, true);
+                Image img = new Image(getClass().getResource("/images/foods/" + imgPath).toExternalForm(), 280, 280, true, true, true);
                 imgView.setImage(img);
                 inner.getChildren().add(imgView);
             }
         } catch (Exception ignored) {}
 
         Label catLabel = new Label(f.getCategory());
-        catLabel.setStyle("-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #10b981; -fx-background-radius: 4; -fx-padding: 2 8; -fx-font-size: 12;");
+        catLabel.setStyle(light
+                ? "-fx-background-color: rgba(16,185,129,0.10); -fx-text-fill: #0d9488; -fx-background-radius: 4; -fx-padding: 2 8; -fx-font-size: 12;"
+                : "-fx-background-color: rgba(16,185,129,0.12); -fx-text-fill: #10b981; -fx-background-radius: 4; -fx-padding: 2 8; -fx-font-size: 12;");
         inner.getChildren().add(catLabel);
 
         StackPane outer = new StackPane(inner);
@@ -190,29 +202,52 @@ public class FoodCompareController implements Initializable {
         return outer;
     }
 
-    private void buildSpecRow(String label, Food f1, Food f2, java.util.function.Function<Food, String> extractor) {
-        HBox row = new HBox();
-        row.setPadding(new Insets(12, 0, 12, 0));
-        row.setStyle("-fx-border-color: transparent transparent rgba(255,255,255,0.04) transparent; -fx-border-width: 0 0 1 0;");
-        Region leftSpacer = new Region(); HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+    private void buildSpecRow(String label, Food f1, Food f2, boolean light,
+                              java.util.function.Function<Food, String> extractor, String unit) {
+        HBox row = new HBox(135);
+        row.setAlignment(Pos.CENTER);
+        row.setPadding(new Insets(18, 40, 18, 40));
 
-        Label metricLabel = new Label(label);
-        metricLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 13;");
-        metricLabel.setMinWidth(100);
-        metricLabel.setAlignment(Pos.CENTER);
+        String valColor = light ? "#111111" : "#d0d0d0";
+        String nameColor = light ? "#555555" : "#6b7280";
 
-        Region rightSpacer = new Region(); HBox.setHgrow(rightSpacer, Priority.ALWAYS);
+        VBox leftCol = new VBox(2);
+        leftCol.setAlignment(Pos.CENTER);
+        leftCol.setPrefWidth(240);
 
-        Label leftVal = new Label(f1 != null ? extractor.apply(f1) : "-");
-        leftVal.setStyle("-fx-text-fill: #d0d0d0; -fx-font-size: 14;");
-        leftVal.setMinWidth(200); leftVal.setAlignment(Pos.CENTER);
+        String leftText = f1 != null ? extractor.apply(f1) : "-";
+        Label leftVal = new Label(unit != null ? leftText + " " + unit : leftText);
+        leftVal.setFont(Font.font("System", FontWeight.BOLD, 22));
+        leftVal.setStyle("-fx-text-fill: " + valColor + ";");
 
-        Label rightVal = new Label(f2 != null ? extractor.apply(f2) : "-");
-        rightVal.setStyle("-fx-text-fill: #d0d0d0; -fx-font-size: 14;");
-        rightVal.setMinWidth(200); rightVal.setAlignment(Pos.CENTER);
+        Label leftName = new Label(label);
+        leftName.setStyle("-fx-text-fill: " + nameColor + "; -fx-font-size: 12;");
 
-        row.getChildren().addAll(leftVal, leftSpacer, metricLabel, rightSpacer, rightVal);
+        leftCol.getChildren().addAll(leftVal, leftName);
+
+        VBox rightCol = new VBox(2);
+        rightCol.setAlignment(Pos.CENTER);
+        rightCol.setPrefWidth(240);
+
+        String rightText = f2 != null ? extractor.apply(f2) : "-";
+        Label rightVal = new Label(unit != null ? rightText + " " + unit : rightText);
+        rightVal.setFont(Font.font("System", FontWeight.BOLD, 22));
+        rightVal.setStyle("-fx-text-fill: " + valColor + ";");
+
+        Label rightName = new Label(label);
+        rightName.setStyle("-fx-text-fill: " + nameColor + "; -fx-font-size: 12;");
+
+        rightCol.getChildren().addAll(rightVal, rightName);
+
+        row.getChildren().addAll(leftCol, rightCol);
         compareContent.getChildren().add(row);
+    }
+
+    private boolean isLightTheme() {
+        if (foodCombo1.getScene() != null && foodCombo1.getScene().getRoot() instanceof Parent) {
+            return ((Parent) foodCombo1.getScene().getRoot()).getStyleClass().contains("light-theme");
+        }
+        return false;
     }
 
     private static String nullToDash(String s) { return s != null && !s.isEmpty() ? s : "-"; }

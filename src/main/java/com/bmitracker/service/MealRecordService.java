@@ -35,4 +35,36 @@ public class MealRecordService {
             throw new RuntimeException("保存膳食记录失败", e);
         }
     }
+
+    public void addRecord(MealRecord record) {
+        try {
+            dao.insertOne(record);
+        } catch (SQLException e) {
+            throw new RuntimeException("保存失败", e);
+        }
+    }
+
+    public void updateRecord(MealRecord record) {
+        try {
+            dao.updateOne(record);
+        } catch (SQLException e) {
+            throw new RuntimeException("更新失败", e);
+        }
+    }
+
+    public void deleteRecord(int recordId) {
+        try {
+            dao.deleteOne(recordId);
+        } catch (SQLException e) {
+            throw new RuntimeException("删除失败", e);
+        }
+    }
+
+    public List<LocalDate> getDistinctDates(int userId) {
+        try {
+            return dao.findDistinctDatesByUser(userId);
+        } catch (SQLException e) {
+            return Collections.emptyList();
+        }
+    }
 }
