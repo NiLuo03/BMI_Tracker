@@ -1,11 +1,13 @@
 package com.bmitracker.component;
 
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class TitleBar extends HBox {
@@ -14,6 +16,8 @@ public class TitleBar extends HBox {
     private final Button maxBtn = new Button("□");
     private final Button closeBtn = new Button("✕");
     private double xOff, yOff;
+    private double prevX, prevY, prevW, prevH;
+    private boolean maximized;
 
     public TitleBar() {
         getStyleClass().add("title-bar");
@@ -32,17 +36,26 @@ public class TitleBar extends HBox {
         });
         setOnMouseDragged(e -> {
             Stage s = getStage();
-            if (s != null) { s.setX(e.getScreenX() - xOff); s.setY(e.getScreenY() - yOff); }
+            if (s != null && !maximized) { s.setX(e.getScreenX() - xOff); s.setY(e.getScreenY() - yOff); }
         });
 
         minBtn.setOnAction(e -> { Stage s = getStage(); if (s != null) s.setIconified(true); });
         maxBtn.setOnAction(e -> {
             Stage s = getStage();
-            if (s != null) {
-                boolean maxed = !s.isMaximized();
-                s.setMaximized(maxed);
-                maxBtn.setText(maxed ? "❐" : "□");
+            if (s == null) return;
+            if (!maximized) {
+                prevX = s.getX(); prevY = s.getY();
+                prevW = s.getWidth(); prevH = s.getHeight();
+                Rectangle2D vb = Screen.getPrimary().getVisualBounds();
+                s.setX(vb.getMinX()); s.setY(vb.getMinY());
+                s.setWidth(vb.getWidth()); s.setHeight(vb.getHeight());
+                maxBtn.setText("❐");
+            } else {
+                s.setX(prevX); s.setY(prevY);
+                s.setWidth(prevW); s.setHeight(prevH);
+                maxBtn.setText("□");
             }
+            maximized = !maximized;
         });
         closeBtn.setOnAction(e -> { Stage s = getStage(); if (s != null) s.close(); });
 
