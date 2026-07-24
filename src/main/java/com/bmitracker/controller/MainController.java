@@ -879,13 +879,16 @@ public class MainController {
         try {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             scene.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.web("#050f0a")),
                     new Stop(1, Color.web("#000000"))));
             stage.setScene(scene);
             stage.setResizable(false);
+            stage.setWidth(1200);
+            stage.setHeight(800);
             stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();

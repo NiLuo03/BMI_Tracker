@@ -233,15 +233,18 @@ public class HealthSetupController {
         try {
             Stage stage = (Stage) particlePane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-            Scene newScene = new Scene(loader.load(), 1200, 800);
+            Parent newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
             newScene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
 
-            Parent newRoot = newScene.getRoot();
             newRoot.setOpacity(0);
 
             stage.setScene(newScene);
             stage.setResizable(true);
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
 
             Timeline fadeIn = new Timeline(
                 new KeyFrame(Duration.millis(400), new KeyValue(newRoot.opacityProperty(), 1))

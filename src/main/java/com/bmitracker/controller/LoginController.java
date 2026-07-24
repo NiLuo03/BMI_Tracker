@@ -89,9 +89,12 @@ public class LoginController {
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
+            stage.setWidth(1200);
+            stage.setHeight(800);
             stage.centerOnScreen();
         } catch (Exception e) {
             showAlert("页面加载失败");
@@ -102,10 +105,14 @@ public class LoginController {
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/health_setup.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             stage.setScene(scene);
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
             if (particleText != null) particleText.stop();
         } catch (Exception e) {
             showAlert("页面加载失败");
@@ -116,15 +123,18 @@ public class LoginController {
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-            Scene newScene = new Scene(loader.load(), 1200, 800);
+            Parent newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
             newScene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             newScene.setFill(javafx.scene.paint.Color.TRANSPARENT);
 
-            Parent newRoot = newScene.getRoot();
             newRoot.setOpacity(0);
 
             stage.setScene(newScene);
             stage.setResizable(true);
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
 
             Timeline fadeIn = new Timeline(
                 new KeyFrame(Duration.millis(400), new KeyValue(newRoot.opacityProperty(), 1))

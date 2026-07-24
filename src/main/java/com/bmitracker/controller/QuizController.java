@@ -9,6 +9,7 @@ import com.bmitracker.util.NotificationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -607,9 +608,12 @@ public class QuizController {
         try {
             Stage stage = (Stage) root.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-            Scene scene = new Scene(loader.load(), 1200, 800);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
+            stage.setWidth(1200);
+            stage.setHeight(800);
             stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
