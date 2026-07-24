@@ -1,6 +1,7 @@
 package com.bmitracker.controller;
 
 import com.bmitracker.BMIApplication;
+import com.bmitracker.component.TitleBar;
 import com.bmitracker.model.User;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.ParticleTextCanvas;
@@ -35,6 +36,7 @@ public class LoginController {
     @FXML private StackPane particlePane;
     @FXML private Rectangle rootClip;
     @FXML private VBox root;
+    @FXML private TitleBar titleBar;
 
     private ParticleTextCanvas particleText;
 
@@ -52,6 +54,7 @@ public class LoginController {
             rootClip.heightProperty().bind(root.heightProperty());
         }
         Platform.runLater(() -> userNameField.requestFocus());
+        if (titleBar != null) titleBar.setMaximizeVisible(false);
     }
 
     private final UserService userService = new UserService();
@@ -91,6 +94,7 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
             stage.setWidth(1200);

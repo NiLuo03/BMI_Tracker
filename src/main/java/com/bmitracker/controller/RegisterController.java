@@ -1,5 +1,6 @@
 package com.bmitracker.controller;
 
+import com.bmitracker.component.TitleBar;
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.service.UserService;
 import com.bmitracker.util.NotificationUtil;
@@ -38,6 +39,7 @@ public class RegisterController {
     @FXML private StackPane particlePane;
     @FXML private Rectangle rootClip;
     @FXML private VBox root;
+    @FXML private TitleBar titleBar;
 
     private final UserService userService = new UserService();
     private Popup agePopup;
@@ -54,6 +56,7 @@ public class RegisterController {
             rootClip.widthProperty().bind(root.widthProperty());
             rootClip.heightProperty().bind(root.heightProperty());
         }
+        if (titleBar != null) titleBar.setMaximizeVisible(false);
         ageField.setEditable(false);
         ageField.setFocusTraversable(false);
 
@@ -193,6 +196,7 @@ public class RegisterController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
             stage.setScene(scene);
             stage.setWidth(1200);

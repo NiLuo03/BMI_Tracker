@@ -15,7 +15,7 @@
         <Rectangle fx:id="rootClip" width="1200" height="800" arcWidth="26" arcHeight="26"/>
     </clip>
 
-    <TitleBar/>
+    <TitleBar fx:id="titleBar"/>
 
     <StackPane VBox.vgrow="ALWAYS" style="-fx-background-color: #0a0a0f;">
 

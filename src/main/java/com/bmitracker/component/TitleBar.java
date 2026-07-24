@@ -65,6 +65,7 @@ public class TitleBar extends HBox {
         setCursor(Cursor.DEFAULT);
     }
 
+    public void setMaximizeVisible(boolean v) { maxBtn.setVisible(v); maxBtn.setManaged(v); }
     public Button getMinBtn() { return minBtn; }
     public Button getMaxBtn() { return maxBtn; }
     public Button getCloseBtn() { return closeBtn; }
