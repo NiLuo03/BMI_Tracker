@@ -97,12 +97,6 @@ public class MealRecordController {
         chartCanvas.widthProperty().addListener(o -> drawChart());
         chartCanvas.heightProperty().addListener(o -> drawChart());
 
-        if (isLightTheme()) {
-            chartBox.setStyle("-fx-background-color: rgba(0,255,170,0.03), rgba(0,200,255,0.05), linear-gradient(from 0% 0% to 0% 100%, rgba(0,255,170,0.40), rgba(0,200,255,0.30), rgba(68,0,255,0.25)), #e8e8e8; -fx-background-insets: 0, 4, 6, 8; -fx-background-radius: 12px; -fx-padding: 16;");
-        } else {
-            chartBox.setStyle("-fx-background-color: rgba(0,255,170,0.06), rgba(0,200,255,0.10), linear-gradient(from 0% 0% to 0% 100%, rgba(0,255,170,0.65), rgba(0,200,255,0.50), rgba(68,0,255,0.40)), #1a1a1a; -fx-background-insets: 0, 4, 6, 8; -fx-background-radius: 12px; -fx-padding: 16;");
-        }
-
         prevMonthBtn.setOnAction(e -> {
             calendarMonth = calendarMonth.minusMonths(1);
             loadMonthRecords();

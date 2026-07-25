@@ -6,8 +6,10 @@ import com.bmitracker.component.TitleBar;
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.model.BmiRecord;
 import com.bmitracker.service.BmiService;
+import com.bmitracker.util.Disposable;
 import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
@@ -100,6 +102,8 @@ public class MainController {
     private Popup homeHeightPopup;
     private Popup homeWeightPopup;
     private Node quizView;
+    private ChangeListener<Boolean> stageFocusListener;
+    private Object currentChildController;
 
     private boolean navExpanded = true;
     private final BmiService bmiService = new BmiService();
@@ -512,11 +516,13 @@ public class MainController {
             Stage stage = (Stage) contentPane.getScene().getWindow();
             ai.setMainStage(stage);
             ai.show();
-            stage.focusedProperty().addListener((o, ov, focused) -> {
+            stage.focusedProperty().removeListener(stageFocusListener);
+            stageFocusListener = (o, ov, focused) -> {
                 if (focused) return;
                 if (homeHeightPopup != null) homeHeightPopup.hide();
                 if (homeWeightPopup != null) homeWeightPopup.hide();
-            });
+            };
+            stage.focusedProperty().addListener(stageFocusListener);
         });
 
         DropShadow wideShadow = new DropShadow(35, 0, 12, Color.rgb(0,0,0,0.10));
@@ -872,8 +878,23 @@ public class MainController {
     @FXML
     void showProfile(ActionEvent event) { loadView("profile.fxml"); }
 
+    void dispose() {
+        if (contentPane != null && contentPane.getScene() != null) {
+            Stage stage = (Stage) contentPane.getScene().getWindow();
+            if (stage != null && stageFocusListener != null) {
+                stage.focusedProperty().removeListener(stageFocusListener);
+            }
+        }
+        stageFocusListener = null;
+        if (currentChildController instanceof Disposable d) {
+            d.dispose();
+        }
+        currentChildController = null;
+    }
+
     @FXML
     void showLogout(ActionEvent event) {
+        dispose();
         BMIApplication.currentUserId = -1;
         AIChatController.getInstance().hide();
         try {
@@ -906,7 +927,12 @@ public class MainController {
         glassContent.getChildren().setAll(loadingLabel());
         Platform.runLater(() -> {
             try {
-                Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxml));
+                Node view = loader.load();
+                if (currentChildController instanceof Disposable d) {
+                    d.dispose();
+                }
+                currentChildController = loader.getController();
                 glassContent.getChildren().setAll(view);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -942,7 +968,12 @@ public class MainController {
         glassContent.getChildren().setAll(loadingLabel());
         Platform.runLater(() -> {
             try {
-                Node view = FXMLLoader.load(getClass().getResource("/fxml/" + fxml));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxml));
+                Node view = loader.load();
+                if (currentChildController instanceof Disposable d) {
+                    d.dispose();
+                }
+                currentChildController = loader.getController();
                 glassContent.getChildren().setAll(view);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -6,8 +6,10 @@ import com.bmitracker.model.BmiRecord;
 import com.bmitracker.model.User;
 import com.bmitracker.service.BmiService;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.Disposable;
 import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ProfileController {
+public class ProfileController implements Disposable {
 
     @FXML private Label userIdLabel;
     @FXML private Label userNameLabel;
@@ -44,6 +46,7 @@ public class ProfileController {
     private Popup agePopup;
     private Popup heightPopup;
     private Popup weightPopup;
+    private ChangeListener<Boolean> stageFocusListener;
     private static final double POPUP_HEIGHT = 180;
 
     @FXML
@@ -60,12 +63,14 @@ public class ProfileController {
         Platform.runLater(() -> {
             javafx.stage.Window win = ageField.getScene().getWindow();
             if (win != null) {
-                win.focusedProperty().addListener((o, ov, focused) -> {
+                win.focusedProperty().removeListener(stageFocusListener);
+                stageFocusListener = (o, ov, focused) -> {
                     if (focused) return;
                     if (agePopup != null) agePopup.hide();
                     if (heightPopup != null) heightPopup.hide();
                     if (weightPopup != null) weightPopup.hide();
-                });
+                };
+                win.focusedProperty().addListener(stageFocusListener);
             }
         });
 
@@ -209,6 +214,16 @@ public class ProfileController {
             n = n.getParent();
         }
         return false;
+    }
+
+    public void dispose() {
+        if (ageField != null && ageField.getScene() != null) {
+            javafx.stage.Window win = ageField.getScene().getWindow();
+            if (win != null && stageFocusListener != null) {
+                win.focusedProperty().removeListener(stageFocusListener);
+            }
+        }
+        stageFocusListener = null;
     }
 
     @FXML

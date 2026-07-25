@@ -3,9 +3,11 @@ package com.bmitracker.controller;
 import com.bmitracker.component.TitleBar;
 import com.bmitracker.component.WheelPicker;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.Disposable;
 import com.bmitracker.util.NotificationUtil;
 import com.bmitracker.util.ParticleCanvas;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
@@ -27,7 +29,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegisterController {
+public class RegisterController implements Disposable {
 
     @FXML private TextField userNameField;
     @FXML private PasswordField passwordField;
@@ -44,6 +46,7 @@ public class RegisterController {
     private final UserService userService = new UserService();
     private Popup agePopup;
     private ParticleCanvas particleText;
+    private ChangeListener<Boolean> stageFocusListener;
 
     @FXML
     void initialize() {
@@ -78,10 +81,12 @@ public class RegisterController {
         Platform.runLater(() -> {
             javafx.stage.Window win = ageField.getScene().getWindow();
             if (win != null) {
-                win.focusedProperty().addListener((o, ov, focused) -> {
+                win.focusedProperty().removeListener(stageFocusListener);
+                stageFocusListener = (o, ov, focused) -> {
                     if (focused) return;
                     if (agePopup != null) agePopup.hide();
-                });
+                };
+                win.focusedProperty().addListener(stageFocusListener);
             }
         });
 
@@ -188,8 +193,19 @@ public class RegisterController {
         }
     }
 
+    public void dispose() {
+        if (ageField != null && ageField.getScene() != null) {
+            javafx.stage.Window win = ageField.getScene().getWindow();
+            if (win != null && stageFocusListener != null) {
+                win.focusedProperty().removeListener(stageFocusListener);
+            }
+        }
+        stageFocusListener = null;
+    }
+
     @FXML
     void goToLogin() {
+        dispose();
         if (particleText != null) particleText.stop();
         try {
             Stage stage = (Stage) userNameField.getScene().getWindow();

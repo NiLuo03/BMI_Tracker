@@ -60,6 +60,7 @@ public class HealthSetupController {
     private final Set<String> selectedAllergens = new HashSet<>();
     private final Set<String> selectedDiseases = new HashSet<>();
     private boolean editMode = false;
+    private ParticleTextCanvas particleText;
 
     public void setEditMode(boolean editMode) { this.editMode = editMode; }
 
@@ -67,10 +68,10 @@ public class HealthSetupController {
     void initialize() {
         rootClip.widthProperty().bind(root.widthProperty());
         rootClip.heightProperty().bind(root.heightProperty());
-        ParticleTextCanvas canvas = new ParticleTextCanvas(1200, 800,
+        particleText = new ParticleTextCanvas(1200, 800,
                 new String[]{"HEALTH", "PROFILE", "ALLERGEN", "DISEASE", "RECORD"});
         particlePane.getChildren().clear();
-        particlePane.getChildren().add(canvas);
+        particlePane.getChildren().add(particleText);
 
         allergenSearchField.setOnAction(e -> searchAllergens());
         diseaseSearchField.setOnAction(e -> searchDiseases());
@@ -230,6 +231,7 @@ public class HealthSetupController {
     }
 
     private void navigateToMain() {
+        if (particleText != null) particleText.stop();
         try {
             Stage stage = (Stage) particlePane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));

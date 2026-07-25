@@ -140,6 +140,7 @@ public class AIChatController {
         if (ballStage != null && ballStage.isShowing()) {
             ballStage.hide();
         }
+        ballStage = null;
         if (chatStage != null && chatStage.isShowing()) {
             chatStage.close();
             chatStage = null;

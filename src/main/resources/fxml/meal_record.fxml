@@ -19,10 +19,7 @@
 
     <HBox fx:id="contentArea" VBox.vgrow="ALWAYS" spacing="14">
         <VBox fx:id="leftArea" spacing="8" VBox.vgrow="ALWAYS">
-            <VBox fx:id="chartBox"
-                  style="-fx-background-insets: 0, 4, 6, 8;
-                         -fx-background-radius: 12px;
-                         -fx-padding: 16;">
+            <VBox fx:id="chartBox" styleClass="gradient-card" style="-fx-padding: 16;">
                 <Canvas fx:id="chartCanvas" width="400" height="180"/>
             </VBox>
 

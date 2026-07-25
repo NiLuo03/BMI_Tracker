@@ -5,8 +5,10 @@ import com.bmitracker.component.WheelPicker;
 import com.bmitracker.model.User;
 import com.bmitracker.service.BmiService;
 import com.bmitracker.service.UserService;
+import com.bmitracker.util.Disposable;
 import com.bmitracker.util.NotificationUtil;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
@@ -28,7 +30,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BmiController {
+public class BmiController implements Disposable {
 
     @FXML private TextField heightField;
     @FXML private TextField weightField;
@@ -41,6 +43,7 @@ public class BmiController {
     private final UserService userService = new UserService();
     private Popup heightPopup;
     private Popup weightPopup;
+    private ChangeListener<Boolean> stageFocusListener;
 
     @FXML
     void initialize() {
@@ -65,11 +68,13 @@ public class BmiController {
         Platform.runLater(() -> {
             javafx.stage.Window win = heightField.getScene().getWindow();
             if (win != null) {
-                win.focusedProperty().addListener((o, ov, focused) -> {
+                win.focusedProperty().removeListener(stageFocusListener);
+                stageFocusListener = (o, ov, focused) -> {
                     if (focused) return;
                     if (heightPopup != null) heightPopup.hide();
                     if (weightPopup != null) weightPopup.hide();
-                });
+                };
+                win.focusedProperty().addListener(stageFocusListener);
             }
         });
 
@@ -130,6 +135,16 @@ public class BmiController {
             tag.setStyle("-fx-background-color: #1a6b3c; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 4 12; -fx-font-size: 13px;");
             pane.getChildren().add(tag);
         }
+    }
+
+    public void dispose() {
+        if (heightField != null && heightField.getScene() != null) {
+            javafx.stage.Window win = heightField.getScene().getWindow();
+            if (win != null && stageFocusListener != null) {
+                win.focusedProperty().removeListener(stageFocusListener);
+            }
+        }
+        stageFocusListener = null;
     }
 
     @FXML
