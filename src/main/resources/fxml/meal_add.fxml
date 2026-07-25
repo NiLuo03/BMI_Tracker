@@ -11,7 +11,7 @@
     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
     <HBox alignment="CENTER_LEFT">
-        <Label text="记一餐" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>  <!-- <字体> 页面标题 字号20 字重bold 颜色#111111 -->
+        <Label fx:id="titleLabel" text="记一餐" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="cancelBtn" text="取消" styleClass="btn-primary" onAction="#handleCancel"/>
     </HBox>

@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.Parent;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +26,7 @@ public class MealAddController {
     @FXML private HBox contentArea;
     @FXML private VBox leftArea, rightArea, calcCard;
     @FXML private TextField searchField;
-    @FXML private Label amountLabel, servingDescLbl;
+    @FXML private Label titleLabel, amountLabel, servingDescLbl;
     @FXML private FlowPane foodGrid;
     @FXML private GridPane mealGrid;
     @FXML private GridPane calcGrid;
@@ -48,6 +49,7 @@ public class MealAddController {
     private final StringBuilder expr = new StringBuilder();
     private List<LocalDate> recordDates = new ArrayList<>();
     private String currentMealType = "BREAKFAST";
+    private boolean light;
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM.dd");
     private static final String[] MEAL_KEYS = {"BREAKFAST", "LUNCH", "DINNER", "SNACK"};
@@ -79,7 +81,9 @@ public class MealAddController {
 
         servingDescLbl.managedProperty().bind(servingDescLbl.visibleProperty());
 
-        dateWheel.setLightTheme(true);
+        light = isLightTheme();
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: " + (light ? "#111111" : "#d0d0d0") + ";");
+        dateWheel.setLightTheme(light);
         buildMealCards();
         buildCalcGrid();
         setupKeyboard();
@@ -177,9 +181,9 @@ public class MealAddController {
             VBox card = new VBox(6);                         // <间距> 餐卡内部垂直间距6px
             card.setPadding(new Insets(10, 12, 10, 12));  // <间距> 餐卡内边距 上10 右12 下10 左12
             card.setAlignment(Pos.CENTER);
-            card.setStyle("-fx-background-color: rgba(0,0,0,0.02);"
+            card.setStyle("-fx-background-color: " + (light ? "rgba(0,0,0,0.02)" : "rgba(255,255,255,0.03)") + ";"
                     + "-fx-background-radius: 10px;"
-                    + "-fx-border-color: rgba(0,0,0,0.06);"
+                    + "-fx-border-color: " + (light ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)") + ";"
                     + "-fx-border-width: 1px;"
                     + "-fx-border-radius: 10px;"
                     + "-fx-cursor: hand;");
@@ -191,7 +195,7 @@ public class MealAddController {
             Region sp = new Region();
             HBox.setHgrow(sp, Priority.ALWAYS);
             Label dot = new Label("○");
-            dot.setStyle("-fx-font-size: 37px; -fx-text-fill: #cccccc;");    // <字体> 圆点 字号37 颜色#cccccc（初始态，随后被selectMeal覆盖）
+            dot.setStyle("-fx-font-size: 37px; -fx-text-fill: " + (light ? "#cccccc" : "#777777") + ";");
             topRow.getChildren().addAll(emoji, sp, dot);
 
             Label name = new Label(MEAL_NAMES[i]);
@@ -233,16 +237,16 @@ public class MealAddController {
                 name.setStyle("-fx-font-size: 25px; -fx-text-fill: #10b981; -fx-font-weight: bold;"
                         + "-fx-font-family: \"Alimama ShuHeiTi Bold\", \"阿里妈妈数黑体 Bold\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif;"); // <字体> 选中态：名称 字号25 颜色#10b981 字重bold
             } else {
-                card.setStyle("-fx-background-color: rgba(0,0,0,0.02);"
+                card.setStyle("-fx-background-color: " + (light ? "rgba(0,0,0,0.02)" : "rgba(255,255,255,0.03)") + ";"
                         + "-fx-background-radius: 10px;"
-                        + "-fx-border-color: rgba(0,0,0,0.06);"
+                        + "-fx-border-color: " + (light ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)") + ";"
                         + "-fx-border-width: 1px;"
                         + "-fx-border-radius: 10px;"
                         + "-fx-cursor: hand;");
                 dot.setText("○");
-                dot.setStyle("-fx-font-size: 37px; -fx-text-fill: #cccccc;");                      // <字体> 未选中态：圆点 ○ 字号37 颜色#cccccc
-                name.setStyle("-fx-font-size: 25px; -fx-text-fill: #555555;"
-                        + "-fx-font-family: \"Alimama ShuHeiTi Bold\", \"阿里妈妈数黑体 Bold\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif;");                     // <字体> 未选中态：名称 字号25 颜色#555555
+                dot.setStyle("-fx-font-size: 37px; -fx-text-fill: " + (light ? "#cccccc" : "#777777") + ";");                      // <字体> 未选中态：圆点 ○ 字号37 颜色
+                name.setStyle("-fx-font-size: 25px; -fx-text-fill: " + (light ? "#555555" : "#9ca3af") + ";"                         // <字体> 未选中态：名称 字号25 颜色
+                        + "-fx-font-family: \"Alimama ShuHeiTi Bold\", \"阿里妈妈数黑体 Bold\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif;");
             }
         }
     }
@@ -298,11 +302,11 @@ public class MealAddController {
                     btn.setStyle("-fx-background-color: rgba(16,185,129,0.12);"
                             + "-fx-text-fill: #10b981; -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;");                         // <字体> 再记按钮 字号14 颜色#10b981
                 } else if (op) {
-                    btn.setStyle("-fx-background-color: rgba(0,0,0,0.05);"
-                            + "-fx-text-fill: #333333; -fx-font-size: 18px; -fx-background-radius: 6; -fx-cursor: hand;");                         // <字体> 运算符按钮 字号18 颜色#333333
+                    btn.setStyle("-fx-background-color: " + (light ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)") + ";"
+                            + "-fx-text-fill: " + (light ? "#333333" : "#d0d0d0") + "; -fx-font-size: 18px; -fx-background-radius: 6; -fx-cursor: hand;");
                 } else {
-                    btn.setStyle("-fx-background-color: rgba(0,0,0,0.03);"
-                            + "-fx-text-fill: #222222; -fx-font-size: 18px; -fx-background-radius: 6; -fx-cursor: hand;");                         // <字体> 数字按钮 字号18 颜色#222222
+                    btn.setStyle("-fx-background-color: " + (light ? "rgba(0,0,0,0.03)" : "rgba(255,255,255,0.03)") + ";"
+                            + "-fx-text-fill: " + (light ? "#222222" : "#d0d0d0") + "; -fx-font-size: 18px; -fx-background-radius: 6; -fx-cursor: hand;");
                 }
                 btn.setOnAction(e -> {
                     switch (label) {
@@ -345,6 +349,8 @@ public class MealAddController {
     private void updateAmount() { amountLabel.setText(expr.length() == 0 ? "0.00" : expr.toString()); }  // 克数显示（字号/颜色见fxml）
 
     private void updateFoodGrid(String keyword) {
+        String btnBg = light ? "rgba(0,0,0,0.04)" : "rgba(255,255,255,0.04)";
+        String btnTxt = light ? "#333333" : "#d0d0d0";
         foodGrid.getChildren().clear();
         if (allFoods.isEmpty()) return;
         List<Food> shown = (keyword == null || keyword.isEmpty())
@@ -355,7 +361,7 @@ public class MealAddController {
             Button btn = new Button(food.getFoodName());
             btn.setStyle(sel
                 ? "-fx-background-color: rgba(16,185,129,0.18); -fx-text-fill: #10b981; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand; -fx-border-color: rgba(16,185,129,0.35); -fx-border-radius: 6;"
-                : "-fx-background-color: rgba(0,0,0,0.04); -fx-text-fill: #333333; -fx-font-size: 13px; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand;");  // <按钮大小> 字号13 上下p6 左右p12 圆角6
+                : "-fx-background-color: " + btnBg + "; -fx-text-fill: " + btnTxt + "; -fx-font-size: 13px; -fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand;");  // <按钮大小> 字号13 上下p6 左右p12 圆角6
             btn.setOnAction(e -> {
                 if (food.getFoodId() == selectedFoodId) { selectedFood = null; selectedFoodId = -1; }
                 else { selectedFood = food; selectedFoodId = food.getFoodId(); }
@@ -447,5 +453,12 @@ public class MealAddController {
     private void showAlert(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
         a.setTitle("提示"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+    }
+
+    private boolean isLightTheme() {
+        if (searchField.getScene() != null && searchField.getScene().getRoot() instanceof Parent) {
+            return ((Parent) searchField.getScene().getRoot()).getStyleClass().contains("light-theme");
+        }
+        return false;
     }
 }

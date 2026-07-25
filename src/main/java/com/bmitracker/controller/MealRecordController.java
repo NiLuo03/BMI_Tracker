@@ -97,6 +97,12 @@ public class MealRecordController {
         chartCanvas.widthProperty().addListener(o -> drawChart());
         chartCanvas.heightProperty().addListener(o -> drawChart());
 
+        if (isLightTheme()) {
+            chartBox.setStyle("-fx-background-color: rgba(0,255,170,0.03), rgba(0,200,255,0.05), linear-gradient(from 0% 0% to 0% 100%, rgba(0,255,170,0.40), rgba(0,200,255,0.30), rgba(68,0,255,0.25)), #e8e8e8; -fx-background-insets: 0, 4, 6, 8; -fx-background-radius: 12px; -fx-padding: 16;");
+        } else {
+            chartBox.setStyle("-fx-background-color: rgba(0,255,170,0.06), rgba(0,200,255,0.10), linear-gradient(from 0% 0% to 0% 100%, rgba(0,255,170,0.65), rgba(0,200,255,0.50), rgba(68,0,255,0.40)), #1a1a1a; -fx-background-insets: 0, 4, 6, 8; -fx-background-radius: 12px; -fx-padding: 16;");
+        }
+
         prevMonthBtn.setOnAction(e -> {
             calendarMonth = calendarMonth.minusMonths(1);
             loadMonthRecords();
@@ -151,15 +157,17 @@ public class MealRecordController {
         double h = chartCanvas.getHeight();
         if (w <= 0 || h <= 0) return;
 
+        boolean light = isLightTheme();
         GraphicsContext gc = chartCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, w, h);
 
         int lx = (int) w - 8, ly1 = 6, ly2 = 76;
         gc.setFill(Color.rgb(16, 185, 129, 0.8));
         gc.fillRect(lx - 4, ly1, 8, 8);
-        gc.setFill(Color.rgb(0, 0, 0, 0.15));
+        gc.setFill(light ? Color.rgb(0, 0, 0, 0.15) : Color.rgb(255, 255, 255, 0.10));
         gc.fillRect(lx - 4, ly2, 8, 8);
-        gc.setFill(Color.rgb(51, 51, 51));
+        Color txtColor = light ? Color.rgb(51, 51, 51) : Color.rgb(208, 208, 208);
+        gc.setFill(txtColor);
         gc.setFont(Font.font("Microsoft YaHei", 10));
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText("今", lx, ly1 + 21);
@@ -208,26 +216,37 @@ public class MealRecordController {
 
             double bar2X = centerX + 4;
             double bar2Y = marginT + plotH - stdH;
-            gc.setFill(Color.rgb(0, 0, 0, 0.15));
+            gc.setFill(light ? Color.rgb(0, 0, 0, 0.15) : Color.rgb(255, 255, 255, 0.10));
             gc.fillRoundRect(bar2X, bar2Y, barW, stdH, 3, 3);
 
-            gc.setFill(Color.rgb(51, 51, 51));
+            gc.setFill(txtColor);
             gc.setFont(Font.font("Microsoft YaHei", 10));
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText(String.format("%.0f", data[i][0]), bar1X + barW / 2, bar1Y - 4);
             gc.fillText(String.format("%.0f", data[i][1]), bar2X + barW / 2, bar2Y - 4);
 
-            gc.setFill(Color.rgb(85, 85, 85));
+            Color labelColor = light ? Color.rgb(85, 85, 85) : Color.rgb(156, 163, 175);
+            gc.setFill(labelColor);
             gc.setFont(Font.font("Microsoft YaHei", 11));
             gc.fillText(labels[i], centerX, marginT + plotH + 16);
         }
     }
 
     private void refreshList() {
+        boolean light = isLightTheme();
+        String emptyColor = light ? "#555555" : "#9ca3af";
+        String cardBg = light ? "rgba(0,0,0,0.02)" : "transparent";
+        String cardBorder = light ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.06)";
+        String hoverBg = light ? "#f5f5f5" : "rgba(255,255,255,0.04)";
+        String dateColor = light ? "#111111" : "#d0d0d0";
+        String sepColor = light ? "#f0f0f0" : "rgba(255,255,255,0.04)";
+        String nameColor = light ? "#222222" : "#d0d0d0";
+        String gramColor = light ? "#888888" : "#6b7280";
+
         mealListBox.getChildren().clear();
         if (recordsByDate.isEmpty()) {
             Label empty = new Label("本月暂无膳食记录");
-            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 14px; -fx-padding: 20 0;");
+            empty.setStyle("-fx-text-fill: " + emptyColor + "; -fx-font-size: 14px; -fx-padding: 20 0;");
             empty.setAlignment(Pos.CENTER);
             empty.setMaxWidth(Double.MAX_VALUE);
             mealListBox.getChildren().add(empty);
@@ -247,9 +266,9 @@ public class MealRecordController {
             double sum = getParamSum(recs, currentParam);
 
             VBox card = new VBox(0);
-            card.setStyle("-fx-background-color: #ffffff;"
+            card.setStyle("-fx-background-color: " + cardBg + ";"
                     + "-fx-background-radius: 10px;"
-                    + "-fx-border-color: rgba(0,0,0,0.06);"
+                    + "-fx-border-color: " + cardBorder + ";"
                     + "-fx-border-width: 1px;"
                     + "-fx-border-radius: 10px;"
                     + "-fx-padding: 0;");
@@ -260,12 +279,12 @@ public class MealRecordController {
 
             HBox header = new HBox(6);
             header.setAlignment(Pos.CENTER_LEFT);
-            header.setOnMouseEntered(e -> header.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 6px;"));
+            header.setOnMouseEntered(e -> header.setStyle("-fx-background-color: " + hoverBg + "; -fx-background-radius: 6px;"));
             header.setOnMouseExited(e -> header.setStyle(""));
             Label dateLbl = new Label(formatDateTitle(date));
-            dateLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: bold;");
+            dateLbl.setStyle("-fx-text-fill: " + dateColor + "; -fx-font-size: 15px; -fx-font-weight: bold;");
             Label suffixLbl = new Label(getDateSuffix(date));
-            suffixLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px;");
+            suffixLbl.setStyle("-fx-text-fill: " + dateColor + "; -fx-font-size: 14px;");
             Region dateGap = new Region();
             dateGap.setPrefWidth(0.5);
             Region spacer = new Region();
@@ -283,7 +302,7 @@ public class MealRecordController {
             card.getChildren().add(header);
 
             Region headSep = new Region();
-            headSep.setStyle("-fx-background-color: #f0f0f0;");
+            headSep.setStyle("-fx-background-color: " + sepColor + ";");
             headSep.setPrefHeight(0.1);
             headSep.setMaxHeight(2);
             headSep.setMaxWidth(Double.MAX_VALUE);
@@ -292,7 +311,7 @@ public class MealRecordController {
             for (int i = 0; i < recs.size(); i++) {
                 if (i > 0) {
                     Region gap = new Region();
-                    gap.setStyle("-fx-background-color: #f0f0f0;");
+                    gap.setStyle("-fx-background-color: " + sepColor + ";");
                     gap.setPrefHeight(0.1);
                     gap.setMaxHeight(2);
                     gap.setMaxWidth(Double.MAX_VALUE);
@@ -304,7 +323,7 @@ public class MealRecordController {
 
                 HBox row = new HBox(8);
                 row.setAlignment(Pos.CENTER_LEFT);
-                row.setOnMouseEntered(e -> row.setStyle("-fx-background-color: #f5f5f5; -fx-background-radius: 6px;"));
+                row.setOnMouseEntered(e -> row.setStyle("-fx-background-color: " + hoverBg + "; -fx-background-radius: 6px;"));
                 row.setOnMouseExited(e -> row.setStyle(""));
                 row.setPadding(new Insets(6, 14, 6, 14));
                 row.setStyle("-fx-cursor: hand;");
@@ -317,9 +336,9 @@ public class MealRecordController {
                 VBox nameBox = new VBox(2);
                 nameBox.setAlignment(Pos.CENTER_LEFT);
                 Label nameLbl = new Label(r.getFoodName());
-                nameLbl.setStyle("-fx-text-fill: #222222; -fx-font-size: 16px;");
+                nameLbl.setStyle("-fx-text-fill: " + nameColor + "; -fx-font-size: 16px;");
                 Label gramLbl = new Label(String.format("%.0f g", r.getGrams()));
-                gramLbl.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+                gramLbl.setStyle("-fx-text-fill: " + gramColor + "; -fx-font-size: 11px;");
                 nameBox.getChildren().addAll(nameLbl, gramLbl);
 
                 Region rowSpacer = new Region();
@@ -336,6 +355,13 @@ public class MealRecordController {
     }
 
     private void buildCalendar() {
+        boolean light = isLightTheme();
+        String headerColor = light ? "#777777" : "#9ca3af";
+        String numColor = light ? "#111111" : "#d0d0d0";
+        calendarBox.setStyle(light
+                ? "-fx-background-color: rgba(0,0,0,0.02); -fx-background-radius: 10px; -fx-border-color: rgba(0,0,0,0.06); -fx-border-width: 1px; -fx-border-radius: 10px; -fx-padding: 10 6 6 6;"
+                : "-fx-background-color: transparent; -fx-background-radius: 10px; -fx-border-color: rgba(255,255,255,0.06); -fx-border-width: 1px; -fx-border-radius: 10px; -fx-padding: 10 6 6 6;");
+
         calendarGrid.getChildren().clear();
         calendarGrid.getColumnConstraints().clear();
         calendarGrid.getRowConstraints().clear();
@@ -373,7 +399,7 @@ public class MealRecordController {
             Label dayLabel = new Label(WEEKDAYS[col]);
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            dayLabel.setStyle("-fx-text-fill: #777777; -fx-font-size: 11px;");
+            dayLabel.setStyle("-fx-text-fill: " + headerColor + "; -fx-font-size: 11px;");
             calendarGrid.add(dayLabel, col, 0);
             GridPane.setHalignment(dayLabel, HPos.CENTER);
         }
@@ -409,7 +435,7 @@ public class MealRecordController {
 
             Label numLbl = new Label(String.valueOf(d));
             numLbl.setAlignment(Pos.CENTER);
-            numLbl.setStyle("-fx-text-fill: #111111; -fx-font-size: 14px");
+            numLbl.setStyle("-fx-text-fill: " + numColor + "; -fx-font-size: 14px");
 
             cell.getChildren().add(numLbl);
 
@@ -762,5 +788,12 @@ public class MealRecordController {
         addMealBtn.setVisible(true);
         loadMonthRecords();
         contentArea.getChildren().setAll(leftArea, rightArea);
+    }
+
+    private boolean isLightTheme() {
+        if (contentArea.getScene() != null && contentArea.getScene().getRoot() instanceof javafx.scene.Parent) {
+            return ((javafx.scene.Parent) contentArea.getScene().getRoot()).getStyleClass().contains("light-theme");
+        }
+        return false;
     }
 }
