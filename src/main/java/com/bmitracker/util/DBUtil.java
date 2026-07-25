@@ -15,9 +15,7 @@ public class DBUtil {
     public static boolean PREVIEW_MODE = false;
 
     /** H2本地文件数据库，MySQL兼容模式 */
-    private static final String H2_URL = "jdbc:h2:file:./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE;AUTO_SERVER=TRUE";
-    /** H2 TCP Server共享模式 */
-    private static final String H2_TCP_URL = "jdbc:h2:tcp://localhost:9092/./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE";
+    private static final String H2_URL = "jdbc:h2:file:./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE";
     /** 队友的MySQL地址 */
     private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/bmi_db?useSSL=false&serverTimezone=Asia/Shanghai&connectTimeout=3000&socketTimeout=3000";
     private static final String USER = "root";
@@ -26,23 +24,10 @@ public class DBUtil {
     /** true=使用内嵌H2， false=连队友MySQL */
     public static boolean USE_H2 = true;
 
-    private static void startH2TcpServer() {
-        try {
-            Class<?> c = Class.forName("org.h2.tools.Server");
-            java.lang.reflect.Method create = c.getMethod("createTcpServer", String[].class);
-            Object server = create.invoke(null, (Object) new String[]{"-tcpPort", "9092", "-tcpAllowOthers", "-tcpDaemon"});
-            c.getMethod("start").invoke(server);
-            LOG.info("H2 TCP Server 已启动 (9092)");
-        } catch (Exception e) {
-            LOG.info("H2 TCP Server 可能已在运行");
-        }
-    }
-
     static {
         try {
             Class.forName("org.h2.Driver");
             if (USE_H2) {
-                startH2TcpServer();
                 initH2Database();
             }
         } catch (Exception e) {
@@ -51,7 +36,7 @@ public class DBUtil {
     }
 
     private static void initH2Database() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(H2_TCP_URL, "sa", "");
+        try (Connection conn = DriverManager.getConnection(H2_URL, "sa", "");
              Statement stmt = conn.createStatement()) {
 
             stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
@@ -227,11 +212,7 @@ public class DBUtil {
             throw new SQLException("前端预览模式，已跳过数据库连接");
         }
         if (USE_H2) {
-            try {
-                return DriverManager.getConnection(H2_TCP_URL, "sa", "");
-            } catch (SQLException e) {
-                return DriverManager.getConnection(H2_URL, "sa", "");
-            }
+            return DriverManager.getConnection(H2_URL, "sa", "");
         }
         return DriverManager.getConnection(MYSQL_URL, USER, PASS);
     }
