@@ -26,10 +26,23 @@ public class DBUtil {
     /** true=使用内嵌H2， false=连队友MySQL */
     public static boolean USE_H2 = true;
 
+    private static void startH2TcpServer() {
+        try {
+            Class<?> c = Class.forName("org.h2.tools.Server");
+            java.lang.reflect.Method create = c.getMethod("createTcpServer", String[].class);
+            Object server = create.invoke(null, (Object) new String[]{"-tcpPort", "9092", "-tcpAllowOthers", "-tcpDaemon"});
+            c.getMethod("start").invoke(server);
+            LOG.info("H2 TCP Server 已启动 (9092)");
+        } catch (Exception e) {
+            LOG.info("H2 TCP Server 可能已在运行");
+        }
+    }
+
     static {
         try {
             Class.forName("org.h2.Driver");
             if (USE_H2) {
+                startH2TcpServer();
                 initH2Database();
             }
         } catch (Exception e) {
@@ -38,7 +51,7 @@ public class DBUtil {
     }
 
     private static void initH2Database() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(H2_URL, "sa", "");
+        try (Connection conn = DriverManager.getConnection(H2_TCP_URL, "sa", "");
              Statement stmt = conn.createStatement()) {
 
             stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
@@ -214,7 +227,11 @@ public class DBUtil {
             throw new SQLException("前端预览模式，已跳过数据库连接");
         }
         if (USE_H2) {
-            return DriverManager.getConnection(H2_URL, "sa", "");
+            try {
+                return DriverManager.getConnection(H2_TCP_URL, "sa", "");
+            } catch (SQLException e) {
+                return DriverManager.getConnection(H2_URL, "sa", "");
+            }
         }
         return DriverManager.getConnection(MYSQL_URL, USER, PASS);
     }
