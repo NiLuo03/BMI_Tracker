@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -62,9 +63,9 @@ public class AIChatController {
     private boolean longPressed = false;
     private Timeline longPressTimer;
 
-    private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
     private static final String MODEL = "ep-20260714154339-vkt22";
+    private static String API_KEY = "";
 
     private static final ImageView aiAvatar;
     static {
@@ -469,15 +470,19 @@ public class AIChatController {
         subtitleLabel.setFont(Font.font("System", 10));
         subtitleLabel.setOpacity(0.8);
 
+        Button settingBtn = new Button("⚙");
+        settingBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #666; -fx-font-size: 14; -fx-cursor: hand; -fx-padding: 0;");
+        settingBtn.setPrefSize(28, 28);
+        settingBtn.setTooltip(new Tooltip("API设置"));
+        settingBtn.setOnAction(e -> showApiKeyDialog());
+
         HBox titleTop = new HBox();
         Pane leftSpacer = new Pane();
         leftSpacer.setPrefWidth(30);
         VBox centerPart = new VBox(0, titleLabel, subtitleLabel);
         centerPart.setAlignment(javafx.geometry.Pos.CENTER);
-        Pane rightSpacer = new Pane();
-        rightSpacer.setMinWidth(28); rightSpacer.setPrefWidth(28); rightSpacer.setMaxWidth(28);
 
-        titleTop.getChildren().addAll(historyBtn, leftSpacer, centerPart, rightSpacer);
+        titleTop.getChildren().addAll(historyBtn, leftSpacer, centerPart, settingBtn);
         HBox.setHgrow(centerPart, Priority.ALWAYS);
 
         titleBar.getChildren().addAll(titleTop);
@@ -553,6 +558,12 @@ public class AIChatController {
     private void sendMessage() {
         String text = inputField.getText().trim();
         if (text.isEmpty()) return;
+
+        if (API_KEY == null || API_KEY.trim().isEmpty()) {
+            showApiKeyDialog();
+            return;
+        }
+
         inputField.clear();
 
         addMessage("我", text);
@@ -712,6 +723,32 @@ public class AIChatController {
             }
         }
         return sb.toString();
+    }
+
+    private void showApiKeyDialog() {
+        TextInputDialog d = new TextInputDialog(API_KEY);
+        d.setTitle("API 设置");
+        d.setHeaderText("请输入你的 AI API Key");
+        d.setContentText("API Key:");
+        d.initOwner(chatStage);
+        d.showAndWait().ifPresent(key -> {
+            if (key != null && !key.trim().isEmpty()) {
+                API_KEY = key.trim();
+                try {
+                    java.nio.file.Files.createDirectories(java.nio.file.Paths.get("data"));
+                    java.nio.file.Files.writeString(java.nio.file.Paths.get("data/api_key_" + BMIApplication.currentUserId + ".txt"), API_KEY);
+                } catch (Exception ex) { ex.printStackTrace(); }
+            }
+        });
+    }
+
+    private void loadApiKey() {
+        try {
+            java.nio.file.Path p = java.nio.file.Paths.get("data/api_key_" + BMIApplication.currentUserId + ".txt");
+            if (java.nio.file.Files.exists(p)) {
+                API_KEY = java.nio.file.Files.readString(p).trim();
+            }
+        } catch (Exception ex) { /* use default empty */ }
     }
 
     private void saveHistory() {

@@ -41,6 +41,24 @@ public class DietController {
         String allergens = user.getAllergens();
         String chronicDiseases = user.getChronicDiseases();
 
+        java.nio.file.Path keyPath = java.nio.file.Paths.get("data/api_key_" + BMIApplication.currentUserId + ".txt");
+        if (!java.nio.file.Files.exists(keyPath)) {
+            javafx.scene.control.TextInputDialog d = new javafx.scene.control.TextInputDialog();
+            d.setTitle("API 设置");
+            d.setHeaderText("请先设置 AI API Key");
+            d.setContentText("API Key:");
+            d.initOwner(breakfastLabel.getScene().getWindow());
+            d.showAndWait().ifPresent(key -> {
+                if (key != null && !key.trim().isEmpty()) {
+                    try {
+                        java.nio.file.Files.createDirectories(java.nio.file.Paths.get("data"));
+                        java.nio.file.Files.writeString(keyPath, key.trim());
+                    } catch (Exception ex) { ex.printStackTrace(); }
+                }
+            });
+            return;
+        }
+
         new Thread(() -> {
             try {
                 String json = CozeClient.getDietRecommendation(age, sex, height, weight, bmi, status, preferences, allergens, chronicDiseases);

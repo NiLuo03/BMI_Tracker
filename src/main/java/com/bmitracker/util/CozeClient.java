@@ -9,11 +9,20 @@ import java.time.Duration;
 
 public class CozeClient {
 
-    private static final String API_KEY = "ark-bbc33ed4-cfb8-403d-bfa1-c180e8d9e02f-606ca";
     private static final String ENDPOINT_ID = "ep-20260713112535-75rjx";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
     private static final int TIMEOUT_SECONDS = 30;
     private static final int MAX_RETRIES = 2;
+
+    private static String loadApiKey() {
+        try {
+            java.nio.file.Path p = java.nio.file.Paths.get("data/api_key_" + com.bmitracker.BMIApplication.currentUserId + ".txt");
+            if (java.nio.file.Files.exists(p)) {
+                return java.nio.file.Files.readString(p).trim();
+            }
+        } catch (Exception ex) { /* fallback */ }
+        return "";
+    }
 
     public static String getDietRecommendation(int age, int sex, double height, double weight,
                                                 double bmi, String status, String preferences,
@@ -34,7 +43,7 @@ public class CozeClient {
         message += "。请按照格式返回：{\"breakfast\":\"...\",\"lunch\":\"...\",\"dinner\":\"...\",\"totalCal\":\"...\"}";
 
         try {
-            CozeClient client = new CozeClient(API_KEY, ENDPOINT_ID);
+            CozeClient client = new CozeClient(loadApiKey(), ENDPOINT_ID);
             return client.sendMessage(message);
         } catch (Exception e) {
             return null;
