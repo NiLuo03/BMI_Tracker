@@ -65,9 +65,9 @@ public class AIChatController {
     private boolean longPressed = false;
     private Timeline longPressTimer;
 
-    private static String API_URL = "https://api.openai.com/v1/chat/completions";
-    private static String MODEL = "gpt-3.5-turbo";
-    private static String API_KEY = "";
+    private String API_URL = "https://api.openai.com/v1/chat/completions";
+    private String MODEL = "gpt-3.5-turbo";
+    private String API_KEY = "";
 
     private static final ImageView aiAvatar;
     static {
@@ -777,6 +777,9 @@ public class AIChatController {
     }
 
     private void loadApiConfig() {
+        API_URL = "https://api.openai.com/v1/chat/completions";
+        MODEL = "gpt-3.5-turbo";
+        API_KEY = "";
         try {
             java.sql.Connection conn = com.bmitracker.util.DBUtil.getConnection();
             java.sql.PreparedStatement ps = conn.prepareStatement(
@@ -787,9 +790,9 @@ public class AIChatController {
                 String url = rs.getString("api_url");
                 String model = rs.getString("api_model");
                 String key = rs.getString("api_key");
-                if (url != null) API_URL = url;
-                if (model != null) MODEL = model;
-                if (key != null) API_KEY = key;
+                if (url != null && !url.isEmpty()) API_URL = url;
+                if (model != null && !model.isEmpty()) MODEL = model;
+                if (key != null && !key.isEmpty()) API_KEY = key;
             }
             rs.close(); ps.close(); conn.close();
         } catch (Exception ex) { /* use defaults */ }
