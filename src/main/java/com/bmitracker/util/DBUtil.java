@@ -51,7 +51,8 @@ public class DBUtil {
                     "createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
             // 兼容旧表：添加健康档案字段
-            for (String col : new String[]{"allergens VARCHAR(200)", "chronic_diseases VARCHAR(200)"}) {
+            for (String col : new String[]{"allergens VARCHAR(200)", "chronic_diseases VARCHAR(200)",
+                    "api_url VARCHAR(300)", "api_model VARCHAR(100)", "api_key VARCHAR(200)"}) {
                 try { stmt.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS " + col); } catch (SQLException ignored) {}
             }
 

@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -16,6 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -63,8 +65,8 @@ public class AIChatController {
     private boolean longPressed = false;
     private Timeline longPressTimer;
 
-    private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
-    private static final String MODEL = "ep-20260714154339-vkt22";
+    private static String API_URL = "https://api.openai.com/v1/chat/completions";
+    private static String MODEL = "gpt-3.5-turbo";
     private static String API_KEY = "";
 
     private static final ImageView aiAvatar;
@@ -539,6 +541,10 @@ public class AIChatController {
         Scene chatScene = new Scene(root);
         chatStage.setScene(chatScene);
 
+        loadApiConfig();
+        if (API_KEY.isEmpty()) {
+            Platform.runLater(this::showApiKeyDialog);
+        }
         messages.clear();
         buildSystemPrompt();
 
@@ -558,12 +564,6 @@ public class AIChatController {
     private void sendMessage() {
         String text = inputField.getText().trim();
         if (text.isEmpty()) return;
-
-        if (API_KEY == null || API_KEY.trim().isEmpty()) {
-            showApiKeyDialog();
-            return;
-        }
-
         inputField.clear();
 
         addMessage("我", text);
@@ -601,7 +601,12 @@ public class AIChatController {
                 String resp = full.toString().trim();
                 if (!resp.isEmpty()) messages.add(new ChatMessage("assistant", resp));
             } catch (Exception ex) {
-                Platform.runLater(() -> aiLabel.setText("抱歉，服务繁忙，请稍后再试。"));
+                ex.printStackTrace();
+                String err = ex.getMessage();
+                if (err != null && err.length() > 40) err = err.substring(0, 40);
+                final String url = API_URL.replace("https://", "").replace("http://", "");
+                final String msg = "服务异常：" + (err != null ? err : "未知") + " → " + url + "\n点击 ⚙ 修改";
+                Platform.runLater(() -> aiLabel.setText(msg));
             } finally {
                 Platform.runLater(() -> {
                     inputField.setDisable(false);
@@ -726,29 +731,68 @@ public class AIChatController {
     }
 
     private void showApiKeyDialog() {
-        TextInputDialog d = new TextInputDialog(API_KEY);
+        javafx.scene.control.Dialog<ButtonType> d = new javafx.scene.control.Dialog<>();
         d.setTitle("API 设置");
-        d.setHeaderText("请输入你的 AI API Key");
-        d.setContentText("API Key:");
+        Label hint = new Label("DeepSeek: api.deepseek.com | 火山引擎: ark.cn-beijing.volces.com");
+        hint.setStyle("-fx-font-size: 11px; -fx-text-fill: #999;");
+        d.getDialogPane().setHeader(hint);
+        d.setHeaderText("API Key（必填）");
         d.initOwner(chatStage);
-        d.showAndWait().ifPresent(key -> {
-            if (key != null && !key.trim().isEmpty()) {
-                API_KEY = key.trim();
-                try {
-                    java.nio.file.Files.createDirectories(java.nio.file.Paths.get("data"));
-                    java.nio.file.Files.writeString(java.nio.file.Paths.get("data/api_key_" + BMIApplication.currentUserId + ".txt"), API_KEY);
-                } catch (Exception ex) { ex.printStackTrace(); }
+        ButtonType okBtn = new ButtonType("保存", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+        d.getDialogPane().getButtonTypes().addAll(okBtn, ButtonType.CANCEL);
+
+        javafx.scene.control.TextField keyField = new javafx.scene.control.TextField(API_KEY);
+        keyField.setPromptText("sk-... 或 ark-...");
+        javafx.scene.control.TextField urlField = new javafx.scene.control.TextField(API_URL);
+        urlField.setPromptText("https://api.openai.com/v1/chat/completions");
+        javafx.scene.control.TextField modelField = new javafx.scene.control.TextField(MODEL);
+        modelField.setPromptText("gpt-3.5-turbo");
+
+        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+        grid.setHgap(10); grid.setVgap(10);
+        grid.addRow(0, new Label("API Key:"), keyField);
+        grid.addRow(1, new Label("URL（可选）:"), urlField);
+        grid.addRow(2, new Label("Model（可选）:"), modelField);
+        d.getDialogPane().setContent(grid);
+
+        d.showAndWait().ifPresent(r -> {
+            if (r == okBtn && !keyField.getText().trim().isEmpty()) {
+                API_KEY = keyField.getText().trim();
+                API_URL = urlField.getText().trim().isEmpty() ? API_URL : urlField.getText().trim();
+                MODEL = modelField.getText().trim().isEmpty() ? MODEL : modelField.getText().trim();
+                saveApiConfig();
             }
         });
     }
 
-    private void loadApiKey() {
+    private void saveApiConfig() {
         try {
-            java.nio.file.Path p = java.nio.file.Paths.get("data/api_key_" + BMIApplication.currentUserId + ".txt");
-            if (java.nio.file.Files.exists(p)) {
-                API_KEY = java.nio.file.Files.readString(p).trim();
+            java.sql.Connection conn = com.bmitracker.util.DBUtil.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement(
+                "UPDATE users SET api_url=?, api_model=?, api_key=? WHERE userId=?");
+            ps.setString(1, API_URL); ps.setString(2, MODEL); ps.setString(3, API_KEY);
+            ps.setInt(4, BMIApplication.currentUserId);
+            ps.executeUpdate(); ps.close(); conn.close();
+        } catch (Exception ex) { ex.printStackTrace(); }
+    }
+
+    private void loadApiConfig() {
+        try {
+            java.sql.Connection conn = com.bmitracker.util.DBUtil.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement(
+                "SELECT api_url, api_model, api_key FROM users WHERE userId=?");
+            ps.setInt(1, BMIApplication.currentUserId);
+            java.sql.ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String url = rs.getString("api_url");
+                String model = rs.getString("api_model");
+                String key = rs.getString("api_key");
+                if (url != null) API_URL = url;
+                if (model != null) MODEL = model;
+                if (key != null) API_KEY = key;
             }
-        } catch (Exception ex) { /* use default empty */ }
+            rs.close(); ps.close(); conn.close();
+        } catch (Exception ex) { /* use defaults */ }
     }
 
     private void saveHistory() {

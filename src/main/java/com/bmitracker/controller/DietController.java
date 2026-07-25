@@ -41,8 +41,18 @@ public class DietController {
         String allergens = user.getAllergens();
         String chronicDiseases = user.getChronicDiseases();
 
-        java.nio.file.Path keyPath = java.nio.file.Paths.get("data/api_key_" + BMIApplication.currentUserId + ".txt");
-        if (!java.nio.file.Files.exists(keyPath)) {
+        // check if user has set API config in DB
+        boolean hasApi = false;
+        try {
+            java.sql.Connection conn = com.bmitracker.util.DBUtil.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement("SELECT api_key FROM users WHERE userId=?");
+            ps.setInt(1, BMIApplication.currentUserId);
+            java.sql.ResultSet rs = ps.executeQuery();
+            hasApi = rs.next() && rs.getString("api_key") != null && !rs.getString("api_key").trim().isEmpty();
+            rs.close(); ps.close(); conn.close();
+        } catch (Exception ex) {}
+
+        if (!hasApi) {
             javafx.scene.control.TextInputDialog d = new javafx.scene.control.TextInputDialog();
             d.setTitle("API 设置");
             d.setHeaderText("请先设置 AI API Key");
@@ -51,8 +61,14 @@ public class DietController {
             d.showAndWait().ifPresent(key -> {
                 if (key != null && !key.trim().isEmpty()) {
                     try {
-                        java.nio.file.Files.createDirectories(java.nio.file.Paths.get("data"));
-                        java.nio.file.Files.writeString(keyPath, key.trim());
+                        java.sql.Connection conn = com.bmitracker.util.DBUtil.getConnection();
+                        java.sql.PreparedStatement ps = conn.prepareStatement(
+                            "UPDATE users SET api_url=?, api_model=?, api_key=? WHERE userId=?");
+                        ps.setString(1, "https://api.openai.com/v1/chat/completions");
+                        ps.setString(2, "gpt-3.5-turbo");
+                        ps.setString(3, key.trim());
+                        ps.setInt(4, BMIApplication.currentUserId);
+                        ps.executeUpdate(); ps.close(); conn.close();
                     } catch (Exception ex) { ex.printStackTrace(); }
                 }
             });
