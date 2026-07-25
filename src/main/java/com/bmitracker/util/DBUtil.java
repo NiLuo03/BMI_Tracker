@@ -15,7 +15,9 @@ public class DBUtil {
     public static boolean PREVIEW_MODE = false;
 
     /** H2本地文件数据库，MySQL兼容模式 */
-    private static final String H2_URL = "jdbc:h2:file:./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE";
+    private static final String H2_URL = "jdbc:h2:file:./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE;AUTO_SERVER=TRUE";
+    /** H2 TCP Server共享模式 */
+    private static final String H2_TCP_URL = "jdbc:h2:tcp://localhost:9092/./bmi_db;MODE=MySQL;DATABASE_TO_LOWER=TRUE";
     /** 队友的MySQL地址 */
     private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/bmi_db?useSSL=false&serverTimezone=Asia/Shanghai&connectTimeout=3000&socketTimeout=3000";
     private static final String USER = "root";
