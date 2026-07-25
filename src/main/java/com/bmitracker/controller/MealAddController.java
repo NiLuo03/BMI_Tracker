@@ -81,11 +81,13 @@ public class MealAddController {
 
         servingDescLbl.managedProperty().bind(servingDescLbl.visibleProperty());
 
-        light = isLightTheme();
-        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: " + (light ? "#111111" : "#d0d0d0") + ";");
-        dateWheel.setLightTheme(light);
-        buildMealCards();
-        buildCalcGrid();
+        Platform.runLater(() -> {
+            light = isLightTheme();
+            titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: " + (light ? "#111111" : "#d0d0d0") + ";");
+            dateWheel.setLightTheme(light);
+            buildMealCards();
+            buildCalcGrid();
+        });
         setupKeyboard();
 
         new Thread(() -> {
